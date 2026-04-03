@@ -32,6 +32,7 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
 .header {
@@ -68,6 +69,7 @@ body {
   flex-direction: column;
   gap: 4px;
   align-items: center;
+  justify-self: center;
 }
 .picker-group .picker-label {
   font-size: 0.7rem;
@@ -76,12 +78,18 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
+  height: 30px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
 }
 .picker-group .picker-value {
   font-size: 0.75rem;
   font-weight: 600;
   color: var(--primary);
   text-align: center;
+  height: 1.2em;
   min-height: 18px;
 }
 
@@ -172,17 +180,40 @@ body {
   font-weight: 700;
   font-size: 1.2rem;
   color: var(--success);
-  min-width: 90px;
+  width: 80px;
+  height: 120px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 .ibw-display .ibw-val { font-size: 1.4rem; }
 .ibw-display .ibw-unit { font-size: 0.7rem; font-weight: 500; }
 .ibw-display .ibw-range { font-size: 0.65rem; font-weight: 400; color: var(--text-muted); }
+/* Desktop: IBW display matches input height */
+@media (min-width: 769px) {
+  .desk-field .ibw-display {
+    width: 120px;
+    height: 44px;
+    padding: 0 14px;
+    flex-direction: row;
+    gap: 6px;
+    font-size: 1.05rem;
+    box-sizing: border-box;
+  }
+  .desk-field .ibw-display .ibw-val { font-size: 1.05rem; }
+  .desk-field .ibw-display .ibw-unit { font-size: 0.75rem; }
+  .desk-field .ibw-display .ibw-range { font-size: 0.65rem; }
+}
 
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--card);
+}
 .tabs {
   display: flex;
   background: var(--card);
@@ -199,8 +230,8 @@ body {
   white-space: nowrap;
   transition: all 0.2s;
 }
-.tab:hover { color: var(--primary); background: #f1f5f9; }
-.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+.tab:hover { color: var(--primary); background: rgba(56,189,248,0.08); }
+.tab.active { color: #00bfa5; border: 2px solid #00bfa5; border-radius: 20px; background: transparent; }
 
 .tab-content { display: none; padding: 16px; }
 .tab-content.active { display: block; }
@@ -222,7 +253,8 @@ body {
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background: var(--card);
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -232,14 +264,11 @@ table {
 thead th {
   background: var(--section-bg);
   padding: 8px 10px;
-  text-align: center;
+  text-align: left;
   font-weight: 600;
   font-size: 0.75rem;
   color: var(--text-muted);
   border-bottom: 2px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 tbody td {
   padding: 6px 10px;
@@ -269,6 +298,11 @@ tbody tr:hover { background: var(--section-bg); }
 }
 .interval { font-size: 0.78rem; color: var(--text-muted); text-align: center; }
 .note { font-size: 0.72rem; color: var(--danger); font-style: italic; }
+.note.note-age { color: #4fc3f7; font-weight: 600; }
+.note.note-bw { color: #ce93d8; font-weight: 600; }
+.note-age-match { color: #66bb6a; font-weight: 700; }
+.note-bw-match { color: #66bb6a; font-weight: 700; }
+.dose-age-match .dose-info { color: #66bb6a; font-weight: 700; }
 
 .age-dose-table td { font-size: 0.78rem; }
 .age-dose-table td:first-child { font-weight: 500; }
@@ -309,6 +343,11 @@ tbody tr:hover { background: var(--section-bg); }
 .dehydration-card h4 { color: var(--primary); margin-bottom: 6px; }
 .dehydration-card ul { list-style: none; text-align: left; }
 .dehydration-card ul li { padding: 2px 0; }
+.dehydration-card.active-level {
+  border: 3px solid var(--warning);
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+}
+.dehydration-card.active-level h4 { color: var(--warning); }
 
 /* PALS specific */
 .pals-info {
@@ -366,19 +405,38 @@ tbody tr:hover { background: var(--section-bg); }
   50% { opacity: 0.85; }
 }
 
+/* Fixed table header */
+.fixed-thead {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  background: var(--section-bg);
+  border-bottom: 2px solid var(--primary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  overflow: hidden;
+}
+.fixed-thead.visible { display: block; }
+.fixed-thead table {
+  margin: 0;
+  box-shadow: none;
+  border-radius: 0;
+}
+
 /* Search bar */
 .search-bar {
-  display: none;
+  display: flex;
+  gap: 8px;
+  align-items: center;
   padding: 12px 20px;
   background: var(--card);
   border-bottom: 2px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 50;
 }
-.search-bar.visible { display: flex; gap: 8px; align-items: center; }
 .search-wrap {
   flex: 1;
+  min-width: 0;
   position: relative;
 }
 .search-wrap input {
@@ -433,6 +491,7 @@ tbody tr:hover { background: var(--section-bg); }
   border-radius: 10px;
   font-size: 0.9rem;
   font-weight: 600;
+  flex-shrink: 0;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -444,27 +503,213 @@ tbody tr:hover { background: var(--section-bg); }
   border: none;
   border-radius: 10px;
   font-size: 0.9rem;
+  flex-shrink: 0;
   cursor: pointer;
 }
 
 /* Highlight found drug rows */
-tr.drug-highlight {
-  outline: 3px solid var(--warning) !important;
-  outline-offset: -2px;
+tr.drug-highlight td {
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
 }
+tr.drug-highlight td:first-child { border-left: 3px solid var(--warning) !important; }
+tr.drug-highlight td:last-child { border-right: 3px solid var(--warning) !important; }
+tr.drug-highlight-first td { border-top: 3px solid var(--warning) !important; }
+tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; }
 
 .results-hidden .tab-content { display: none !important; }
-.results-hidden .tabs { opacity: 0.3; pointer-events: none; }
-.results-hidden .search-bar { display: none !important; }
+.tabs-hidden { opacity: 0.3; pointer-events: none; }
 
-@media (max-width: 768px) {
+/* Desktop inputs vs Mobile pickers */
+.desktop-inputs { display: none; }
+.mobile-pickers {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  align-items: end;
+  width: 100%;
+}
+.mobile-pickers > div:first-child { grid-column: 1 / -1; }
+
+@media (min-width: 769px) {
+  .desktop-inputs {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    align-items: end;
+    width: 100%;
+  }
+  .desktop-inputs > div:first-child { grid-column: 1 / -1; }
+  .mobile-pickers { display: none; }
+}
+
+.desk-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.desk-field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.desk-field input, .desk-field select {
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 1.05rem;
+  background: var(--section-bg);
+  color: var(--text);
+  width: 120px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.desk-field input:focus, .desk-field select:focus {
+  border-color: var(--primary);
+}
+.desk-field select { width: 70px; cursor: pointer; }
+.desk-field.desk-red input {
+  border-color: var(--danger);
+  background: var(--picker-red-bg);
+}
+.desk-row {
+  display: flex;
+  gap: 6px;
+}
+.desk-row input { width: 80px; }
+
+/* Weight mode toggle */
+.mode-toggle {
+  display: flex;
+  background: var(--section-bg);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+  width: fit-content;
+}
+.mode-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.mode-btn.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 2px 8px rgba(96, 165, 250, 0.3);
+}
+.mode-btn:not(.active):hover { color: var(--text); background: var(--border); }
+
+/* Reset button */
+.reset-btn {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  height: 44px;
+  white-space: nowrap;
+}
+.reset-btn:hover { opacity: 0.9; }
+.reset-btn:active { transform: scale(0.97); }
+
+/* ===== Responsive: Desktop ===== */
+@media (min-width: 1024px) {
+  .header { padding: 24px 40px; }
+  .header h1 { font-size: 1.6rem; }
+  .input-bar { padding: 20px 40px; justify-content: center; }
+  .tab-content { padding: 20px 40px; max-width: 1400px; margin: 0 auto; }
+  table { font-size: 0.85rem; }
+  .scroll-hint { display: none; }
+  .calc-btn { max-width: 500px; }
+  .search-bar { padding: 12px 40px; }
+}
+
+/* ===== Responsive: Tablet ===== */
+@media (max-width: 1023px) and (min-width: 769px) {
   .input-bar { justify-content: center; }
+  table { font-size: 0.8rem; }
+}
+
+/* ===== Responsive: Mobile ===== */
+@media (max-width: 768px) {
+  .header { padding: 14px 12px; }
+  .header h1 { font-size: 1.05rem; }
+  .header .subtitle { font-size: 0.7rem; }
+  .header .warning { font-size: 0.65rem; padding: 4px 8px; }
+
+  .input-bar {
+    padding: 12px;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .picker-group { min-width: 0; }
+  .picker-label { font-size: 0.6rem; }
+  .picker-value { font-size: 0.65rem; }
+  .wheel-picker { width: 80px; height: 100px; }
+  .wheel-picker .wheel-item { font-size: 0.85rem; height: 32px; }
+  .wheel-picker .wheel-item.selected { font-size: 0.95rem; }
+  .wheel-picker .wheel-highlight { height: 32px; }
+  .ibw-display { width: 80px; height: 100px; padding: 6px 10px; }
+  .ibw-display .ibw-val { font-size: 1.1rem; }
+  .ibw-display .ibw-unit { font-size: 0.6rem; }
+  .ibw-display .ibw-range { font-size: 0.55rem; }
+  .reset-btn { padding: 8px 14px; font-size: 0.75rem; height: 38px; }
+
+  .calc-btn-wrap { padding: 10px 12px; }
+  .calc-btn { padding: 12px 24px; font-size: 0.95rem; }
+
+  .tabs { font-size: 0.75rem; }
+  .tab { padding: 10px 12px; }
+
+  .search-bar { padding: 8px 12px; gap: 6px; }
+  .search-wrap input { padding: 8px 12px; font-size: 0.9rem; }
+  .search-btn { padding: 8px 14px; font-size: 0.8rem; }
+  .search-clear-btn { padding: 8px 10px; font-size: 0.8rem; }
+
+  .tab-content { padding: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .section-title { font-size: 0.78rem; padding: 6px 12px; margin: 12px 0 6px; }
+  table { font-size: 0.7rem; display: table; min-width: 700px; table-layout: fixed !important; }
+  thead th { padding: 6px 4px; font-size: 0.65rem; }
+  tbody td { padding: 5px 4px; }
+  .scroll-hint { display: block; text-align: center; font-size: 0.7rem; color: var(--text-muted); padding: 4px; opacity: 0.6; }
+
   .dehydration-grid { grid-template-columns: 1fr; }
-  table { font-size: 0.75rem; }
-  .header h1 { font-size: 1.1rem; }
-  .tabs { font-size: 0.8rem; }
-  .tab { padding: 10px 14px; }
-  .wheel-picker { width: 68px; height: 110px; }
+  .pals-info { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .pals-card { padding: 10px; }
+  .pals-card .value { font-size: 1.1rem; }
+
+  .fluid-card { padding: 14px; }
+  .fluid-card h3 { font-size: 0.9rem; }
+  .fluid-result { font-size: 1.4rem; }
+}
+
+/* ===== Responsive: Very small phone ===== */
+@media (max-width: 380px) {
+  .wheel-picker { width: 60px; height: 80px; }
+  .wheel-picker .wheel-item { font-size: 0.75rem; height: 28px; }
+  .wheel-picker .wheel-item.selected { font-size: 0.85rem; }
+  .wheel-picker .wheel-highlight { height: 28px; }
+  .input-bar { gap: 6px; padding: 8px; }
+  .picker-label { font-size: 0.55rem; }
+  .ibw-display { width: 60px; height: 80px; padding: 4px 6px; }
+  .ibw-display .ibw-val { font-size: 0.95rem; }
+  table { font-size: 0.65rem; }
+  thead th { font-size: 0.6rem; }
+  .pals-info { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media print {
@@ -482,33 +727,109 @@ tr.drug-highlight {
 </div>
 
 <div class="input-bar">
-  <div class="picker-group">
-    <div class="picker-label">Age</div>
-    <div class="wheel-picker yellow-border" id="pickerAge" style="width:90px;"></div>
-    <div class="picker-value" id="ageRangeLabel">1-6 yr</div>
-  </div>
-  <div class="picker-group">
-    <div class="picker-label">IBW (คำนวณ)</div>
-    <div class="ibw-display" id="ibwCalc">
-      <div class="ibw-val">20.0</div>
-      <div class="ibw-unit">kg</div>
-      <div class="ibw-range">1-6 yr</div>
+  <!-- Desktop inputs -->
+  <div class="desktop-inputs">
+    <!-- Weight Mode Toggle -->
+    <div style="width:100%;display:flex;justify-content:center;margin-bottom:8px;">
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="modeIBW" onclick="setWeightMode('ibw')">IBW from Age</button>
+        <button class="mode-btn" id="modeRBW" onclick="setWeightMode('rbw')">ใช้ Real BW</button>
+      </div>
+    </div>
+    <!-- IBW Mode fields -->
+    <div class="desk-field ibw-mode-field">
+      <label>Age Range</label>
+      <select id="deskAgeRange" onchange="deskAgeChanged()" style="padding:10px 14px;border:2px solid var(--warning);border-radius:10px;font-size:1rem;background:var(--picker-yellow-bg);color:var(--text);cursor:pointer;width:140px;">
+        <option value="nb">NB</option>
+        <option value="3-12mo">3-12 mo</option>
+        <option value="1-6yr">1-6 yr</option>
+        <option value="7-12yr">7-12 yr</option>
+      </select>
+    </div>
+    <div class="desk-field ibw-mode-field">
+      <label id="deskAgeLabel">Age (mo/yr)</label>
+      <input type="number" id="deskAge" value="0" min="0" max="18" step="1" oninput="deskAgeChanged()" style="border-color:var(--warning);background:var(--picker-yellow-bg);">
+    </div>
+    <div class="desk-field ibw-mode-field">
+      <label>IBW (ใช้คำนวณ)</label>
+      <div class="ibw-display" id="ibwCalcDesk">
+        <div class="ibw-val">3.0</div>
+        <div class="ibw-unit">kg</div>
+        <div class="ibw-range">NB</div>
+      </div>
+    </div>
+    <!-- RBW Mode fields -->
+    <div class="desk-field rbw-mode-field" style="display:none;">
+      <label>Real BW (kg)</label>
+      <input type="number" id="deskRBW" value="0" min="0" max="100" step="0.5" oninput="deskInputChanged()" style="border-color:var(--success);background:var(--picker-green-bg);font-size:1.2rem;width:140px;">
+    </div>
+    <div class="desk-field rbw-mode-field" style="display:none;">
+      <label>Age (yr)</label>
+      <input type="number" id="deskRBWAge" value="0" min="0" max="18" step="0.5" oninput="deskInputChanged()">
+    </div>
+    <!-- Common fields -->
+    <div class="desk-field">
+      <label>Age PALS (yr)</label>
+      <input type="number" id="deskPals" value="0" min="0" max="18" step="1" oninput="deskInputChanged()">
+    </div>
+    <div class="desk-field desk-red">
+      <label>% Dehydration</label>
+      <input type="number" id="deskDehyd" value="0" min="0" max="15" step="1" oninput="deskInputChanged()">
+    </div>
+    <div class="desk-field">
+      <label>&nbsp;</label>
+      <button class="reset-btn" onclick="doReset()">RESET</button>
     </div>
   </div>
-  <div class="picker-group">
-    <div class="picker-label">IBW (kg)</div>
-    <div class="wheel-picker red-border" id="pickerIBW"></div>
-    <div class="picker-value" id="ibwPickerVal">10 kg</div>
-  </div>
-  <div class="picker-group">
-    <div class="picker-label">Age PALS (yr)</div>
-    <div class="wheel-picker yellow-border" id="pickerPals"></div>
-    <div class="picker-value" id="palsPickerVal">1 yr</div>
-  </div>
-  <div class="picker-group">
-    <div class="picker-label">% Dehydration</div>
-    <div class="wheel-picker red-border" id="pickerDehyd"></div>
-    <div class="picker-value" id="dehydPickerVal">3%</div>
+
+  <!-- Mobile pickers -->
+  <div class="mobile-pickers">
+    <!-- Mode toggle -->
+    <div style="width:100%;display:flex;justify-content:center;margin-bottom:4px;">
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="modeIBWm" onclick="setWeightModeMobile('ibw')">IBW from Age</button>
+        <button class="mode-btn" id="modeRBWm" onclick="setWeightModeMobile('rbw')">ใช้ Real BW</button>
+      </div>
+    </div>
+    <!-- IBW mode: Age picker -->
+    <div class="picker-group mob-ibw-field">
+      <div class="picker-label">Age</div>
+      <div class="wheel-picker yellow-border" id="pickerAge"></div>
+      <div class="picker-value" id="ageRangeLabel">NB</div>
+    </div>
+    <div class="picker-group mob-ibw-field">
+      <div class="picker-label">IBW (ใช้คำนวณ)</div>
+      <div class="ibw-display" id="ibwCalc">
+        <div class="ibw-val">3.0</div>
+        <div class="ibw-unit">kg</div>
+        <div class="ibw-range">NB</div>
+      </div>
+      <div class="picker-value">&nbsp;</div>
+    </div>
+    <!-- RBW mode: BW picker -->
+    <div class="picker-group mob-rbw-field" style="display:none;">
+      <div class="picker-label">Real BW (kg)</div>
+      <div class="wheel-picker green-border" id="pickerRBW"></div>
+      <div class="picker-value" id="rbwPickerVal">0 kg</div>
+    </div>
+    <!-- Common -->
+    <div class="picker-group">
+      <div class="picker-label">Age PALS (yr)</div>
+      <div class="wheel-picker yellow-border" id="pickerPals"></div>
+      <div class="picker-value" id="palsPickerVal">1 yr</div>
+    </div>
+    <div class="picker-group">
+      <div class="picker-label">% Dehydration</div>
+      <div class="wheel-picker red-border" id="pickerDehyd"></div>
+      <div class="picker-value" id="dehydPickerVal">3%</div>
+    </div>
+    <div class="picker-group">
+      <div class="picker-label">&nbsp;</div>
+      <div style="height:80px;display:flex;align-items:center;">
+        <button class="reset-btn" onclick="doReset()">RESET</button>
+      </div>
+      <div class="picker-value">&nbsp;</div>
+    </div>
   </div>
 </div>
 
@@ -516,6 +837,7 @@ tr.drug-highlight {
   <button class="calc-btn" id="calcBtn" onclick="doCalculate()">CALCULATE</button>
 </div>
 
+<div class="sticky-nav" id="stickyNav">
 <div class="search-bar" id="searchBar">
   <div class="search-wrap">
     <input type="text" id="searchInput" placeholder="Search drug name..." autocomplete="off" oninput="onSearchInput()" onkeydown="onSearchKey(event)">
@@ -524,14 +846,17 @@ tr.drug-highlight {
   <button class="search-btn" onclick="doSearch()">SEARCH</button>
   <button class="search-clear-btn" onclick="clearSearch()">CLEAR</button>
 </div>
-
-<div id="resultsArea" class="results-hidden">
-<div class="tabs">
+<div class="tabs tabs-hidden">
   <div class="tab active" onclick="switchTab('dose')">Pediatric Dose</div>
   <div class="tab" onclick="switchTab('atb')">Pediatric ATB</div>
   <div class="tab" onclick="switchTab('fluid')">IV Fluid</div>
   <div class="tab" onclick="switchTab('pals')">PALS</div>
 </div>
+</div>
+
+<div class="fixed-thead" id="fixedThead"></div>
+
+<div id="resultsArea" class="results-hidden">
 
 <div id="tab-dose" class="tab-content active"></div>
 <div id="tab-atb" class="tab-content"></div>
@@ -795,7 +1120,7 @@ function getAgeRange(months) {
 }
 
 function calcAndUpdateIBW() {
-  if (!pickerAge || !pickerIBW) return;
+  if (!pickerAge) return;
   markStale();
   const ageVal = pickerAge.getValue();
   let months = ageVal.value;
@@ -809,42 +1134,173 @@ function calcAndUpdateIBW() {
     document.getElementById('ageRangeLabel').textContent = (months/12) + ' yr';
   }
 
-  // determine range
-  let range, ibw, ageNum;
-  if (months === 0) { range = 'NB'; ibw = 3; ageNum = 0; }
-  else if (months < 3) {
-    range = '1-2 mo'; ageNum = months;
-    ibw = 3 + (months * 0.75); // approx NB growth ~750g/mo
-  }
+  // Calculate IBW from age using APLS/Best Guess formulas
+  // 3-12 mo: (age_mo + 9) / 2
+  // 1-6 yr:  (age_yr * 2) + 8
+  // 7-12 yr: ((age_yr * 7) - 5) / 2
+  let range, ibw;
+  if (months === 0) { range = 'NB'; ibw = 3; }
   else if (months <= 12) {
-    range = '3-12 mo'; ageNum = months;
+    range = '3-12 mo';
     ibw = (months + 9) / 2;
   }
   else if (months <= 72) {
-    range = '1-6 yr'; ageNum = months / 12;
-    ibw = (ageNum * 2) + 8;
+    range = '1-6 yr';
+    const yrs = months / 12;
+    ibw = (yrs * 2) + 8;
   }
   else {
-    range = '7-12 yr'; ageNum = months / 12;
-    ibw = ((ageNum * 7) - 5) / 2;
+    range = '7-12 yr';
+    const yrs = months / 12;
+    ibw = ((yrs * 7) - 5) / 2;
   }
 
   const el = document.getElementById('ibwCalc');
   el.innerHTML = `<div class="ibw-val">${ibw.toFixed(1)}</div><div class="ibw-unit">kg</div><div class="ibw-range">${range}</div>`;
 
+  // Store calculated IBW for mobile use
+  window._mobileIBW = ibw;
+
   recalcAll();
 }
 
 function recalcAll() {
-  if (!pickerIBW || !pickerPals || !pickerDehyd) return;
-  const w = pickerIBW.getValue().value;
-  document.getElementById('ibwPickerVal').textContent = w + ' kg';
-  document.getElementById('palsPickerVal').textContent = pickerPals.getValue().value + ' yr';
-  document.getElementById('dehydPickerVal').textContent = pickerDehyd.getValue().value + '%';
-  renderDose(w);
-  renderATB(w);
-  renderFluid(w);
-  renderPALS(w);
+  let w, palsAge, dehyd;
+  let ageMonths = 0;
+  if (isDesktop()) {
+    const d = getDeskValues();
+    w = d.w; palsAge = d.pals; dehyd = d.dehyd;
+    if (weightMode === 'rbw') {
+      const rbwAge = parseFloat(document.getElementById('deskRBWAge').value) || 0;
+      ageMonths = rbwAge * 12;
+    } else {
+      const range = document.getElementById('deskAgeRange').value;
+      const ageVal = parseFloat(document.getElementById('deskAge').value) || 0;
+      if (range === '3-12mo') ageMonths = ageVal;
+      else if (range === '1-6yr') ageMonths = ageVal * 12;
+      else if (range === '7-12yr') ageMonths = ageVal * 12;
+    }
+  } else {
+    if (!pickerPals || !pickerDehyd) return;
+    if (mobileWeightMode === 'rbw' && pickerRBW) {
+      w = pickerRBW.getValue().value;
+      document.getElementById('rbwPickerVal').textContent = w + ' kg';
+    } else {
+      w = window._mobileIBW || 3;
+    }
+    palsAge = pickerPals.getValue().value;
+    dehyd = pickerDehyd.getValue().value;
+    document.getElementById('palsPickerVal').textContent = palsAge + ' yr';
+    document.getElementById('dehydPickerVal').textContent = dehyd + '%';
+    if (pickerAge) ageMonths = pickerAge.getValue().value;
+  }
+  renderDose(w, ageMonths);
+  renderATB(w, ageMonths);
+  renderFluid(w, dehyd, ageMonths);
+  renderPALS(w, palsAge);
+  highlightAgeNotes(ageMonths, w);
+}
+
+function highlightAgeNotes(am, w) {
+  const ageYr = (am || 0) / 12;
+  document.querySelectorAll('.note-age, .note-bw').forEach(noteEl => {
+    const tr = noteEl.closest('tr');
+    if (!tr) return;
+    const isBW = noteEl.classList.contains('note-bw');
+    const matchClass = isBW ? 'note-bw-match' : 'note-age-match';
+    const raw = noteEl.innerHTML;
+    // Split by | and <br> but keep delimiters for reconstruction
+    const tokens = raw.split(/(\s*\|\s*|<br\s*\/?>)/i);
+    let matched = false;
+    const highlighted = tokens.map(tok => {
+      // Skip delimiters
+      if (/^\s*\|\s*$/.test(tok) || /^<br/i.test(tok)) return tok;
+      if (!tok.trim()) return tok;
+      const t = tok.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
+      if (!matched && !isBW && matchesAgeRange(t, am, ageYr)) {
+        matched = true;
+        return '<span class="' + matchClass + '">' + tok + '</span>';
+      }
+      if (!matched && matchesWeightRange(t, w)) {
+        matched = true;
+        return '<span class="' + matchClass + '">' + tok + '</span>';
+      }
+      return tok;
+    });
+    noteEl.innerHTML = highlighted.join('');
+    // Highlight Dose cell (3rd column) — always green
+    const doseCell = tr.querySelectorAll('td')[2];
+    if (doseCell) {
+      if (matched) doseCell.classList.add('dose-age-match');
+      else doseCell.classList.remove('dose-age-match');
+    }
+  });
+  // Propagate dose-age-match to sibling rows with same drug name & dose
+  document.querySelectorAll('td.dose-age-match').forEach(td => {
+    const tr = td.closest('tr');
+    if (!tr) return;
+    const drugName = tr.querySelector('.drug-name')?.textContent?.split(' ')[0];
+    const doseVal = td.querySelector('.dose-info')?.textContent?.trim();
+    if (!drugName || !doseVal) return;
+    let sibling = tr.nextElementSibling;
+    while (sibling && sibling.tagName === 'TR') {
+      const sibDrug = sibling.querySelector('.drug-name')?.textContent?.split(' ')[0];
+      if (sibDrug !== drugName) break;
+      const sibDoseCell = sibling.querySelectorAll('td')[2];
+      const sibDoseVal = sibDoseCell?.querySelector('.dose-info')?.textContent?.trim();
+      if (sibDoseVal === doseVal) sibDoseCell.classList.add('dose-age-match');
+      sibling = sibling.nextElementSibling;
+    }
+  });
+}
+
+function matchesAgeRange(seg, am, ageYr) {
+  const s = seg.toLowerCase();
+  // Skip pure weight-based ranges (no age indicator)
+  if (/\d+\s*kg/.test(s) && !/\d+\s*(yr|mo)/.test(s) && !/term/.test(s)) return false;
+  let m;
+  // "term-9mo" or "0-9mo"
+  if (m = s.match(/(?:term|0)\s*-\s*(\d+)\s*mo/)) return am <= +m[1];
+  // "Xmo-Ymo"
+  if (m = s.match(/(\d+)\s*mo\s*-\s*(\d+)\s*mo/)) return am >= +m[1] && am <= +m[2];
+  // "Xmo-Yyr"
+  if (m = s.match(/(\d+)\s*mo\s*-\s*(\d+)\s*yr/)) return am >= +m[1] && ageYr <= +m[2];
+  // "<Xmo"
+  if (m = s.match(/[<]\s*(\d+)\s*mo/)) return am < +m[1];
+  // ">Xmo"
+  if (m = s.match(/[>]\s*(\d+)\s*mo/)) return am > +m[1];
+  // "X-Yyr"
+  if (m = s.match(/(\d+)\s*-\s*(\d+)\s*yr/)) return ageYr >= +m[1] && ageYr <= +m[2];
+  // "<Xyr"
+  if (m = s.match(/[<]\s*(\d+)\s*yr/)) return ageYr < +m[1];
+  // ">Xyr"
+  if (m = s.match(/[>]\s*(\d+)\s*yr/)) return ageYr > +m[1];
+  // "≤Xyr"
+  if (m = s.match(/≤\s*(\d+)\s*yr/)) return ageYr <= +m[1];
+  // "≥Xyr"
+  if (m = s.match(/≥\s*(\d+)\s*yr/)) return ageYr >= +m[1];
+  // "อายุ >X เดือน"
+  if (m = s.match(/อายุ\s*[>]\s*(\d+)\s*เดือน/)) return am > +m[1];
+  return false;
+}
+
+function matchesWeightRange(seg, w) {
+  if (!w) return false;
+  const s = seg.toLowerCase();
+  // Only match pure weight segments
+  if (!/\d+\s*kg/.test(s)) return false;
+  let m;
+  // "≤Xkg"
+  if (m = s.match(/[≤]\s*(\d+)\s*kg/)) return w <= +m[1];
+  // "<Xkg"
+  if (m = s.match(/[<]\s*(\d+)\s*kg/)) return w < +m[1];
+  // ">Xkg"
+  if (m = s.match(/[>]\s*(\d+)\s*kg/)) return w > +m[1];
+  // "≥Xkg"
+  if (m = s.match(/[≥]\s*(\d+)\s*kg/)) return w >= +m[1];
+  // "X-Ykg"
+  if (m = s.match(/(\d+)\s*-\s*(\d+)\s*kg/)) return w >= +m[1] && w <= +m[2];
+  return false;
 }
 
 function r(v, d=2) {
@@ -859,7 +1315,10 @@ function cv(v, max, d=2) {
 }
 
 function makeTable(headers, rows) {
-  let h = '<table><thead><tr>' + headers.map(x => `<th>${x}</th>`).join('') + '</tr></thead><tbody>';
+  const isDose = headers === doseHeaders;
+  const cg = isDose ? doseColgroup : '';
+  const tblStyle = isDose ? ' style="table-layout:fixed"' : '';
+  let h = '<table' + tblStyle + '>' + cg + '<thead><tr>' + headers.map(x => `<th>${x}</th>`).join('') + '</tr></thead><tbody>';
   h += rows.map(row => '<tr>' + row.map(c => `<td>${c}</td>`).join('') + '</tr>').join('');
   return h + '</tbody></table>';
 }
@@ -878,33 +1337,39 @@ function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, in
   const mvn = minMl !== null ? cv(minMl, null, 2) : '';
   const mvx = maxMl !== null ? cv(maxMl, null, 2) : '';
   const iv = `<span class="interval">${interval || ''}</span>`;
-  const nt = note ? `<span class="note">${note}</span>` : '';
+  const noteDec = note ? note.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&') : '';
+  const hasAge = note && /\d+\s*(yr|mo|เดือน|ขวบ)|[<>≤≥]\s*\d+\s*(yr|mo)|อายุ/.test(noteDec);
+  const hasBW = note && /[<>≤≥]\s*\d+\s*kg|\d+\s*-\s*\d+\s*kg/.test(noteDec);
+  const noteClass = hasAge ? ' note-age' : hasBW ? ' note-bw' : '';
+  const nt = note ? `<span class="note${noteClass}">${note}</span>` : '';
   return [n, p, d, a, mn, mx, mvn, mvx, iv, nt];
 }
 
 const doseHeaders = ['Drug', 'Preparation', 'Dose', 'Approx', 'Min mg', 'Max mg', 'Min mL', 'Max mL', 'Interval', 'Note'];
+const doseColgroup = '<colgroup><col style="width:12%"><col style="width:10%"><col style="width:9%"><col style="width:11%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:8%"><col style="width:22%"></colgroup>';
 
-function renderDose(w) {
+function renderDose(w, am) {
+  const ageYr = (am || 0) / 12;
   let html = '';
 
   // Antipyretic / Analgesia
   html += sectionHead('Antipyretic / Analgesia', 'ยาแก้ปวด / ลดไข้');
   html += makeTable(doseHeaders, [
-    drugRow('Paracetamol syrup','','120 mg/5 mL','10-15 mk/Dose','10 kg = 1 ช้อนชา', 10*w, 15*w, (10*w*5)/120, (15*w*5)/120, 'prn q 6 hr', 'MAX 90 mk/Day'),
-    drugRow('','','250 mg/5 mL','','10 kg = ½ ช้อนชา', 10*w, 15*w, (10*w*5)/250, (15*w*5)/250, 'prn q 6 hr', ''),
-    drugRow('Paracetamol kit syr','','60 mg/0.6 mL','q 4-6 hr','1 kg = 0.1 mL', 10*w, 15*w, (10*w*0.6)/60, (15*w*0.6)/60, 'prn q 6 hr', ''),
-    drugRow('Paracetamol tab','','325 mg/tab','[ MAX 90 mk/Day ]','30 kg = 1 tab', 10*w, 15*w, (10*w)/325, (15*w)/325, 'prn q 6 hr', ''),
-    drugRow('','','500 mg/tab','','25 kg = ½ tab', 10*w, 15*w, (10*w)/500, (15*w)/500, 'prn q 6 hr', ''),
-    drugRow('Ibuprofen syrup','','100 mg/5 mL','5-10 mk/Dose','10 kg = ½ ช้อนชา', 5*w, 10*w, (5*w*5)/100, (10*w*5)/100, 'prn q 8 hr', 'MAX 40 mk/Day'),
-    drugRow('Ibuprofen tab','','200 mg/tab','q 6-8 hr','20 kg = ½-1 tab', 5*w, 10*w, (5*w)/200, (10*w)/200, 'prn q 8 hr', ''),
-    drugRow('','','400 mg/tab','','40 kg = ½-1 tab', 5*w, 10*w, (5*w)/400, (10*w)/400, 'prn q 8 hr', ''),
+    drugRow('Paracetamol syrup','','120 mg/5 mL','10-15 mk/Dose','10 kg = 1 ช้อนชา', 10*w, 15*w, (10*w*5)/120, (15*w*5)/120, 'prn q 4-6 hr', 'MAX 90 mk/Day'),
+    drugRow('Paracetamol syrup','','250 mg/5 mL','','10 kg = ½ ช้อนชา', null, null, (10*w*5)/250, (15*w*5)/250, '', ''),
+    drugRow('Paracetamol kit syr','','60 mg/0.6 mL','','1 kg = 0.1 mL', null, null, (10*w*0.6)/60, (15*w*0.6)/60, '', ''),
+    drugRow('Paracetamol tab','','325 mg/tab','','30 kg = 1 tab', null, null, (10*w)/325, (15*w)/325, '', ''),
+    drugRow('Paracetamol tab','','500 mg/tab','','25 kg = ½ tab', null, null, (10*w)/500, (15*w)/500, '', ''),
+    drugRow('Ibuprofen syrup','','100 mg/5 mL','5-10 mk/Dose','10 kg = ½ ช้อนชา', 5*w, 10*w, (5*w*5)/100, (10*w*5)/100, 'prn q 6-8 hr', 'MAX 40 mk/Day'),
+    drugRow('Ibuprofen tab','','200 mg/tab','','20 kg = ½-1 tab', null, null, (5*w)/200, (10*w)/200, '', ''),
+    drugRow('Ibuprofen tab','','400 mg/tab','','40 kg = ½-1 tab', null, null, (5*w)/400, (10*w)/400, '', ''),
   ]);
 
   // Antihistamine
   html += sectionHead('Antihistamine', 'ยาแก้แพ้ ลดอาการคัน');
   html += makeTable(doseHeaders, [
-    drugRow('Cetirizine syr','','5 mg/5 mL','','6mo-2yr: 2.5mg q24hr', null, null, null, null, '', ''),
-    drugRow('Cetirizine tab','','10 mg/tab','','2-6yr: 5mg; >6yr: 10mg', null, null, null, null, 'q 12-24 hr', ''),
+    drugRow('Cetirizine syr','','5 mg/5 mL', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, ageYr<2?'q 24 hr':'q 12-24 hr', '6mo-2yr:2.5mg | 2-6yr:5mg | &gt;6yr:10mg'),
+    drugRow('Cetirizine tab','','10 mg/tab', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, '', ''),
     drugRow('CPM syrup','','2 mg/5 mL','0.35 mk/Day','10 kg = ½ ช้อนชา', (0.35*w)/3, null, ((0.35*w)/3*5)/2, null, 'q 8 hr', ''),
     drugRow('CPM tablet','','4 mg/tab','q 6-8 hr','25 kg = ½ tab', (0.35*w)/3, null, ((0.35*w)/3)/4, null, 'q 8 hr', ''),
     drugRow('CPM IV','','10 mg/mL','0.25 mk/Dose','', 0.25*w, null, (0.25*w)/10, null, '', ''),
@@ -914,19 +1379,17 @@ function renderDose(w) {
 
   // Mucolytic
   html += sectionHead('Mucolytic', 'ยาละลายเสมหะ');
-  let mucoRows = `<table class="age-dose-table"><thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-  mucoRows += '<tr><td><span class="drug-name">Bromhexine syr</span><br><span class="drug-brand">(Bisolvon)</span></td><td class="prep">4 mg/5 mL</td>';
-  mucoRows += '<td colspan="8" class="dose-info">&lt;2yr: 1mg tid | 2-5yr: 2mg tid | 5-10yr: 4mg tid | &gt;10yr: 8mg tid</td></tr>';
-  mucoRows += '<tr><td><span class="drug-name">Bromhexine tab</span></td><td class="prep">8 mg/tab</td>';
-  mucoRows += '<td colspan="8" class="dose-info">10 kg = ½ ช้อนชา tid | 25 kg = ½ tab tid</td></tr>';
-  mucoRows += '<tr><td><span class="drug-name">Carbocysteine syr</span><br><span class="drug-brand">(Flemex)</span></td><td class="prep">250 mg/5 mL<br>100 mg/5 mL kids</td>';
-  mucoRows += '<td colspan="8" class="dose-info">&lt;5yr: 125mg tid | 5-12yr: 250mg tid | &gt;12yr: 500mg tid</td></tr>';
-  mucoRows += '<tr><td><span class="drug-name">Carbocysteine lysine</span><br><span class="drug-brand">(Fluifort)</span></td><td class="prep">90 mg/mL</td>';
-  mucoRows += '<td colspan="8" class="dose-info">2-5yr: 2.5mL bid | 5-12yr: 5mL bid | &gt;2yr: 20mL od</td></tr>';
-  mucoRows += '<tr><td><span class="drug-name">Acetylcysteine</span><br><span class="drug-brand">(Fluimucil)</span></td><td class="prep">Sachet 100,200mg<br>Tab 600mg</td>';
-  mucoRows += '<td colspan="8" class="dose-info">½ - 1 sac bid/tid/qid pc</td></tr>';
-  mucoRows += '</tbody></table>';
-  html += mucoRows;
+  const bromDose = ageYr<2?'1 mg':ageYr<5?'2 mg':ageYr<10?'4 mg':'8 mg';
+  const carboSyrDose = ageYr<5?'125 mg':ageYr<12?'250 mg':'500 mg';
+  const carboLysDose = ageYr<5?'2.5 mL':ageYr<12?'5 mL':'20 mL';
+  const carboLysInt = ageYr>=2&&ageYr<=12?'bid':'od';
+  html += makeTable(doseHeaders, [
+    drugRow('Bromhexine syr','(Bisolvon)','4 mg/5 mL',bromDose,'', null, null, null, null, 'tid', '&lt;2yr:1mg | 2-5yr:2mg | 5-10yr:4mg | &gt;10yr:8mg'),
+    drugRow('Bromhexine tab','','8 mg/tab',bromDose,'', null, null, null, null, 'tid', ''),
+    drugRow('Carbocysteine syr','(Flemex)','250 mg/5 mL<br>100 mg/5 mL kids',carboSyrDose,'', null, null, null, null, 'tid', '&lt;5yr:125mg | 5-12yr:250mg | &gt;12yr:500mg'),
+    drugRow('Carbocysteine lysine','(Fluifort)','90 mg/mL',carboLysDose,'', null, null, null, null, carboLysInt, '2-5yr:2.5mL bid | 5-12yr:5mL bid | &gt;12yr:20mL od'),
+    drugRow('Acetylcysteine','(Fluimucil)','Sachet 100,200mg<br>Tab 600mg','½-1 sac','', null, null, null, null, 'bid/tid/qid pc', ''),
+  ]);
 
   // Antitussive
   html += sectionHead('Antitussive', 'ยาแก้ไอ');
@@ -937,31 +1400,27 @@ function renderDose(w) {
 
   // Decongestant
   html += sectionHead('Decongestant', 'ยาลดคัดจมูก');
-  let deconRows = `<table class="age-dose-table"><thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-  deconRows += '<tr><td><span class="drug-name">Oxymetazoline</span><br><span class="drug-brand">(Iliadin)</span></td><td class="prep">Drop 0.025%, 0.05%<br>Spray 0.05%</td>';
-  deconRows += '<td colspan="6" class="dose-info">&lt;6yr: 0.025% | &gt;6yr: 0.05% | 1-2 หยด/puff แต่ละข้าง q8-24hr</td><td class="note" colspan="2">ใช้นาน 3-5 วัน<br>S/E: rhinitis medicamentosa</td></tr>';
-  deconRows += `<tr>${drugRow('Pseudoephedrine','(Maxiphed, Nasolin)','30 mg/5 mL, 60 mg/tab','1 mk/Dose','', w*1, null, (w*1*5)/30, null, 'q 8 hr', '').map(c=>`<td>${c}</td>`).join('')}</tr>`;
-  deconRows += '<tr><td><span class="drug-name">Phenylephrine</span><br><span class="drug-brand">(Dimetapp)</span></td><td class="prep">5mg PE + 2mg BPM/5mL</td>';
-  deconRows += '<td colspan="8" class="dose-info">0.25mg q6-8hr | BPM 0.5 mk/Day | 10 kg = ½ ช้อนชา tid</td></tr>';
-  deconRows += '</tbody></table>';
-  html += deconRows;
+  const oxyConc = ageYr<6?'0.025%':'0.05%';
+  html += makeTable(doseHeaders, [
+    drugRow('Oxymetazoline','(Iliadin)','Drop 0.025%, 0.05%<br>Spray 0.05%',oxyConc,'1-2 หยด/puff แต่ละข้าง', null, null, null, null, 'q 8-24 hr', 'ใช้นาน 3-5 วัน<br>S/E: rhinitis medicamentosa'),
+    drugRow('Pseudoephedrine','(Maxiphed, Nasolin)','30 mg/5 mL, 60 mg/tab','1 mk/Dose','', w*1, null, (w*1*5)/30, null, 'q 8 hr', ''),
+    drugRow('Phenylephrine','(Dimetapp)','5mg PE + 2mg BPM/5mL','0.25 mg','10 kg = ½ ช้อนชา', null, null, null, null, 'q 6-8 hr', 'BPM 0.5 mk/Day'),
+  ]);
 
   // Asthma
   html += sectionHead('Asthma', 'ยาโรคหอบ / พ่น / ขยายหลอดลม');
-  let asthmaRows = `<table><thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-  asthmaRows += '<tr><td><span class="drug-name">Montelukast</span><br><span class="drug-brand">(Singulair, Montek)</span></td><td class="prep">Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg</td>';
-  asthmaRows += '<td colspan="8" class="dose-info">6mo-5yr: 4mg q24hr | 6-14yr: 5mg q24hr | &gt;15yr: 10mg q24hr</td></tr>';
-  asthmaRows += `<tr>${drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.05-0.15 mk/Dose','0.03 mL/kg', null, null, w*0.03, null, 'neb q 20 min<br>x 2-3 doses', 'S/E: tachycardia, hypoK').map(c=>`<td>${c}</td>`).join('')}</tr>`;
-  asthmaRows += '<tr><td></td><td class="prep">Nebule 2.5mg/2.5mL</td><td colspan="8" class="dose-info">&lt;20 kg: ½ neb | &gt;20 kg: 1 neb | ผสม NSS up to 4 mL</td></tr>';
-  asthmaRows += '<tr><td><span class="drug-name">Ipratropium+Fenoterol</span><br><span class="drug-brand">(Berodual)</span></td><td class="prep">500 mcg/neb (4mL)</td>';
-  asthmaRows += '<td colspan="6" class="dose-info">&lt;20 kg: 250 mcg (½ neb) | &gt;20 kg: 500 mcg (1 neb) | q6-8hr</td><td class="note" colspan="2">S/E: dried secretion, antiCholinergic</td></tr>';
-  asthmaRows += '<tr><td><span class="drug-name">Ipratropium+Albuterol</span><br><span class="drug-brand">(Combivent)</span></td><td class="prep">500 mcg/2.5 mL/vial</td>';
-  asthmaRows += '<td colspan="6" class="dose-info">&lt;20 kg: 250 mcg (½ neb) | &gt;20 kg: 500 mcg (1 neb) | q6-8hr | ผสม NSS up to 4 mL</td><td class="note" colspan="2">S/E: dried secretion, antiCholinergic</td></tr>';
-  asthmaRows += '<tr><td><span class="drug-name">Budesonide</span><br><span class="drug-brand">(Pulmicort)</span></td><td class="prep">1 mg/2 mL/respule</td>';
-  asthmaRows += '<td colspan="8" class="dose-info">Attack: 0.5-1mg q20min x3 | Maintenance: 0.5mg bid (MAX 2mg/d) | Croup: 2mg single</td></tr>';
-  asthmaRows += `<tr>${drugRow('Terbutaline','(Bricanyl)','0.5 mg/mL','0.01 mk/Dose','10 mcg/kg IM/SC', w*0.01, null, (w*0.01)/0.5, null, 'IM or SC', 'MAX 0.4 mg').map(c=>`<td>${c}</td>`).join('')}</tr>`;
-  asthmaRows += '</tbody></table>';
-  html += asthmaRows;
+  const montelDose = ageYr<5?'4 mg':ageYr<15?'5 mg':'10 mg';
+  const nebDose = w<20?'½ neb':'1 neb';
+  const ipratDose = w<20?'250 mcg (½ neb)':'500 mcg (1 neb)';
+  html += makeTable(doseHeaders, [
+    drugRow('Montelukast','(Singulair, Montek)','Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg',montelDose,'', null, null, null, null, 'q 24 hr', '6mo-5yr:4mg | 6-14yr:5mg | &gt;15yr:10mg'),
+    drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.05-0.15 mk/Dose','0.03 mL/kg', null, null, w*0.03, null, 'neb q 20 min<br>x 2-3 doses', 'S/E: tachycardia, hypoK'),
+    drugRow('Salbutamol NEB','','Nebule 2.5mg/2.5mL',nebDose,'ผสม NSS up to 4 mL', null, null, null, null, '', '&lt;20kg:½neb | &gt;20kg:1neb'),
+    drugRow('Ipratropium+Fenoterol','(Berodual)','500 mcg/neb (4mL)',ipratDose,'', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
+    drugRow('Ipratropium+Albuterol','(Combivent)','500 mcg/2.5mL/vial',ipratDose,'ผสม NSS up to 4 mL', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
+    drugRow('Budesonide','(Pulmicort)','1 mg/2mL/respule','see note','', null, null, null, null, '', 'Attack:0.5-1mg q20min x3<br>Maint:0.5mg bid (MAX 2mg/d)<br>Croup:2mg single'),
+    drugRow('Terbutaline','(Bricanyl)','0.5 mg/mL','0.01 mk/Dose','10 mcg/kg IM/SC', w*0.01, null, (w*0.01)/0.5, null, 'IM or SC', 'MAX 0.4 mg'),
+  ]);
 
   // Adrenaline
   html += sectionHead('Adrenaline', 'Adrenaline');
@@ -988,32 +1447,32 @@ function renderDose(w) {
 
   // Antacid
   html += sectionHead('Antacid', 'ยาลดกรด');
-  html += makeTable(doseHeaders, [
+  let antacidRows = `<table style="table-layout:fixed">${doseColgroup}<thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  antacidRows += drugRow('Omeprazole IV','','40 mg/amp','0.5-2 mk/Day','1 mk/Dose IV OD', w*1, null, null, null, '', '').map(c=>`<td>${c}</td>`).join('');
+  antacidRows = antacidRows.replace(/<td>/, '<tr><td>') + '</tr>';
+  // Simpler: build all rows
+  antacidRows = `<table style="table-layout:fixed">${doseColgroup}<thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  [
     drugRow('Omeprazole IV','','40 mg/amp','0.5-2 mk/Day','1 mk/Dose IV OD', w*1, null, null, null, '', ''),
     drugRow('Omeprazole tab','','20 mg/tab','PO/IV q12-24hr','', w*0.5, w*2, (w*0.5)/20, (w*2)/20, 'q 24 hr', ''),
     drugRow('Ranitidine IV','','50 mg/amp','2-4 mk/Day','1 mk/Dose IV/PO q12hr', w*1, w*2, null, null, 'q 12 hr', 'MAX 50 mg/dose'),
     drugRow('Ranitidine tab','','150 mg/tab','PO q12hr, IV q8hr','', w*1, w*2, (w*1)/150, (w*2)/150, 'q 12 hr', 'MAX 300 mg/day'),
     drugRow('Famotidine tab','','20 mg/tab','0.5 mk/Dose','PO q12-24hr', w*0.5, null, (w*0.5)/20, null, 'q 12-24 hr', ''),
     drugRow('Alum milk','(Al-Mg Hydroxide)','240 mL/bottle','0.5-1 mL/kg/dose','0.5 mL/kg tid pc', null, null, w*0.5, w*1, 'q 12 hr', 'MAX 30 mL/dose'),
-  ]);
-
-  // Simethicone (age-based)
-  let simeRows = `<table class="age-dose-table"><thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-  simeRows += '<tr><td><span class="drug-name">Simethicone</span><br><span class="drug-brand">(Air-X)</span></td><td class="prep">Drop 40mg/0.6mL<br>Tab 80mg/tab</td>';
-  simeRows += '<td colspan="8" class="dose-info">&lt;2yr: 20mg tid (0.3mL) | 2-12yr: 40mg tid (0.6mL) | &gt;12yr: 40-80mg tid</td></tr>';
-  simeRows += '</tbody></table>';
-  html += simeRows;
+  ].forEach(row => { antacidRows += '<tr>' + row.map(c=>`<td>${c}</td>`).join('') + '</tr>'; });
+  const simeDose = ageYr<2?'20 mg (0.3mL)':ageYr<12?'40 mg (0.6mL)':'40-80 mg';
+  antacidRows += '<tr>' + drugRow('Simethicone','(Air-X)','Drop 40mg/0.6mL<br>Tab 80mg/tab',simeDose,'', null, null, null, null, 'q 8 hr', '&lt;2yr:20mg | 2-12yr:40mg | &gt;12yr:40-80mg').map(c=>`<td>${c}</td>`).join('') + '</tr>';
+  antacidRows += '</tbody></table>';
+  html += antacidRows;
 
   // Laxatives
   html += sectionHead('Laxatives', 'ยาระบาย');
-  html += makeTable(doseHeaders, [
-    drugRow('Lactulose','(Hepalac, Duphalac)','10 mg/5 mL','1-3 mk/Day','1-3 mL/kg hs', w*1, w*3, (w*1*5)/10, (w*3*5)/10, 'q 24 hr / hs', 'อายุ >1 เดือน<br>MAX 60 mL/dose'),
-  ]);
-  let momRows = `<table class="age-dose-table"><thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-  momRows += `<tr><td><span class="drug-name">Milk of Magnesia</span></td><td class="prep"></td>`;
-  momRows += `<td colspan="4" class="dose-info">&lt;2yr: 0.5mL/kg/dose (${r(w*0.5)}mL) | 2-5yr: 5-15mL | 6-11yr: 15-30mL | &gt;12yr: 30-60mL</td><td colspan="4" class="interval">q 24 hr / hs or bid</td></tr>`;
-  momRows += '</tbody></table>';
-  html += momRows;
+  let laxRows = `<table style="table-layout:fixed">${doseColgroup}<thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  laxRows += '<tr>' + drugRow('Lactulose','(Hepalac, Duphalac)','10 mg/5 mL','1-3 mk/Day','1-3 mL/kg hs', w*1, w*3, (w*1*5)/10, (w*3*5)/10, 'q 24 hr / hs', 'อายุ >1 เดือน<br>MAX 60 mL/dose').map(c=>`<td>${c}</td>`).join('') + '</tr>';
+  const momDose = ageYr<2?`0.5mL/kg (${r(w*0.5)}mL)`:ageYr<6?'5-15 mL':ageYr<12?'15-30 mL':'30-60 mL';
+  laxRows += '<tr>' + drugRow('Milk of Magnesia','','','0.5-1 mL/kg/dose',momDose, null, null, null, null, 'q 24 hr / hs or bid', '&lt;2yr:0.5mL/kg | 2-5yr:5-15mL | 6-11yr:15-30mL | &gt;12yr:30-60mL').map(c=>`<td>${c}</td>`).join('') + '</tr>';
+  laxRows += '</tbody></table>';
+  html += laxRows;
 
   // Steroid
   html += sectionHead('Steroid', 'Steroid');
@@ -1043,7 +1502,7 @@ function renderDose(w) {
   html += sectionHead('Procedural Sedation', 'Procedural sedation');
   html += makeTable(doseHeaders, [
     drugRow('Chloral hydrate','','250 mg/5 mL','25-75 mk/Dose','1 mL/kg ก่อนหัตถการ', w*25, w*75, (w*25*5)/250, (w*75*5)/250, '', 'MAX 0.5-2 gm/dose'),
-    drugRow('','','500 mg/5 mL','','ใช้ขนาด 250 mg/5 mL', null, null, null, null, '', ''),
+    drugRow('Chloral hydrate','','500 mg/5 mL','','ใช้ขนาด 250 mg/5 mL', null, null, null, null, '', ''),
     drugRow('Midazolam IV','','5 mg/mL','0.05-0.1 mg/kg','repeat 0.05 q2min', w*0.05, w*0.1, null, null, 'IV', ''),
     drugRow('Midazolam IM','','5 mg/mL','0.1 mg/kg','', w*0.1, null, null, null, 'IM', ''),
     drugRow('Fentanyl','','50 mcg/mL','0.5-1.5 mcg/kg','up to 5 mcg/kg', w*0.5, w*1.5, null, null, 'IV', ''),
@@ -1055,14 +1514,15 @@ function renderDose(w) {
   document.getElementById('tab-dose').innerHTML = html;
 }
 
-function renderATB(w) {
+function renderATB(w, am) {
+  const ageYr = (am || 0) / 12;
   let html = '';
 
   // Penicillins
   html += sectionHead('Penicillins', 'Penicillins');
   html += makeTable(doseHeaders, [
     drugRow('Penicillin G','','1,5 mU/vial','100-250k u/kg/d','q6hr', (w*0.1)/4, (w*0.25)/4, null, null, 'q 6 hr (mU)', 'MAX 24 mU/day'),
-    drugRow('','','','250-450k u/kg/d','q4hr', (w*0.25)/6, (w*0.45)/6, null, null, 'q 4 hr (mU)', ''),
+    drugRow('Penicillin G','','','250-450k u/kg/d','q4hr', (w*0.25)/6, (w*0.45)/6, null, null, 'q 4 hr (mU)', ''),
     drugRow('Penicillin V syr','','125 mg/5 mL','25-75 mk/Day','', (w*25)/3, (w*75)/3, ((w*25)/3*5)/125, ((w*75)/3*5)/125, 'q 8 hr', 'MAX 2 gm/day'),
     drugRow('Penicillin V tab','','250 mg/tab','q 6-8 hr','', (w*25)/3, (w*75)/3, ((w*25)/3)/250, ((w*75)/3)/250, 'q 8 hr', ''),
     drugRow('Cloxacillin IV','','0.5,1 gm/amp','50-100 mk/Day','', (w*50)/4, (w*100)/4, null, null, 'q 6 hr', 'MAX 4 gm/day'),
@@ -1073,7 +1533,7 @@ function renderATB(w) {
     drugRow('Amoxicillin syr','','125, 250 mg/5 mL','40-90 mk/Day','10 kg = 1 ช้อนชา', (w*40)/2, (w*90)/2, ((w*40)/2*5)/250, ((w*90)/2*5)/250, 'q 12 hr', 'MAX 4 gm/day'),
     drugRow('Amoxicillin cap','','500 mg/cap','q 8-12 hr','', (w*40)/2, (w*90)/2, ((w*40)/2)/500, ((w*90)/2)/500, 'q 12 hr', ''),
     drugRow('Amox/Clav IV','(Augmentin)','1.2 gm IV','30-90 mk/Day of Amox','', (w*30)/2, (w*90)/2, null, null, 'q 12 hr', 'MAX 4gm Amox/day'),
-    drugRow('Amox/Clav syr','','228, 457 mg/5 mL','q 8-12 hr','ใช้ 400/57 mg/5 mL', (w*30)/2, (w*90)/2, ((w*30)/2*5)/400, ((w*90)/2*5)/400, 'q 12 hr', ''),
+    drugRow('Amox/Clav syr','','400/57 mg/5 mL','q 8-12 hr','', (w*30)/2, (w*90)/2, ((w*30)/2*5)/400, ((w*90)/2*5)/400, 'q 12 hr', ''),
     drugRow('Amox/Clav tab','','875/125 mg/tab','','', (w*30)/2, (w*90)/2, ((w*30)/2)/875, ((w*90)/2)/875, 'q 12 hr', ''),
     drugRow('Ampicillin','','500,1000 mg/vial','100-200 mk/Day','q 6 hr', (w*100)/4, (w*200)/4, null, null, 'q 6 hr', 'MAX 12 gm/day'),
   ]);
@@ -1124,7 +1584,7 @@ function renderATB(w) {
   html += sectionHead('Quinolones', 'Quinolones');
   html += makeTable(doseHeaders, [
     drugRow('Ciprofloxacin','','250,500 mg/tab','20-40 mk/Day','ใช้ 250mg/tab', (w*20)/2, (w*40)/2, ((w*20)/2)/250, ((w*40)/2)/250, 'q 12 hr', 'MAX 1.5 gm/day'),
-    drugRow('Norfloxacin','','200,400 mg/tab','15-20 mk/Day','ใช้ 200mg/tab', (w*15)/2, (w*20)/2, ((w*15)/2)/200, ((w*20)/2)/200, 'q 12 hr', 'MAX 400 mg/day'),
+    drugRow('Norfloxacin','','100,200,400 mg/tab','15-20 mk/Day','ใช้ 200mg/tab', (w*15)/2, (w*20)/2, ((w*15)/2)/200, ((w*20)/2)/200, 'q 12 hr', 'MAX 400 mg/day'),
   ]);
 
   // Others
@@ -1137,28 +1597,54 @@ function renderATB(w) {
   ]);
 
   // Antivirals
-  html += sectionHead('Antivirals', 'Antivirals');
-  let avRows = `<table><thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-  avRows += '<tr><td><span class="drug-name">Oseltamivir</span></td><td class="prep">75 mg/tab</td>';
-  avRows += '<td class="dose-info" colspan="8">';
-  avRows += `Preterm PMA&lt;38wk: ${r(w*1)}mg bid | PMA38-40wk: ${r(w*1.5)}mg bid | PMA&gt;40wk: ${r(w*3)}mg bid<br>`;
-  avRows += `Term-9mo: ${r(w*3)}mg bid | 9-11mo: ${r(w*3.5)}mg bid<br>`;
-  avRows += '1-12yr: ≤15kg 30mg | 15-23kg 45mg | 23-40kg 60mg | &gt;40kg 75mg bid<br>';
-  avRows += '≥13yr: 75mg bid | Total 10 days</td></tr>';
+  // Oseltamivir dose by age/weight
+  let oselMg;
+  const mo = am || 0;
+  if (mo < 9) oselMg = w*3;
+  else if (mo < 12) oselMg = w*3.5;
+  else if (ageYr >= 13) oselMg = 75;
+  else { // 1-12yr by weight
+    if (w <= 15) oselMg = 30;
+    else if (w <= 23) oselMg = 45;
+    else if (w <= 40) oselMg = 60;
+    else oselMg = 75;
+  }
+  const oselDose = r(oselMg) + ' mg';
+  // Acyclovir HSV dose by age
+  let acyHSVDose;
+  if (mo <= 3) acyHSVDose = r((w*60)/3) + ' mg';
+  else if (ageYr <= 12) acyHSVDose = r((w*30)/3) + '-' + r((w*45)/3) + ' mg';
+  else acyHSVDose = r((w*30)/3) + ' mg';
 
-  avRows += '<tr><td><span class="drug-name">Acyclovir</span></td><td class="prep">200,400,800 mg/tab</td>';
-  avRows += '<td class="dose-info" colspan="8">';
-  avRows += `<b>HSV encephalitis:</b> 0-3mo: ${r((w*60)/3)}mg q8hr IV x21d | 3mo-12yr: ${r((w*30)/3)}-${r((w*45)/3)}mg q8hr IV 14-21d | &gt;12yr: ${r((w*30)/3)}mg q8hr IV<br>`;
-  avRows += `<b>VZV (Chicken pox):</b> PO ${r((w*80)/4)}mg q6hr x5d (MAX 800mg/dose) | IV ${r((w*30)/3)}mg q8hr 7-10d<br>`;
-  avRows += `<b>Herpes zoster:</b> PO ${r((w*80)/5)}mg x5 times 5-7d | IV ${r((w*30)/3)}mg q8hr 7-10d</td></tr>`;
-  avRows += '</tbody></table>';
-  html += avRows;
+  // Find best Oseltamivir preparation: prefer whole tabs, then half, then fewest tabs
+  const oselPreps = [30, 45, 75];
+  const oselBest = oselPreps.reduce((best, p) => {
+    const tabs = oselMg / p;
+    const fracWhole = Math.abs(tabs - Math.round(tabs)); // distance to whole number
+    const fracHalf = Math.abs(tabs - Math.round(tabs * 2) / 2); // distance to nearest 0.5
+    const score = fracWhole < 0.01 ? 0 : fracHalf < 0.01 ? 1 : 2; // 0=whole, 1=half, 2=other
+    if (score < best.score) return {p, score, tabs};
+    if (score === best.score && tabs < best.tabs) return {p, score, tabs}; // fewer tabs
+    return best;
+  }, {p: 0, score: 999, tabs: 999}).p;
+  const oselApprox = (p) => { const t = r(oselMg/p,1); return t + ' tab' + (p === oselBest ? ' ✅' : ''); };
+
+  html += sectionHead('Antivirals', 'Antivirals');
+  html += makeTable(doseHeaders, [
+    drugRow('Oseltamivir','','30 mg/tab',oselDose, oselApprox(30), oselMg, null, null, null, 'bid x10 days', 'Term-9mo:3mk/Dose | 9-11mo:3.5mk/Dose<br>1-12yr: ≤15kg 30mg | 15-23kg 45mg | 23-40kg 60mg | &gt;40kg 75mg'),
+    drugRow('Oseltamivir','','45 mg/tab','', oselApprox(45), null, null, null, null, '', ''),
+    drugRow('Oseltamivir','','75 mg/tab','', oselApprox(75), null, null, null, null, '', ''),
+    drugRow('Acyclovir','','200,400,800 mg/tab','HSV: '+acyHSVDose,'', null, null, null, null, 'q 8 hr IV', `HSV: 0-3mo:${r((w*60)/3)}mg x21d | 3-12yr:${r((w*30)/3)}-${r((w*45)/3)}mg 14-21d`),
+    drugRow('Acyclovir VZV','','','VZV: '+r((w*80)/4)+' mg','', null, null, null, null, 'PO q6hr x5d<br>IV q8hr 7-10d', 'PO MAX 800mg/dose<br>IV:'+r((w*30)/3)+'mg q8hr'),
+    drugRow('Acyclovir Zoster','','','Zoster: '+r((w*80)/5)+' mg','', null, null, null, null, 'PO x5/d 5-7d<br>IV q8hr 7-10d', 'IV:'+r((w*30)/3)+'mg q8hr'),
+  ]);
 
   document.getElementById('tab-atb').innerHTML = html;
 }
 
-function renderFluid(w) {
-  const dehyd = pickerDehyd ? pickerDehyd.getValue().value : 3;
+function renderFluid(w, dehydParam, ageMonths) {
+  const dehyd = dehydParam !== undefined ? dehydParam : (pickerDehyd ? pickerDehyd.getValue().value : 3);
+  const am = ageMonths || 0;
 
   // Maintenance: Holliday-Segar
   let maint;
@@ -1178,29 +1664,63 @@ function renderFluid(w) {
   let html = '';
 
   // IV Concentration guide
+  // Highlight row based on age
+  const hlTdL = (cond) => cond ? ' style="border-top:2px solid var(--warning);border-bottom:2px solid var(--warning);border-left:2px solid var(--warning);border-radius:6px 0 0 6px;"' : '';
+  const hlTdR = (cond) => cond ? ' style="border-top:2px solid var(--warning);border-bottom:2px solid var(--warning);border-right:2px solid var(--warning);border-radius:0 6px 6px 0;"' : '';
+  // Old School: Preterm, Term-1mo, 1-6mo, 6mo-6yr, >6yr
+  const os0 = am === 0;
+  const os1 = am >= 0 && am <= 1;
+  const os2 = am >= 1 && am <= 6;
+  const os3 = am > 6 && am <= 72;
+  const os4 = am > 72;
+  // Current: NB, <1yr, >=1yr
+  const cu0 = am === 0;
+  const cu1 = am > 0 && am < 12;
+  const cu2 = am >= 12;
+
   html += '<div class="fluid-card"><h3>IV Fluid Concentration Guide</h3>';
   html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
   html += '<div><h4 style="font-size:0.85rem;margin-bottom:8px;">Old School</h4><table class="iv-conc-table">';
-  html += '<tr><td>Preterm</td><td>N/5</td></tr>';
-  html += '<tr><td>Term - 1 mo</td><td>N/5</td></tr>';
-  html += '<tr><td>1 - 6 mo</td><td>N/4</td></tr>';
-  html += '<tr><td>6 mo - 6 yr</td><td>N/3</td></tr>';
-  html += '<tr><td>&gt; 6 yr</td><td>N/2</td></tr>';
+  html += `<tr><td${hlTdL(os0)}>Preterm</td><td${hlTdR(os0)}>N/5</td></tr>`;
+  html += `<tr><td${hlTdL(os1)}>Term - 1 mo</td><td${hlTdR(os1)}>N/5</td></tr>`;
+  html += `<tr><td${hlTdL(os2)}>1 - 6 mo</td><td${hlTdR(os2)}>N/4</td></tr>`;
+  html += `<tr><td${hlTdL(os3)}>6 mo - 6 yr</td><td${hlTdR(os3)}>N/3</td></tr>`;
+  html += `<tr><td${hlTdL(os4)}>&gt; 6 yr</td><td${hlTdR(os4)}>N/2</td></tr>`;
   html += '</table></div>';
   html += '<div><h4 style="font-size:0.85rem;margin-bottom:8px;">Current</h4><table class="iv-conc-table">';
-  html += '<tr><td>NB</td><td>N/5</td></tr>';
-  html += '<tr><td>&lt; 1 yr</td><td>N/2</td></tr>';
-  html += '<tr><td>&gt;= 1 yr</td><td>NSS</td></tr>';
+  html += `<tr><td${hlTdL(cu0)}>NB</td><td${hlTdR(cu0)}>N/5</td></tr>`;
+  html += `<tr><td${hlTdL(cu1)}>&lt; 1 yr</td><td${hlTdR(cu1)}>N/2</td></tr>`;
+  html += `<tr><td${hlTdL(cu2)}>&gt;= 1 yr</td><td${hlTdR(cu2)}>NSS</td></tr>`;
   html += '</table></div></div></div>';
 
   // Dehydration assessment
   html += '<div class="fluid-card"><h3>Assessment Level of Dehydration</h3>';
+  // Age-based dehydration thresholds
+  // < 1 yr: 5-10-15%, >= 1 yr: 3-6-9%, > 12 yr: 3-5-7%
+  let mildMax, modMin, modMax, sevMin;
+  let mildLabel, modLabel, sevLabel, ageNote;
+  if (am < 12) {
+    mildMax = 5; modMin = 6; modMax = 10; sevMin = 11;
+    mildLabel = '&lt;5%'; modLabel = '5-10%'; sevLabel = '&gt;10% (15%)';
+    ageNote = '&lt; 1 yr: 5-10-15 % deficit';
+  } else if (am <= 144) {
+    mildMax = 3; modMin = 4; modMax = 6; sevMin = 7;
+    mildLabel = '&lt;3%'; modLabel = '4-6%'; sevLabel = '7-9%';
+    ageNote = '&gt;= 1 yr: 3-6-9 % deficit';
+  } else {
+    mildMax = 3; modMin = 4; modMax = 5; sevMin = 6;
+    mildLabel = '&lt;3%'; modLabel = '4-5%'; sevLabel = '6-7%';
+    ageNote = '&gt; 12 yr: 3-5-7 % deficit';
+  }
+  const mildActive = dehyd > 0 && dehyd <= mildMax ? ' active-level' : '';
+  const modActive = dehyd >= modMin && dehyd <= modMax ? ' active-level' : '';
+  const sevActive = dehyd >= sevMin ? ' active-level' : '';
   html += '<div class="dehydration-grid">';
-  html += '<div class="dehydration-card"><h4>Mild (&lt;3%)</h4><ul><li>No physical signs</li><li>or Thirst</li><li>Dry mucous membranes</li><li>Reduced urine output</li></ul></div>';
-  html += '<div class="dehydration-card"><h4>Moderate (4-6%)</h4><ul><li>Dry mucous membranes</li><li>Reduced urine output</li><li>Tachycardia</li><li>Sunken eyes</li><li>Diminished skin turgor</li><li>Altered neuro status</li></ul></div>';
-  html += '<div class="dehydration-card"><h4>Severe (7-10%)</h4><ul><li>Increased signs from moderate</li><li>Decreased peripheral perfusion</li><li>(cool, mottled, pale, CRT &gt;2s)</li><li>Anuria</li><li>Hypotension</li><li>Circulatory collapse</li></ul></div>';
+  html += `<div class="dehydration-card${mildActive}"><h4>Mild (${mildLabel})</h4><ul><li>No physical signs</li><li><em style="color:var(--warning);">or</em></li><li>Thirst</li><li>Dry mucous membranes</li><li>Reduced urine output</li></ul></div>`;
+  html += `<div class="dehydration-card${modActive}"><h4>Moderate (${modLabel})</h4><ul><li>Dry mucous membranes</li><li>Reduced urine output</li><li>Tachycardia</li><li>Sunken eyes</li><li>Diminished skin turgor</li><li>Altered neuro status<br>(drowsy, irritability)</li></ul></div>`;
+  html += `<div class="dehydration-card${sevActive}"><h4>Severe (${sevLabel})</h4><ul><li>Increased signs from moderate</li><li><em style="color:var(--warning);">plus</em></li><li>Decreased peripheral perfusion</li><li>(cool, mottled, pale, CRT &gt;2s)</li><li>Anuria</li><li>Hypotension</li><li>Circulatory collapse</li></ul></div>`;
   html += '</div>';
-  html += '<div style="font-size:0.8rem;color:var(--text-muted);">&lt; 1 yr: 5-10-15 % deficit | &gt;= 1 yr: 3-6-9 % deficit | &gt; 12 yr: 3-5-7 % deficit</div></div>';
+  html += `<div style="font-size:0.8rem;margin-top:8px;"><span style="color:var(--warning);font-weight:600;">ใช้เกณฑ์: ${ageNote}</span><br><span style="color:var(--text-muted);">&lt; 1 yr: 5-10-15 % | &gt;= 1 yr: 3-6-9 % | &gt; 12 yr: 3-5-7 %</span></div></div>`;
 
   // Calculations
   html += '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">';
@@ -1218,8 +1738,8 @@ function renderFluid(w) {
   document.getElementById('tab-fluid').innerHTML = html;
 }
 
-function renderPALS(w) {
-  const age = pickerPals ? pickerPals.getValue().value : 1;
+function renderPALS(w, palsParam) {
+  const age = palsParam !== undefined ? palsParam : (pickerPals ? pickerPals.getValue().value : 1);
 
   const cuffETT = (age / 4) + 3.5;
   const uncuffETT = (age / 4) + 4;
@@ -1235,13 +1755,14 @@ function renderPALS(w) {
   let html = '';
 
   // Airway info
+  const palsHL = age > 0 ? 'border:2px solid var(--warning);' : '';
   html += '<div class="pals-info">';
-  html += `<div class="pals-card"><div class="label">Cuff ETT #</div><div class="value">${r(cuffETT,1)}</div></div>`;
-  html += `<div class="pals-card"><div class="label">Uncuff ETT #</div><div class="value">${r(uncuffETT,1)}</div></div>`;
-  html += `<div class="pals-card"><div class="label">ETT Depth</div><div class="value">${r(ettDepth,1)}</div><div class="unit">cm</div></div>`;
-  html += `<div class="pals-card"><div class="label">Suction/NG/Foley #</div><div class="value">${r(suction,1)}</div></div>`;
-  html += `<div class="pals-card"><div class="label">ICD Size #</div><div class="value">${r(icd,1)}</div></div>`;
-  html += `<div class="pals-card"><div class="label">Blade Size</div><div class="value">${bladeSize}</div><div class="unit">&lt;10kg=#1, 10-30kg=#2, &gt;30kg=#3</div></div>`;
+  html += `<div class="pals-card" style="${palsHL}"><div class="label">Cuff ETT #</div><div class="value">${r(cuffETT,1)}</div></div>`;
+  html += `<div class="pals-card" style="${palsHL}"><div class="label">Uncuff ETT #</div><div class="value">${r(uncuffETT,1)}</div></div>`;
+  html += `<div class="pals-card" style="${palsHL}"><div class="label">ETT Depth</div><div class="value">${r(ettDepth,1)}</div><div class="unit">cm</div></div>`;
+  html += `<div class="pals-card" style="${palsHL}"><div class="label">Suction/NG/Foley #</div><div class="value">${r(suction,1)}</div></div>`;
+  html += `<div class="pals-card" style="${palsHL}"><div class="label">ICD Size #</div><div class="value">${r(icd,1)}</div></div>`;
+  html += `<div class="pals-card" style="${palsHL}"><div class="label">Blade Size</div><div class="value">${bladeSize}</div><div class="unit">&lt;10kg=#1, 10-30kg=#2, &gt;30kg=#3</div></div>`;
   html += '</div>';
   html += '<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:16px;text-align:center;">Assist ventilation 1 breath q 2-3 sec = RR 20-30/min</div>';
 
@@ -1258,16 +1779,16 @@ function renderPALS(w) {
   html += sectionHead('Defibrillation', 'Defibrillation');
   html += `<div style="margin:8px 0;display:flex;align-items:center;gap:8px;">
     <span style="font-size:0.85rem;color:var(--text-muted);">Shock ครั้งที่:</span>
-    <input type="number" id="shockNum" value="3" min="3" max="20" step="1"
+    <input type="number" id="shockNum" value="1" min="1" max="20" step="1"
       style="width:60px;padding:6px 10px;border:2px solid var(--warning);border-radius:8px;background:var(--section-bg);color:var(--text);font-size:1rem;text-align:center;"
       oninput="updateShock()">
-    <span id="shockResult" style="font-weight:700;color:var(--primary);font-size:1rem;">${cv(w*4*(3-1))} J</span>
-    <span id="shockWarn" style="font-size:0.75rem;color:var(--danger);">${w*4*(3-1)>200?'เกิน MAX 200 J!':''}</span>
+    <span id="shockResult" style="font-weight:700;color:var(--primary);font-size:1rem;">${cv(w*2)} J</span>
+    <span id="shockWarn" style="font-size:0.75rem;color:var(--danger);">${w*2>200?'เกิน MAX 200 J!':''}</span>
   </div>`;
   html += makeTable(['Shock','Energy (J)','Note'], [
     ['1st shock: 2 J/kg', cv(w*2), ''],
     ['2nd shock: 4 J/kg', cv(w*4), ''],
-    ['Subsequent: 4 J/kg x (n-1)', `<span class="calc-val" id="shockCalc">${r(w*4*(3-1))}</span>`, 'MAX 10 J/kg or 200 J'],
+    ['Subsequent: 4 J/kg x (n-1)', `<span class="calc-val" id="shockCalc">${r(w*2)}</span>`, 'MAX 10 J/kg or 200 J'],
     ['MAX energy', cv(w*10), `${w*10 > 200 ? '<span class="note">เกิน 200 J!</span>' : ''}`],
   ]);
 
@@ -1281,8 +1802,8 @@ function renderPALS(w) {
   // Tachycardia
   html += sectionHead('Tachycardia', 'Tachycardia');
   html += makeTable(doseHeaders, [
-    drugRow('Adenosine 1st','','','0.1 mg/kg','MAX 6 mg', w*0.1, null, null, null, '', w*0.1 > 6 ? 'เกิน MAX!' : ''),
-    drugRow('Adenosine 2nd','','','0.2 mg/kg','MAX 12 mg', w*0.2, null, null, null, '', w*0.2 > 12 ? 'เกิน MAX!' : ''),
+    drugRow('Adenosine 1st','','','0.1 mg/kg','MAX 6 mg', w*0.1, 6, null, null, '', w*0.1 > 6 ? 'เกิน MAX!' : ''),
+    drugRow('Adenosine 2nd','','','0.2 mg/kg','MAX 12 mg', w*0.2, 12, null, null, '', w*0.2 > 12 ? 'เกิน MAX!' : ''),
   ]);
 
   // Synchronized cardioversion
@@ -1323,10 +1844,23 @@ function markStale() {
     resultsVisible = false;
     document.getElementById('resultsArea').classList.add('results-hidden');
     document.getElementById('searchBar').classList.remove('visible');
+    document.querySelector('.tabs').classList.add('tabs-hidden');
+    document.getElementById('fixedThead').classList.remove('visible');
     const btn = document.getElementById('calcBtn');
     btn.classList.add('stale');
     btn.textContent = 'CALCULATE';
   }
+}
+
+function addScrollHints() {
+  if (window.innerWidth >= 769) return;
+  document.querySelectorAll('.tab-content').forEach(tc => {
+    if (tc.querySelector('.scroll-hint')) return;
+    const hint = document.createElement('div');
+    hint.className = 'scroll-hint';
+    hint.textContent = '← swipe table →';
+    tc.insertBefore(hint, tc.firstChild);
+  });
 }
 
 function doCalculate() {
@@ -1334,11 +1868,57 @@ function doCalculate() {
   recalcAll();
   document.getElementById('resultsArea').classList.remove('results-hidden');
   document.getElementById('searchBar').classList.add('visible');
+  document.querySelector('.tabs').classList.remove('tabs-hidden');
+  addScrollHints();
   const btn = document.getElementById('calcBtn');
   btn.classList.remove('stale');
   btn.textContent = 'CALCULATED';
   clearSearch();
   document.querySelector('.search-bar').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ===== Fixed table header on scroll =====
+function setupFixedHeader() {
+  const fixedEl = document.getElementById('fixedThead');
+
+  window.addEventListener('scroll', () => {
+    if (!resultsVisible) { fixedEl.classList.remove('visible'); return; }
+    const activeTab = document.querySelector('.tab-content.active');
+    if (!activeTab) { fixedEl.classList.remove('visible'); return; }
+    const tables = activeTab.querySelectorAll('table');
+    const stickyNav = document.getElementById('stickyNav');
+    const stickyTop = stickyNav ? stickyNav.getBoundingClientRect().bottom : 0;
+    let matchTbl = null;
+    let matchThead = null;
+    for (const tbl of tables) {
+      const thead = tbl.querySelector('thead');
+      if (!thead) continue;
+      const theadRect = thead.getBoundingClientRect();
+      const tblRect = tbl.getBoundingClientRect();
+      // thead hidden behind search bar AND table body still visible
+      if (theadRect.bottom < stickyTop && tblRect.bottom > stickyTop) {
+        matchTbl = tbl;
+        matchThead = thead;
+      }
+    }
+    if (matchTbl) {
+      const tblRect2 = matchTbl.getBoundingClientRect();
+      fixedEl.innerHTML = '';
+      const ct = document.createElement('table');
+      // Clone colgroup from original table if exists
+      const origCg = matchTbl.querySelector('colgroup');
+      if (origCg) ct.appendChild(origCg.cloneNode(true));
+      ct.appendChild(matchThead.cloneNode(true));
+      ct.style.width = tblRect2.width + 'px';
+      ct.style.tableLayout = 'fixed';
+      fixedEl.style.top = stickyTop + 'px';
+      fixedEl.style.left = tblRect2.left + 'px';
+      fixedEl.style.right = 'auto';
+      fixedEl.style.width = tblRect2.width + 'px';
+      fixedEl.appendChild(ct);
+    }
+    fixedEl.classList.toggle('visible', !!matchTbl);
+  }, { passive: true });
 }
 
 // ===== Tab switching =====
@@ -1348,9 +1928,144 @@ function switchTab(name) {
   document.getElementById('tab-' + name).classList.add('active');
 }
 
+// ===== Desktop input handlers =====
+function isDesktop() { return window.innerWidth >= 769; }
+
+let weightMode = 'ibw'; // 'ibw' or 'rbw'
+
+let mobileWeightMode = 'ibw';
+let pickerRBW;
+
+function setWeightMode(mode) {
+  weightMode = mode;
+  document.getElementById('modeIBW').classList.toggle('active', mode === 'ibw');
+  document.getElementById('modeRBW').classList.toggle('active', mode === 'rbw');
+  document.querySelectorAll('.ibw-mode-field').forEach(el => el.style.display = mode === 'ibw' ? '' : 'none');
+  document.querySelectorAll('.rbw-mode-field').forEach(el => el.style.display = mode === 'rbw' ? '' : 'none');
+  markStale();
+}
+
+function setWeightModeMobile(mode) {
+  mobileWeightMode = mode;
+  document.getElementById('modeIBWm').classList.toggle('active', mode === 'ibw');
+  document.getElementById('modeRBWm').classList.toggle('active', mode === 'rbw');
+  document.querySelectorAll('.mob-ibw-field').forEach(el => el.style.display = mode === 'ibw' ? '' : 'none');
+  document.querySelectorAll('.mob-rbw-field').forEach(el => el.style.display = mode === 'rbw' ? '' : 'none');
+  markStale();
+}
+
+function deskAgeChanged() {
+  markStale();
+  const range = document.getElementById('deskAgeRange').value;
+  const label = document.getElementById('deskAgeLabel');
+  const ageInput = document.getElementById('deskAge');
+
+  // Set label and constrain min/max based on range
+  if (range === 'nb') {
+    label.textContent = 'NB';
+    ageInput.value = '0';
+    ageInput.min = 0; ageInput.max = 0;
+    ageInput.disabled = true;
+  } else if (range === '3-12mo') {
+    label.textContent = 'Age (mo)';
+    ageInput.min = 3; ageInput.max = 12;
+    ageInput.disabled = false;
+    if (parseFloat(ageInput.value) < 3) ageInput.value = '3';
+    if (parseFloat(ageInput.value) > 12) ageInput.value = '12';
+  } else if (range === '1-6yr') {
+    label.textContent = 'Age (yr)';
+    ageInput.min = 1; ageInput.max = 6;
+    ageInput.disabled = false;
+    if (parseFloat(ageInput.value) < 1) ageInput.value = '1';
+    if (parseFloat(ageInput.value) > 6) ageInput.value = '6';
+  } else if (range === '7-12yr') {
+    label.textContent = 'Age (yr)';
+    ageInput.min = 7; ageInput.max = 12;
+    ageInput.disabled = false;
+    if (parseFloat(ageInput.value) < 7) ageInput.value = '7';
+    if (parseFloat(ageInput.value) > 12) ageInput.value = '12';
+  }
+  deskUpdateIBWCalc();
+}
+
+function deskInputChanged() {
+  markStale();
+}
+
+function deskCalcIBW() {
+  const range = document.getElementById('deskAgeRange').value;
+  const age = parseFloat(document.getElementById('deskAge').value) || 0;
+  // Same formulas as Excel: P8/P9/P10 = age input
+  // Q8 = (age_mo + 9) / 2
+  // Q9 = (age_yr * 2) + 8
+  // Q10 = ((age_yr * 7) - 5) / 2
+  if (range === 'nb') return 3;
+  if (range === '3-12mo') return (age + 9) / 2;
+  if (range === '1-6yr') return (age * 2) + 8;
+  if (range === '7-12yr') return ((age * 7) - 5) / 2;
+  return 3;
+}
+
+function deskUpdateIBWCalc() {
+  const range = document.getElementById('deskAgeRange').value;
+  const ibw = deskCalcIBW();
+  const rangeLabels = { 'nb': 'NB', '3-12mo': '3-12 mo', '1-6yr': '1-6 yr', '7-12yr': '7-12 yr' };
+  const el = document.getElementById('ibwCalcDesk');
+  if (el) el.innerHTML = `<div class="ibw-val">${ibw.toFixed(1)}</div><div class="ibw-unit">kg</div><div class="ibw-range">${rangeLabels[range]}</div>`;
+}
+
+function getDeskValues() {
+  let w;
+  if (weightMode === 'rbw') {
+    w = parseFloat(document.getElementById('deskRBW').value) || 0;
+  } else {
+    w = deskCalcIBW();
+  }
+  return {
+    w: w,
+    pals: parseFloat(document.getElementById('deskPals').value) || 0,
+    dehyd: parseFloat(document.getElementById('deskDehyd').value) || 0
+  };
+}
+
+// ===== Reset =====
+function doReset() {
+  initializing = true;
+  // Reset mobile pickers
+  pickerAge.scrollToIdx(0, true);
+  if (pickerRBW) pickerRBW.scrollToIdx(0, true);
+  pickerPals.scrollToIdx(0, true);
+  pickerDehyd.scrollToIdx(0, true);
+  setWeightModeMobile('ibw');
+  // Reset desktop inputs
+  setWeightMode('ibw');
+  document.getElementById('deskAgeRange').value = 'nb';
+  document.getElementById('deskAge').value = '0';
+  document.getElementById('deskAge').disabled = true;
+  document.getElementById('deskRBW').value = '0';
+  document.getElementById('deskRBWAge').value = '0';
+  document.getElementById('deskPals').value = '0';
+  document.getElementById('deskDehyd').value = '0';
+  deskUpdateIBWCalc();
+  // Reset UI
+  resultsVisible = false;
+  document.getElementById('resultsArea').classList.add('results-hidden');
+  document.getElementById('searchBar').classList.remove('visible');
+  document.querySelector('.tabs').classList.add('tabs-hidden');
+  const btn = document.getElementById('calcBtn');
+  btn.classList.remove('stale');
+  btn.textContent = 'CALCULATE';
+  clearSearch();
+  setTimeout(() => {
+    initializing = false;
+    calcAndUpdateIBW();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 300);
+}
+
 // ===== Defibrillation shock calculator =====
 function updateShock() {
-  const n = parseInt(document.getElementById('shockNum')?.value) || 3;
+  const n = parseInt(document.getElementById('shockNum')?.value) || 1;
   const w = pickerIBW.getValue().value;
   const energy = w * 4 * (n - 1);
   const el = document.getElementById('shockCalc');
@@ -1363,6 +2078,14 @@ function updateShock() {
 
 // ===== Drug search =====
 const allDrugs = [
+  // Drug groups / sections
+  'Antipyretic','Analgesia','Antihistamine','Mucolytic','Antitussive',
+  'Decongestant','Asthma','Antiemetic','Antacid','Laxatives',
+  'Steroid','Anti-epileptic','Procedural sedation',
+  'Penicillins','Cephalosporins','Macrolides','Lincosamides',
+  'Sulfonamides','Quinolones','Antivirals',
+  'Cardiac arrest','Bradycardia','Tachycardia','Defibrillation',
+  'Reversible causes',
   // Antipyretic / Analgesia
   'Paracetamol','Ibuprofen',
   // Antihistamine
@@ -1473,30 +2196,65 @@ function selectAC(name) {
   doSearch();
 }
 
+function clearHighlights() {
+  document.querySelectorAll('tr.drug-highlight').forEach(tr => {
+    tr.classList.remove('drug-highlight', 'drug-highlight-first', 'drug-highlight-last');
+  });
+}
+
 function doSearch() {
   document.getElementById('acList').classList.remove('show');
   const val = document.getElementById('searchInput').value.trim().toLowerCase();
-  document.querySelectorAll('tr.drug-highlight').forEach(tr => tr.classList.remove('drug-highlight'));
+  clearHighlights();
   if (!val) return;
 
-  // Search ALL rows across ALL tabs
-  let firstMatch = null;
-  let firstMatchTab = null;
-  document.querySelectorAll('#resultsArea table tbody tr').forEach(tr => {
-    const text = tr.textContent.toLowerCase();
-    if (text.includes(val)) {
-      tr.classList.add('drug-highlight');
-      if (!firstMatch) {
-        firstMatch = tr;
-        firstMatchTab = tr.closest('.tab-content');
-      }
+  // Auto calculate if not yet calculated
+  if (!resultsVisible) {
+    doCalculate();
+  }
+
+  // Search only in the ACTIVE tab
+  const activeTab = document.querySelector('.tab-content.active');
+  if (!activeTab) return;
+
+  // Check section titles in active tab
+  let sectionMatch = null;
+  activeTab.querySelectorAll('.section-title').forEach(el => {
+    if (el.textContent.toLowerCase().includes(val) && !sectionMatch) {
+      sectionMatch = el;
     }
   });
 
-  // Switch to the tab containing first match
-  if (firstMatch && firstMatchTab) {
-    const tabId = firstMatchTab.id.replace('tab-', '');
-    switchTab(tabId);
+  // Find matching rows in active tab only
+  let firstMatch = null;
+  const matchedRows = [];
+  activeTab.querySelectorAll('table tbody tr').forEach(tr => {
+    const text = tr.textContent.toLowerCase();
+    if (text.includes(val)) {
+      tr.classList.add('drug-highlight');
+      matchedRows.push(tr);
+      if (!firstMatch) firstMatch = tr;
+    }
+  });
+
+  // If section matched but no drug rows matched, scroll to section
+  if (sectionMatch && !firstMatch) {
+    firstMatch = sectionMatch;
+  }
+
+  // Group consecutive rows and mark first/last of each group
+  for (let i = 0; i < matchedRows.length; i++) {
+    const curr = matchedRows[i];
+    const prev = matchedRows[i - 1];
+    const next = matchedRows[i + 1];
+    const isFirstInGroup = !prev || prev.nextElementSibling !== curr;
+    const isLastInGroup = !next || curr.nextElementSibling !== next;
+    if (isFirstInGroup) curr.classList.add('drug-highlight-first');
+    if (isLastInGroup) curr.classList.add('drug-highlight-last');
+  }
+
+  // Scroll to first match (stay in current tab)
+  if (firstMatch) {
     setTimeout(() => firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' }), 100);
   }
 }
@@ -1504,11 +2262,11 @@ function doSearch() {
 function clearSearch() {
   document.getElementById('searchInput').value = '';
   document.getElementById('acList').classList.remove('show');
-  document.querySelectorAll('tr.drug-highlight').forEach(tr => tr.classList.remove('drug-highlight'));
+  clearHighlights();
 }
 
 // ===== Initialize pickers =====
-const defaultAgeIdx = 13; // index 13 = "2" yr in simpleAgeItems (NB,1-11mo,1yr,2yr)
+const defaultAgeIdx = 0; // NB
 pickerAge = new WheelPicker(
   document.getElementById('pickerAge'),
   simpleAgeItems,
@@ -1516,26 +2274,22 @@ pickerAge = new WheelPicker(
   () => calcAndUpdateIBW()
 );
 
-
-const defaultIBWIdx = ibwItems.findIndex(x => x.value === 10); // 10 kg
-pickerIBW = new WheelPicker(
-  document.getElementById('pickerIBW'),
-  ibwItems,
-  defaultIBWIdx,
-  () => { markStale(); recalcAll(); }
-);
+const pickerRBWEl = document.getElementById('pickerRBW');
+if (pickerRBWEl) {
+  pickerRBW = new WheelPicker(pickerRBWEl, ibwItems, 0, () => { markStale(); recalcAll(); });
+}
 
 pickerPals = new WheelPicker(
   document.getElementById('pickerPals'),
   palsItems,
-  1, // 1 yr
+  0, // 0 yr
   () => { markStale(); recalcAll(); }
 );
 
 pickerDehyd = new WheelPicker(
   document.getElementById('pickerDehyd'),
   dehydItems,
-  3, // 3%
+  0, // 0%
   () => { markStale(); recalcAll(); }
 );
 
@@ -1545,6 +2299,8 @@ setTimeout(() => {
   calcAndUpdateIBW();
   recalcAll();
 }, 50);
+
+setupFixedHeader();
 </script>
 </body>
 </html>
