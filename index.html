@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ER Thungsong Pediatric Calculator</title>
+<title>Pediatric Calculator</title>
 <style>
 :root {
   --primary: #60a5fa;
@@ -40,19 +40,64 @@ body {
 .header {
   background: linear-gradient(135deg, var(--header-gradient-1), var(--header-gradient-2));
   color: white;
-  padding: 20px;
+  padding: 24px 20px 18px;
   text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  position: relative;
+  overflow: hidden;
 }
-.header h1 { font-size: 1.4rem; margin-bottom: 4px; }
-.header .subtitle { font-size: 0.8rem; opacity: 0.85; }
+.header::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: -20%;
+  width: 140%;
+  height: 180%;
+  background: radial-gradient(ellipse at 30% 0%, rgba(255,255,255,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 2px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  position: relative;
+}
+.header .header-icon {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+.header .subtitle {
+  font-size: 0.7rem;
+  opacity: 0.6;
+  position: relative;
+}
 .header .warning {
-  background: rgba(255,255,255,0.15);
-  border-radius: 8px;
-  padding: 6px 12px;
-  margin-top: 8px;
-  font-size: 0.75rem;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 8px 16px;
+  margin-top: 10px;
+  font-size: 0.73rem;
   display: inline-block;
+  line-height: 1.5;
+  position: relative;
+}
+.header .warning .warn-label {
+  background: rgba(255,171,64,0.25);
+  color: #ffcc80;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 .input-bar {
@@ -80,11 +125,6 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   text-align: center;
-  height: 30px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  overflow: hidden;
 }
 .picker-group .picker-value {
   font-size: 0.75rem;
@@ -93,6 +133,46 @@ body {
   text-align: center;
   height: 1.2em;
   min-height: 18px;
+}
+
+/* Picker dropdown - inline with label */
+.picker-dropdown {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  cursor: pointer;
+  padding: 0 0 0 2px;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+.picker-label-wrap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  height: 30px;
+  overflow: hidden;
+}
+.picker-dd-arrow {
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  opacity: 0.7;
+  margin-bottom: 1px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.picker-dd-arrow select {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 /* iOS-style wheel picker */
@@ -266,11 +346,25 @@ body {
 .rev-add-bar { display:flex; gap:8px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
 .rev-add-bar select { flex:1; min-width:200px; padding:10px; border:2px solid #ffa726; border-radius:10px; background:var(--section-bg); color:var(--text); font-size:0.85rem; }
 .rev-add-btn { padding:10px 16px; background:#ffa726; color:#000; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.85rem; }
-.rev-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; position:relative; }
-.rev-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.rev-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; position:relative; overflow:hidden; }
+.rev-card[style*="border-left"] { border-left-width:5px !important; border-radius:0 12px 12px 0; }
+.rev-card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+.rev-card-remove { position:absolute; top:10px; right:10px; }
 .rev-card-name { font-weight:600; font-size:0.9rem; }
 .rev-card-prep { font-size:0.75rem; color:var(--text-muted); }
-.rev-card-remove { background:none; border:none; color:var(--danger); cursor:pointer; font-size:1.2rem; padding:4px 8px; }
+.rev-card-remove { background:none; border:2px solid var(--danger); color:var(--danger); cursor:pointer; font-size:0.85rem; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; line-height:1; }
+.rev-card-remove:active { background:var(--danger); color:white; }
+.rev-search-panel { background:var(--card); border:1px solid #ffa726; border-radius:8px; padding:8px; margin-bottom:8px; }
+.rev-search-header { display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:0.75rem; margin-bottom:4px; color:#ffa726; }
+.rev-search-close { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.9rem; padding:2px 4px; }
+.rev-search-list { max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:2px; margin-bottom:6px; }
+.rev-search-item { display:flex; align-items:center; gap:6px; padding:5px 8px; border-radius:6px; background:var(--section-bg); cursor:pointer; font-size:0.75rem; }
+.rev-search-item:hover { background:var(--border); }
+.rev-search-item input[type=checkbox] { accent-color:#ffa726; width:15px; height:15px; flex-shrink:0; }
+.rev-search-name { font-weight:600; }
+.rev-search-prep { color:var(--text-muted); font-size:0.65rem; }
+.rev-search-confirm { width:100%; padding:7px; border:none; border-radius:6px; background:#ffa726; color:#000; font-weight:700; font-size:0.75rem; cursor:pointer; }
+.rev-search-confirm:active { background:#ff9800; }
 .rev-input-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
 .rev-input { width:100px; padding:8px; border:2px solid var(--border); border-radius:8px; background:var(--section-bg); color:var(--text); font-size:1rem; text-align:center; }
 .rev-input:focus { border-color:#ffa726; outline:none; }
@@ -305,6 +399,8 @@ body {
 
 /* Checkbox in drug tables */
 .drug-chk { width:16px; height:16px; cursor:pointer; accent-color:#ffa726; }
+td:has(.drug-chk) { cursor:pointer; }
+.calc-placeholder { text-align:center; padding:60px 20px; color:var(--text-muted); font-size:0.9rem; opacity:0.7; }
 
 /* Scroll to top button */
 .scroll-top-btn {
@@ -543,7 +639,7 @@ tbody tr:hover { background: var(--section-bg); }
   top: 0;
   left: 0;
   right: 0;
-  z-index: 200;
+  z-index: 40;
   background: var(--section-bg);
   border-bottom: 2px solid var(--primary);
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -587,19 +683,19 @@ tbody tr:hover { background: var(--section-bg); }
   top: 100%;
   left: 0; right: 0;
   background: var(--card);
-  border: 2px solid var(--primary);
+  border: 1px solid var(--primary);
   border-top: none;
-  border-radius: 0 0 10px 10px;
-  max-height: 200px;
+  border-radius: 0 0 8px 8px;
+  max-height: 150px;
   overflow-y: auto;
   z-index: 60;
   display: none;
 }
 .autocomplete-list.show { display: block; }
 .autocomplete-item {
-  padding: 8px 16px;
+  padding: 5px 12px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.78rem;
   color: var(--text);
   border-bottom: 1px solid var(--border);
 }
@@ -644,10 +740,10 @@ tr.drug-highlight td {
   border-right: none;
   border-bottom: none;
 }
-tr.drug-highlight td:first-child { border-left: 3px solid var(--warning) !important; }
-tr.drug-highlight td:last-child { border-right: 3px solid var(--warning) !important; }
-tr.drug-highlight-first td { border-top: 3px solid var(--warning) !important; }
-tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; }
+tr.drug-highlight td:first-child { border-left: 3px solid #00bfa5 !important; }
+tr.drug-highlight td:last-child { border-right: 3px solid #00bfa5 !important; }
+tr.drug-highlight-first td { border-top: 3px solid #00bfa5 !important; }
+tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 
 .results-hidden .tab-content { display: none !important; }
 .tabs-hidden { opacity: 0.3; pointer-events: none; }
@@ -689,6 +785,14 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
   display: flex;
   flex-direction: column;
   gap: 6px;
+  align-items: center;
+}
+.desk-val {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-align: center;
+  width: 100%;
 }
 .desk-field label {
   font-size: 0.75rem;
@@ -707,6 +811,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
   width: 120px;
   outline: none;
   transition: border-color 0.2s;
+  text-align: center;
 }
 .desk-field input:focus, .desk-field select:focus {
   border-color: var(--primary);
@@ -768,8 +873,9 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
 
 /* ===== Responsive: Desktop ===== */
 @media (min-width: 1024px) {
-  .header { padding: 24px 40px; }
-  .header h1 { font-size: 1.6rem; }
+  .header { padding: 28px 40px 22px; }
+  .header h1 { font-size: 1.7rem; }
+  .header .header-icon { font-size: 2rem; }
   .input-bar { padding: 20px 40px; justify-content: center; }
   .tab-content { padding: 20px 40px; max-width: 1400px; margin: 0 auto; }
   table { font-size: 0.85rem; }
@@ -786,10 +892,11 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
 
 /* ===== Responsive: Mobile ===== */
 @media (max-width: 768px) {
-  .header { padding: 14px 12px; }
-  .header h1 { font-size: 1.05rem; }
-  .header .subtitle { font-size: 0.7rem; }
-  .header .warning { font-size: 0.65rem; padding: 4px 8px; }
+  .header { padding: 16px 12px 12px; }
+  .header h1 { font-size: 1.15rem; }
+  .header .header-icon { font-size: 1.4rem; margin-bottom: 2px; }
+  .header .subtitle { font-size: 0.62rem; }
+  .header .warning { font-size: 0.65rem; padding: 6px 12px; }
 
   .input-bar {
     padding: 12px;
@@ -862,9 +969,9 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
 <body>
 
 <div class="header">
-  <h1>ER Thungsong Pediatric Calculator</h1>
-  <div class="subtitle">จัดทำเพื่อใช้งานภายในห้องฉุกเฉิน โรงพยาบาลทุ่งสง</div>
-  <div class="warning">Beta version - กรุณา re-check dose ซ้ำ | หากพบข้อผิดพลาด แจ้งแพทย์ณัฐภัทร</div>
+  <h1>Pediatric Calculator</h1>
+  <div class="warning"><span class="warn-label">BETA V.3</span>กรุณา re-check dose ซ้ำ<br>หากพบข้อผิดพลาด แจ้งแพทย์ธนกฤต</div>
+  <div class="subtitle">Source: ER TSH Ped Cal, Rx QSNICH</div>
 </div>
 
 <div class="input-bar">
@@ -934,12 +1041,12 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
     </div>
     <!-- IBW mode: Age picker -->
     <div class="picker-group mob-ibw-field">
-      <div class="picker-label">Age</div>
+      <div class="picker-label-wrap"><span class="picker-label">Age</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddAge" onchange="ddSelect('age', this.value)"></select></label></div>
       <div class="wheel-picker yellow-border" id="pickerAge"></div>
       <div class="picker-value" id="ageRangeLabel">NB</div>
     </div>
     <div class="picker-group mob-ibw-field">
-      <div class="picker-label">IBW from Age</div>
+      <div class="picker-label-wrap"><span class="picker-label">IBW from Age</span></div>
       <div class="ibw-display" id="ibwCalc">
         <div class="ibw-val">3.0</div>
       </div>
@@ -947,23 +1054,23 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
     </div>
     <!-- RBW mode: BW picker + Age picker -->
     <div class="picker-group mob-rbw-field" style="display:none;">
-      <div class="picker-label">Real BW (kg)</div>
+      <div class="picker-label-wrap"><span class="picker-label">Real BW (kg)</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddRBW" onchange="ddSelect('rbw', this.value)"></select></label></div>
       <div class="wheel-picker green-border" id="pickerRBW"></div>
       <div class="picker-value" id="rbwPickerVal">0 kg</div>
     </div>
     <div class="picker-group mob-rbw-field" style="display:none;">
-      <div class="picker-label" style="color:var(--warning)">Age</div>
+      <div class="picker-label-wrap"><span class="picker-label" style="color:var(--warning)">Age</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddRBWAge" onchange="ddSelect('rbwAge', this.value)"></select></label></div>
       <div class="wheel-picker yellow-border" id="pickerRBWAge"></div>
       <div class="picker-value" id="rbwAgeLabel">NB</div>
     </div>
     <!-- Common -->
     <div class="picker-group">
-      <div class="picker-label">% Dehydration</div>
+      <div class="picker-label-wrap"><span class="picker-label">% Dehydration</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddDehyd" onchange="ddSelect('dehyd', this.value)"></select></label></div>
       <div class="wheel-picker red-border" id="pickerDehyd"></div>
       <div class="picker-value" id="dehydPickerVal">3%</div>
     </div>
     <div class="picker-group">
-      <div class="picker-label" style="color:var(--pink)">Age PALS (yr)</div>
+      <div class="picker-label-wrap"><span class="picker-label" style="color:var(--pink)">Age PALS (yr)</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddPals" onchange="ddSelect('pals', this.value)"></select></label></div>
       <div class="wheel-picker pink-border" id="pickerPals"></div>
       <div class="picker-value" id="palsPickerVal">1 yr</div>
     </div>
@@ -995,7 +1102,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
   <div class="tab" onclick="switchTab('atb')">Pediatric ATB</div>
   <div class="tab" onclick="switchTab('fluid')">IV Fluid</div>
   <div class="tab tab-pals" onclick="switchTab('pals')">PALS</div>
-  <div class="tab tab-reverse" onclick="switchTab('reverse')">Reverse Dose <span class="rev-badge" id="revBadge" style="display:none">0</span></div>
+  <div class="tab tab-reverse" onclick="switchTab('reverse')">Reverse <span class="rev-badge" id="revBadge" style="display:none">0</span></div>
 </div>
 </div>
 
@@ -1003,10 +1110,10 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
 
 <div id="resultsArea" class="results-hidden">
 
-<div id="tab-dose" class="tab-content active"></div>
-<div id="tab-atb" class="tab-content"></div>
-<div id="tab-fluid" class="tab-content"></div>
-<div id="tab-pals" class="tab-content"></div>
+<div id="tab-dose" class="tab-content active"><div class="calc-placeholder">กรอกอายุ / น้ำหนัก แล้วกด <strong>CALCULATE</strong></div></div>
+<div id="tab-atb" class="tab-content"><div class="calc-placeholder">กรอกอายุ / น้ำหนัก แล้วกด <strong>CALCULATE</strong></div></div>
+<div id="tab-fluid" class="tab-content"><div class="calc-placeholder">กรอกอายุ / น้ำหนัก แล้วกด <strong>CALCULATE</strong></div></div>
+<div id="tab-pals" class="tab-content"><div class="calc-placeholder">กรอกอายุ / น้ำหนัก แล้วกด <strong>CALCULATE</strong></div></div>
 <div id="tab-reverse" class="tab-content"></div>
 </div><!-- /resultsArea -->
 
@@ -1271,8 +1378,7 @@ class WheelPicker {
             targetVal = parseFloat(yMatch[1]) * 12;
           } else {
             targetVal = parseFloat(raw);
-            if (!isNaN(targetVal) && targetVal <= 11) targetVal = targetVal; // months
-            else if (!isNaN(targetVal)) targetVal = targetVal * 12; // years
+            if (!isNaN(targetVal) && targetVal > 11) targetVal = targetVal * 12; // years → months
           }
           if (!isNaN(targetVal)) {
             this.items.forEach((item, i) => {
@@ -1431,6 +1537,7 @@ function recalcAll() {
     document.getElementById('palsPickerVal').textContent = palsAge + ' yr';
     document.getElementById('dehydPickerVal').textContent = dehyd + '%';
   }
+  window._currentW = w;
   renderDose(w, ageMonths);
   renderATB(w, ageMonths);
   renderFluid(w, dehyd, ageMonths);
@@ -1584,7 +1691,7 @@ function makeTable(headers, rows) {
     const prepText = row[1].replace(/<[^>]*>/g, '').trim();
     const drugId = findDrugId(drugName, prepText);
     const chk = drugId ? `<input type="checkbox" class="drug-chk" data-drug-id="${drugId}" ${selectedDrugs.has(drugId)?'checked':''} onchange="toggleDrugSelect(this)">` : '';
-    return `<tr>${isDose ? `<td style="padding:2px;text-align:center">${chk}</td>` : ''}` + row.map(c => `<td>${c}</td>`).join('') + '</tr>';
+    return `<tr>${isDose ? `<td style="padding:2px;text-align:center" onclick="if(event.target.classList.contains('drug-chk'))return;var c=this.querySelector('.drug-chk');if(c){c.checked=!c.checked;toggleDrugSelect(c);}">${chk}</td>` : ''}` + row.map(c => `<td>${c}</td>`).join('') + '</tr>';
   }).join('');
   return h + '</tbody></table>';
 }
@@ -1918,7 +2025,7 @@ function renderDose(w, am) {
     drugRow('Ranitidine IV','','50 mg/amp','2-4 mk/Day','1 mk/Dose IV/PO q12hr', w*1, w*2, null, null, 'q 12 hr', 'MAX 50 mg/dose'),
     drugRow('Ranitidine tab','','150 mg/tab','PO q12hr, IV q8hr','', w*1, w*2, (w*1)/150, (w*2)/150, 'q 12 hr', 'MAX 300 mg/day'),
     drugRow('Famotidine tab','','20 mg/tab','0.5 mk/Dose','PO q12-24hr', w*0.5, null, (w*0.5)/20, null, 'q 12-24 hr', ''),
-    drugRow('Alum milk','(Al-Mg Hydroxide)','240 mL/bottle','0.5-1 mL/kg/dose','0.5 mL/kg tid pc', null, null, w*0.5, w*1, 'q 12 hr', 'MAX 30 mL/dose'),
+    drugRow('Alum milk','(Al-Mg Hydroxide)','240 mL/bottle','0.5-1 mL/kg/dose','0.5 mL/kg tid pc', null, null, w*0.5, w*1, 'q 6-8 hr', 'MAX 30 mL/dose'),
   ].forEach(row => { antacidRows += makeRowHtml(row); });
   const simeDose = ageYr<2?'20 mg (0.3mL)':ageYr<12?'40 mg (0.6mL)':'40-80 mg';
   antacidRows += makeRowHtml(drugRow('Simethicone','(Air-X)','Drop 40mg/0.6mL',simeDose,'', null, null, null, null, 'q 8 hr', '&lt;2yr:20mg | 2-12yr:40mg | &gt;12yr:40-80mg'));
@@ -2079,7 +2186,9 @@ function renderATB(w, am) {
   // Oseltamivir dose by age/weight
   let oselMg;
   const mo = am || 0;
-  if (mo < 9) oselMg = w*3;
+  if (mo === 0 && w < 2) oselMg = w*1;        // Preterm PMA <38wk approximation
+  else if (mo === 0 && w < 3) oselMg = w*1.5; // Preterm PMA 38-40wk
+  else if (mo < 9) oselMg = w*3;
   else if (mo < 12) oselMg = w*3.5;
   else if (ageYr >= 13) oselMg = 75;
   else { // 1-12yr by weight
@@ -2116,7 +2225,7 @@ function renderATB(w, am) {
 
   html += sectionHead('Antivirals', 'Antivirals');
   html += makeTable(doseHeaders, [
-    drugRow('Oseltamivir','','30 mg/tab',oselDose, oselApprox(30), oselMg, null, null, null, 'bid x10 days', 'Term-9mo:3mk/Dose | 9-11mo:3.5mk/Dose<br>1-12yr: ≤15kg 30mg | 15-23kg 45mg | 23-40kg 60mg | &gt;40kg 75mg'),
+    drugRow('Oseltamivir','','30 mg/tab',oselDose, oselApprox(30), oselMg, null, null, null, 'bid x10 days', 'Preterm PMA&lt;38wk:1mk | 38-40wk:1.5mk | &gt;40wk:3mk<br>Term-9mo:3mk/Dose | 9-11mo:3.5mk/Dose<br>1-12yr: ≤15kg 30mg | 15-23kg 45mg | 23-40kg 60mg | &gt;40kg 75mg'),
     drugRow('Oseltamivir','','45 mg/tab','', oselApprox(45), null, null, null, null, '', ''),
     drugRow('Oseltamivir','','75 mg/tab','', oselApprox(75), null, null, null, null, '', ''),
     // Acyclovir IV
@@ -2159,8 +2268,8 @@ function renderFluid(w, dehydParam, ageMonths) {
   const hlTdR = (cond) => cond ? ' style="border-top:2px solid var(--warning);border-bottom:2px solid var(--warning);border-right:2px solid var(--warning);border-radius:0 6px 6px 0;"' : '';
   // Old School: Preterm, Term-1mo, 1-6mo, 6mo-6yr, >6yr
   const os0 = am === 0;
-  const os1 = am >= 0 && am <= 1;
-  const os2 = am >= 1 && am <= 6;
+  const os1 = am > 0 && am <= 1;
+  const os2 = am > 1 && am <= 6;
   const os3 = am > 6 && am <= 72;
   const os4 = am > 72;
   // Current: NB, <1yr, >=1yr
@@ -2169,7 +2278,7 @@ function renderFluid(w, dehydParam, ageMonths) {
   const cu2 = am >= 12;
 
   html += '<div class="fluid-card"><h3>IV Fluid Concentration Guide</h3>';
-  html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">';
+  html += '<div style="display:flex;flex-direction:column;gap:16px;">';
   html += '<div><h4 style="font-size:0.85rem;margin-bottom:8px;">Old School</h4><table class="iv-conc-table">';
   html += `<tr><td${hlTdL(os0)}>Preterm</td><td${hlTdR(os0)}>N/5</td></tr>`;
   html += `<tr><td${hlTdL(os1)}>Term - 1 mo</td><td${hlTdR(os1)}>N/5</td></tr>`;
@@ -2269,9 +2378,11 @@ function renderPALS(w, palsParam) {
   html += sectionHead('Defibrillation', 'Defibrillation');
   html += `<div style="margin:8px 0;display:flex;align-items:center;gap:8px;">
     <span style="font-size:0.85rem;color:var(--text-muted);">Shock ครั้งที่:</span>
+    <button class="spin-btn" onclick="spinShock(-1)">−</button>
     <input type="number" id="shockNum" value="1" min="1" max="20" step="1"
       style="width:60px;padding:6px 10px;border:2px solid var(--warning);border-radius:8px;background:var(--section-bg);color:var(--text);font-size:1rem;text-align:center;"
       oninput="updateShock()">
+    <button class="spin-btn" onclick="spinShock(1)">+</button>
     <span id="shockResult" style="font-weight:700;color:var(--primary);font-size:1rem;">${cv(w*2)} J</span>
     <span id="shockWarn" style="font-size:0.75rem;color:var(--danger);">${w*2>200?'เกิน MAX 200 J!':''}</span>
   </div>`;
@@ -2350,6 +2461,16 @@ function addScrollHints() {
     hint.className = 'scroll-hint';
     hint.textContent = '← swipe table →';
     tc.insertBefore(hint, tc.firstChild);
+    // Hide after first horizontal scroll
+    let hidden = false;
+    tc.addEventListener('scroll', () => {
+      if (!hidden && tc.scrollLeft > 10) {
+        hint.style.transition = 'opacity 0.5s';
+        hint.style.opacity = '0';
+        setTimeout(() => hint.style.display = 'none', 500);
+        hidden = true;
+      }
+    }, { passive: true });
   });
 }
 
@@ -2428,6 +2549,10 @@ function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', tabNames[i] === name));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('acList').classList.remove('show');
+  const panel = document.getElementById('revSearchPanel');
+  if (panel) panel.remove();
+  clearHighlights();
   if (name === 'reverse') renderReverseDose();
 }
 
@@ -2485,7 +2610,7 @@ function renderReverseDose() {
     opts += '</optgroup>';
   });
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = localToday();
   const gStart = document.getElementById('disp-start-global')?.value || today;
   const gDays = document.getElementById('disp-days-global')?.value || '';
   const gEnd = document.getElementById('disp-end-global')?.value || '';
@@ -2508,16 +2633,28 @@ function renderReverseDose() {
           oninput="onGlobalDaysChange()">
         <button class="spin-btn" onclick="spinDays(1)">+</button>
       </div>
-      <span class="rev-disp-or">วัน &nbsp;หรือ&nbsp;</span>
+      <span class="rev-disp-or">วัน</span>
+    </div>
+    <div class="rev-disp-row">
       <label>นัดกลับ:</label>
       <input type="date" class="rev-disp-date" id="disp-end-global" value="${gEnd}" onchange="onGlobalEndChange()">
       <button class="reset-btn" onclick="resetGlobalDate()" style="padding:6px 12px;font-size:0.7rem;height:auto">RESET</button>
     </div>
   </div>`;
 
+  const catColors = {
+    'Antipyretic':'#66bb6a','Antihistamine':'#42a5f5','Mucolytic':'#78909c','Antitussive':'#78909c',
+    'Decongestant':'#ab47bc','Asthma':'#26c6da','Adrenaline':'#ef5350','Antiemetic':'#ffa726',
+    'Antacid':'#8d6e63','Laxatives':'#a1887f','Steroid':'#ec407a','Anti-epileptic':'#7e57c2',
+    'Sedation':'#5c6bc0','Penicillins':'#29b6f6','Cephalosporins':'#26a69a','Macrolides':'#9ccc65',
+    'Lincosamides':'#d4e157','Sulfonamides':'#ffca28','Quinolones':'#ff7043','Others':'#bdbdbd',
+    'Antivirals':'#ce93d8'
+  };
+
   if (selectedDrugs.size === 0) {
     html += '<div class="rev-empty">ยังไม่ได้เลือกยา<br>ติ๊กเลือกจากตาราง Dose/ATB หรือเลือกจาก dropdown ด้านบน</div>';
   } else {
+    html += '<div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin:12px 0 6px;padding-left:4px;">รายการยา</div>';
     selectedDrugs.forEach(id => {
       const drug = drugRegistry.find(d => d.id === id);
       if (!drug) return;
@@ -2528,11 +2665,12 @@ function renderReverseDose() {
       const ivText = drugIntervals[id] || '';
       const ivOptions = intervalToOptions(ivText);
       const existingFreq = document.querySelector('#disp-freq-' + id)?.value || String(ivOptions[0].value);
+      const catColor = catColors[drug.cat] || '#607d8b';
 
-      html += `<div class="rev-card">
+      html += `<div class="rev-card" style="border-left:4px solid ${catColor};">
         <div class="rev-card-header">
           <div>
-            <div class="rev-card-name">${drug.name}</div>
+            <div class="rev-card-name">${drug.name} <span style="font-size:0.6rem;font-weight:400;color:${catColor};opacity:0.8;">${drug.cat}</span></div>
             <div class="rev-card-prep">${drug.prep}</div>
           </div>
           <button class="rev-card-remove" onclick="removeDrugFromReverse('${id}')" title="ลบ">✕</button>
@@ -2548,7 +2686,20 @@ function renderReverseDose() {
           <span class="rev-unit">${drug.unit}</span>
         </div>
         <div id="${resultId}"></div>
-        ${drug.minD > 0 ? `<div class="rev-range">Safe range: ${drug.minD}–${drug.maxD} mg/kg/dose</div>` : ''}
+        ${drug.minD > 0 ? (function(){
+          const minMg = drug.minD * w, maxMg = drug.maxD * w;
+          let minShow, maxShow, u = drug.unit;
+          if (u === 'mL') {
+            minShow = ((minMg * drug.concVol) / drug.concMg).toFixed(1);
+            maxShow = ((maxMg * drug.concVol) / drug.concMg).toFixed(1);
+          } else if (u === 'tab' || u === 'cap') {
+            minShow = ((minMg) / drug.concMg).toFixed(1);
+            maxShow = ((maxMg) / drug.concMg).toFixed(1);
+          } else {
+            minShow = minMg.toFixed(1); maxShow = maxMg.toFixed(1); u = 'mg';
+          }
+          return `<div class="rev-range">Min: <strong>${minShow}</strong> ${u} — Max: <strong>${maxShow}</strong> ${u}<br>Safe range: ${drug.minD}–${drug.maxD} mg/kg/dose</div>`;
+        })() : ''}
         <div class="rev-dispense" id="${dispId}">
           <div class="rev-disp-row">
             <label>Interval:</label>
@@ -2677,12 +2828,12 @@ function intervalToOptions(iv) {
   if (s === 'q 8-12 hr' || s === 'q 8-12hr') return [{label:'q8hr (3x)', value:3},{label:'q12hr (2x)', value:2}];
   if (s === 'q 12-24 hr') return [{label:'q12hr (2x)', value:2},{label:'q24hr (1x)', value:1}];
   if (s === 'bid-qid') return [{label:'bid (2x)', value:2},{label:'tid (3x)', value:3},{label:'qid (4x)', value:4}];
-  // Fixed intervals
-  if (s.includes('q 4 hr') || s === 'q 4 hr') return [{label:'q4hr (6x)', value:6}];
-  if (s.includes('q 6 hr') || s === 'q 6 hr') return [{label:'q6hr (4x)', value:4}];
-  if (s.includes('q 8 hr') || s === 'q 8 hr' || s === 'tid') return [{label:'q8hr (3x)', value:3}];
-  if (s.includes('q 12 hr') || s === 'q 12 hr' || s === 'bid') return [{label:'q12hr (2x)', value:2}];
-  if (s.includes('q 24 hr') || s === 'q 24 hr' || s === 'od') return [{label:'q24hr (1x)', value:1}];
+  // Fixed intervals (use exact match to avoid substring collision e.g. "q 4 hr" inside "q 4-6 hr")
+  if (s === 'q 4 hr') return [{label:'q4hr (6x)', value:6}];
+  if (s === 'q 6 hr') return [{label:'q6hr (4x)', value:4}];
+  if (s === 'q 8 hr' || s === 'tid') return [{label:'q8hr (3x)', value:3}];
+  if (s === 'q 12 hr' || s === 'bid') return [{label:'q12hr (2x)', value:2}];
+  if (s === 'q 24 hr' || s === 'od') return [{label:'q24hr (1x)', value:1}];
   if (s === 'qid') return [{label:'qid (4x)', value:4}];
   if (s === 'single' || s === 'prn') return [{label:'prn (1x)', value:1}];
   if (s.includes('tid-5x')) return [{label:'tid (3x)', value:3},{label:'qid (4x)', value:4},{label:'5x/d', value:5}];
@@ -2708,8 +2859,8 @@ function updateDispense(drugId) {
   }
   const startVal = document.getElementById('disp-start-global')?.value;
   if (startVal && days) {
-    const endDate = new Date(startVal);
-    endDate.setDate(endDate.getDate() + days - 1);
+    const [sy,sm,sd] = startVal.split('-').map(Number);
+    const endDate = new Date(sy, sm - 1, sd + days - 1);
     resultHtml += `<br>วันสิ้นสุดยา: ${formatDateThai(endDate)}`;
   }
   resultHtml += '</div>';
@@ -2724,9 +2875,10 @@ function onGlobalDaysChange() {
   const days = parseInt(document.getElementById('disp-days-global')?.value) || 0;
   const startVal = document.getElementById('disp-start-global')?.value;
   if (days > 0 && startVal) {
-    const endDate = new Date(startVal);
-    endDate.setDate(endDate.getDate() + days - 1);
-    document.getElementById('disp-end-global').value = endDate.toISOString().split('T')[0];
+    const [sy,sm,sd] = startVal.split('-').map(Number);
+    const endDate = new Date(sy, sm - 1, sd + days - 1);
+    const ey = endDate.getFullYear(), em = String(endDate.getMonth()+1).padStart(2,'0'), ed = String(endDate.getDate()).padStart(2,'0');
+    document.getElementById('disp-end-global').value = `${ey}-${em}-${ed}`;
   }
   updateAllDispense();
 }
@@ -2735,8 +2887,10 @@ function onGlobalEndChange() {
   const startVal = document.getElementById('disp-start-global')?.value;
   const endVal = document.getElementById('disp-end-global')?.value;
   if (startVal && endVal) {
-    const start = new Date(startVal);
-    const end = new Date(endVal);
+    const [sy,sm,sd] = startVal.split('-').map(Number);
+    const [ey,em,ed] = endVal.split('-').map(Number);
+    const start = new Date(sy, sm - 1, sd);
+    const end = new Date(ey, em - 1, ed);
     const diffDays = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
     if (diffDays > 0) document.getElementById('disp-days-global').value = diffDays;
   }
@@ -2762,10 +2916,13 @@ function spinDays(delta) {
 }
 
 function resetGlobalDate() {
-  const today = new Date().toISOString().split('T')[0];
-  document.getElementById('disp-start-global').value = today;
-  document.getElementById('disp-days-global').value = '';
-  document.getElementById('disp-end-global').value = '';
+  const today = localToday();
+  const el1 = document.getElementById('disp-start-global');
+  const el2 = document.getElementById('disp-days-global');
+  const el3 = document.getElementById('disp-end-global');
+  if (el1) el1.value = today;
+  if (el2) el2.value = '';
+  if (el3) el3.value = '';
   updateAllDispense();
 }
 
@@ -2775,7 +2932,13 @@ function onGlobalStartChange() {
   else updateAllDispense();
 }
 
+function localToday() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
 function formatDateThai(date) {
+  if (!date || isNaN(date.getTime())) return '';
   const d = date.getDate();
   const m = date.getMonth();
   const y = date.getFullYear() + 543;
@@ -2853,6 +3016,7 @@ function deskAgeChanged() {
 
 function deskInputChanged() {
   markStale();
+  updateDeskVals();
 }
 
 function deskCalcIBW() {
@@ -2875,6 +3039,22 @@ function deskUpdateIBWCalc() {
   const rangeLabels = { 'nb': 'NB', '3-12mo': '3-12 mo', '1-6yr': '1-6 yr', '7-12yr': '7-12 yr' };
   const el = document.getElementById('ibwCalcDesk');
   if (el) el.innerHTML = `<div class="ibw-val">${ibw.toFixed(1)}</div><div class="ibw-unit">kg</div><div class="ibw-range">${rangeLabels[range]}</div>`;
+  updateDeskVals();
+}
+
+function updateDeskVals() {
+  const range = document.getElementById('deskAgeRange').value;
+  const age = document.getElementById('deskAge').value;
+  const rangeLabels = { 'nb': 'NB', '3-12mo': '3-12 mo', '1-6yr': '1-6 yr', '7-12yr': '7-12 yr' };
+  const ibw = deskCalcIBW();
+  const v = (id, txt) => { const e = document.getElementById(id); if (e) e.textContent = txt; };
+  v('deskAgeRangeVal', rangeLabels[range] || '');
+  v('deskAgeVal', range === 'nb' ? 'NB' : age + (range === '3-12mo' ? ' mo' : ' yr'));
+  v('deskIBWVal', ibw.toFixed(1) + ' kg · ' + (rangeLabels[range] || ''));
+  v('deskRBWVal', (parseFloat(document.getElementById('deskRBW').value) || 0) + ' kg');
+  v('deskRBWAgeVal', (parseFloat(document.getElementById('deskRBWAge').value) || 0) + ' yr');
+  v('deskPalsVal', (parseFloat(document.getElementById('deskPals').value) || 0) + ' yr');
+  v('deskDehydVal', (parseFloat(document.getElementById('deskDehyd').value) || 0) + '%');
 }
 
 function getDeskValues() {
@@ -2920,6 +3100,14 @@ function doReset() {
   btn.classList.remove('stale');
   btn.textContent = 'CALCULATE';
   clearSearch();
+  // Reset Reverse Dose
+  selectedDrugs.clear();
+  document.querySelectorAll('.drug-chk').forEach(cb => cb.checked = false);
+  updateRevBadge();
+  updateCartBtn();
+  resetGlobalDate();
+  const revContainer = document.getElementById('tab-reverse');
+  if (revContainer) revContainer.innerHTML = '';
   setTimeout(() => {
     initializing = false;
     calcAndUpdateIBW();
@@ -2928,10 +3116,22 @@ function doReset() {
 }
 
 // ===== Defibrillation shock calculator =====
+function spinShock(delta) {
+  const el = document.getElementById('shockNum');
+  if (!el) return;
+  let val = parseInt(el.value) || 1;
+  val = Math.max(1, Math.min(20, val + delta));
+  el.value = val;
+  updateShock();
+}
+
 function updateShock() {
   const n = parseInt(document.getElementById('shockNum')?.value) || 1;
-  const w = pickerIBW.getValue().value;
-  const energy = w * 4 * (n - 1);
+  const w = window._currentW || 0;
+  let energy;
+  if (n === 1) energy = w * 2;
+  else if (n === 2) energy = w * 4;
+  else energy = w * 4 * (n - 1);
   const el = document.getElementById('shockCalc');
   const res = document.getElementById('shockResult');
   const warn = document.getElementById('shockWarn');
@@ -3073,12 +3273,28 @@ function doSearch() {
   if (!val) return;
 
   // Auto calculate if not yet calculated
+  const activeTab = document.querySelector('.tab-content.active');
   if (!resultsVisible) {
-    doCalculate();
+    resultsVisible = true;
+    recalcAll();
+    document.getElementById('resultsArea').classList.remove('results-hidden');
+    document.getElementById('searchBar').classList.add('visible');
+    document.querySelector('.tabs').classList.remove('tabs-hidden');
+    addScrollHints();
+    const btn = document.getElementById('calcBtn');
+    btn.classList.remove('stale');
+    btn.textContent = 'CALCULATED';
+  }
+  if (activeTab && activeTab.id === 'tab-reverse') {
+    const matches = drugRegistry.filter(d => {
+      const searchText = (d.name + ' ' + d.prep + ' ' + d.cat).toLowerCase();
+      return searchText.includes(val);
+    });
+    if (matches.length > 0) showRevSearchResults(matches);
+    return;
   }
 
   // Search only in the ACTIVE tab
-  const activeTab = document.querySelector('.tab-content.active');
   if (!activeTab) return;
 
   // Check section titles in active tab
@@ -3127,6 +3343,72 @@ function clearSearch() {
   document.getElementById('searchInput').value = '';
   document.getElementById('acList').classList.remove('show');
   clearHighlights();
+  const panel = document.getElementById('revSearchPanel');
+  if (panel) panel.remove();
+}
+
+function showRevSearchResults(matches) {
+  let panel = document.getElementById('revSearchPanel');
+  if (panel) panel.remove();
+  panel = document.createElement('div');
+  panel.id = 'revSearchPanel';
+  panel.className = 'rev-search-panel';
+  let html = '<div class="rev-search-header">เลือกยาที่ต้องการ<button class="rev-search-close" onclick="this.parentElement.parentElement.remove()">✕</button></div>';
+  html += '<div class="rev-search-list">';
+  matches.forEach(d => {
+    const checked = selectedDrugs.has(d.id) ? ' checked' : '';
+    html += `<label class="rev-search-item">
+      <input type="checkbox" value="${d.id}"${checked}>
+      <span class="rev-search-name">${d.name}</span>
+      <span class="rev-search-prep">${d.prep}</span>
+    </label>`;
+  });
+  html += '</div>';
+  html += '<button class="rev-search-confirm" onclick="confirmRevSearch()">เพิ่มยาที่เลือก</button>';
+  panel.innerHTML = html;
+  const container = document.getElementById('tab-reverse');
+  container.insertBefore(panel, container.querySelector('.rev-card') || container.querySelector('.rev-empty'));
+}
+
+function confirmRevSearch() {
+  const panel = document.getElementById('revSearchPanel');
+  if (!panel) return;
+  panel.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    if (cb.checked) {
+      selectedDrugs.add(cb.value);
+      document.querySelectorAll(`.drug-chk[data-drug-id="${cb.value}"]`).forEach(c => c.checked = true);
+    }
+  });
+  panel.remove();
+  updateRevBadge();
+  renderReverseDose();
+}
+
+// ===== Populate picker dropdowns =====
+function populateDD(selectId, items) {
+  const sel = document.getElementById(selectId);
+  if (!sel) return;
+  sel.innerHTML = items.map((it, i) => `<option value="${i}">${it.label}</option>`).join('');
+}
+populateDD('ddAge', simpleAgeItems);
+populateDD('ddRBW', ibwItems);
+populateDD('ddRBWAge', simpleAgeItems);
+populateDD('ddDehyd', dehydItems);
+populateDD('ddPals', palsItems);
+
+function ddSelect(type, idx) {
+  idx = parseInt(idx);
+  if (type === 'age') { pickerAge.scrollToIdx(idx, true); }
+  else if (type === 'rbw' && pickerRBW) { pickerRBW.scrollToIdx(idx, true); }
+  else if (type === 'rbwAge' && pickerRBWAge) { pickerRBWAge.scrollToIdx(idx, true); }
+  else if (type === 'dehyd') { pickerDehyd.scrollToIdx(idx, true); }
+  else if (type === 'pals') { pickerPals.scrollToIdx(idx, true); }
+}
+
+// Sync dropdown when picker scrolls
+function syncDD(selectId, idx) {
+  const sel = document.getElementById(selectId);
+  if (sel) sel.value = String(idx);
 }
 
 // ===== Initialize pickers =====
@@ -3135,18 +3417,19 @@ pickerAge = new WheelPicker(
   document.getElementById('pickerAge'),
   simpleAgeItems,
   defaultAgeIdx,
-  () => calcAndUpdateIBW()
+  (item, idx) => { syncDD('ddAge', idx); calcAndUpdateIBW(); }
 );
 
 const pickerRBWEl = document.getElementById('pickerRBW');
 if (pickerRBWEl) {
-  pickerRBW = new WheelPicker(pickerRBWEl, ibwItems, 0, () => { markStale(); recalcAll(); });
+  pickerRBW = new WheelPicker(pickerRBWEl, ibwItems, 0, (item, idx) => { syncDD('ddRBW', idx); markStale(); recalcAll(); });
 }
 
 let pickerRBWAge;
 const pickerRBWAgeEl = document.getElementById('pickerRBWAge');
 if (pickerRBWAgeEl) {
-  pickerRBWAge = new WheelPicker(pickerRBWAgeEl, simpleAgeItems, 0, (item) => {
+  pickerRBWAge = new WheelPicker(pickerRBWAgeEl, simpleAgeItems, 0, (item, idx) => {
+    syncDD('ddRBWAge', idx);
     const lbl = document.getElementById('rbwAgeLabel');
     if (lbl) lbl.textContent = item.label;
     markStale();
@@ -3157,15 +3440,15 @@ if (pickerRBWAgeEl) {
 pickerPals = new WheelPicker(
   document.getElementById('pickerPals'),
   palsItems,
-  0, // 0 yr
-  () => { markStale(); recalcAll(); }
+  0,
+  (item, idx) => { syncDD('ddPals', idx); markStale(); recalcAll(); }
 );
 
 pickerDehyd = new WheelPicker(
   document.getElementById('pickerDehyd'),
   dehydItems,
-  0, // 0%
-  () => { markStale(); recalcAll(); }
+  0,
+  (item, idx) => { syncDD('ddDehyd', idx); markStale(); recalcAll(); }
 );
 
 // Initial render - delay to let pickers finish rAF init
@@ -3194,6 +3477,24 @@ cartBtn.onclick = () => {
   document.querySelector('.tab-reverse')?.scrollIntoView({ behavior: 'smooth' });
 };
 document.body.appendChild(cartBtn);
+
+// Keep fixed buttons visible during pinch-zoom on mobile
+if (window.visualViewport) {
+  const repositionBtns = () => {
+    const vv = window.visualViewport;
+    const offsetX = vv.offsetLeft + vv.width - window.innerWidth;
+    const offsetY = vv.offsetTop + vv.height - window.innerHeight;
+    const r = 24 - offsetX;
+    const bScroll = 24 - offsetY;
+    const bCart = 76 - offsetY;
+    scrollBtn.style.right = r + 'px';
+    scrollBtn.style.bottom = bScroll + 'px';
+    cartBtn.style.right = r + 'px';
+    cartBtn.style.bottom = bCart + 'px';
+  };
+  window.visualViewport.addEventListener('resize', repositionBtns);
+  window.visualViewport.addEventListener('scroll', repositionBtns);
+}
 
 function updateCartBtn() {
   const n = selectedDrugs.size;
