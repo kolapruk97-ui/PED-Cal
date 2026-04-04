@@ -23,6 +23,8 @@
   --picker-green-bg: #0f2a1a;
   --picker-pink-bg: #2a1a24;
   --pink: #f48fb1;
+  --purple: #ce93d8;
+  --picker-purple-bg: #241a2a;
   --header-gradient-1: #1e3a5f;
   --header-gradient-2: #0f2440;
   --over-max-bg: #dc2626;
@@ -115,8 +117,9 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  align-items: center;
-  justify-self: center;
+  align-items: stretch;
+  justify-self: stretch;
+  text-align: center;
 }
 .picker-group .picker-label {
   font-size: 0.7rem;
@@ -135,7 +138,7 @@ body {
   min-height: 18px;
 }
 
-/* Picker dropdown - inline with label */
+/* Picker dropdown - visible select on mobile */
 .picker-dropdown {
   background: none;
   border: none;
@@ -149,31 +152,37 @@ body {
   height: 16px;
   position: relative;
 }
+.mob-select {
+  width: 100%;
+  height: 44px;
+  padding: 0 4px;
+  background: var(--section-bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+.mob-select.yellow-border { border-color: var(--warning); background: var(--picker-yellow-bg); }
+.mob-select.green-border { border-color: var(--success); background: var(--picker-green-bg); }
+.mob-select.red-border { border-color: var(--danger); background: var(--picker-red-bg); }
+.mob-select.pink-border { border-color: var(--pink); background: var(--picker-pink-bg); }
+.mob-select.purple-border { border-color: var(--purple); background: var(--picker-purple-bg); }
+.mob-select:focus { outline: none; box-shadow: 0 0 0 2px rgba(96,165,250,0.4); }
 .picker-label-wrap {
   display: flex;
   align-items: flex-end;
   justify-content: center;
   gap: 2px;
-  height: 30px;
-  overflow: hidden;
+  min-height: 30px;
 }
-.picker-dd-arrow {
-  font-size: 0.55rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  opacity: 0.7;
-  margin-bottom: 1px;
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-.picker-dd-arrow select {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
+.picker-dd-arrow { display: none; }
 
 /* iOS-style wheel picker */
 .wheel-picker {
@@ -279,13 +288,13 @@ body {
 .ibw-display {
   background: var(--picker-green-bg);
   border: 2px solid var(--success);
-  border-radius: 12px;
-  padding: 8px 16px;
+  border-radius: 10px;
+  padding: 2px 4px;
   font-weight: 700;
   font-size: 1.2rem;
   color: var(--success);
-  width: 80px;
-  height: 120px;
+  width: 100%;
+  height: 44px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -336,8 +345,10 @@ body {
 }
 .tab:hover { color: var(--primary); background: rgba(56,189,248,0.08); }
 .tab.active { color: #00bfa5; border: 2px solid #00bfa5; border-radius: 20px; background: transparent; }
-.tab.tab-pals.active { color: var(--pink); border-color: var(--pink); }
-.tab.tab-pals:hover { color: var(--pink); background: rgba(244,143,177,0.08); }
+.tab.tab-fluid.active { color: var(--danger); border-color: var(--danger); }
+.tab.tab-fluid:hover { color: var(--danger); background: rgba(248,113,113,0.08); }
+.tab.tab-pals.active { color: var(--purple); border-color: var(--purple); }
+.tab.tab-pals:hover { color: var(--purple); background: rgba(206,147,216,0.08); }
 .tab.tab-reverse.active { color: #ffa726; border-color: #ffa726; }
 .tab.tab-reverse:hover { color: #ffa726; background: rgba(255,167,38,0.08); }
 .rev-badge { display:inline-block; background:#ffa726; color:#000; font-size:0.65rem; font-weight:700; padding:1px 6px; border-radius:10px; margin-left:4px; vertical-align:middle; }
@@ -541,6 +552,8 @@ tbody tr:hover { background: var(--section-bg); }
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
   margin-bottom: 16px;
+  overflow: hidden;
+  max-width: 100%;
 }
 .fluid-card h3 {
   font-size: 1rem;
@@ -567,14 +580,24 @@ tbody tr:hover { background: var(--section-bg); }
   text-align: center;
   font-size: 0.8rem;
 }
-.dehydration-card h4 { color: var(--primary); margin-bottom: 6px; }
+.dehydration-card h4 { margin-bottom: 6px; }
 .dehydration-card ul { list-style: none; text-align: left; }
 .dehydration-card ul li { padding: 2px 0; }
-.dehydration-card.active-level {
+.dehydration-card.mild-card h4 { color: var(--success); }
+.dehydration-card.mod-card h4 { color: var(--warning); }
+.dehydration-card.sev-card h4 { color: var(--danger); }
+.dehydration-card.active-mild {
+  border: 3px solid var(--success);
+  box-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+}
+.dehydration-card.active-mod {
   border: 3px solid var(--warning);
   box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
 }
-.dehydration-card.active-level h4 { color: var(--warning); }
+.dehydration-card.active-sev {
+  border: 3px solid var(--danger);
+  box-shadow: 0 0 12px rgba(248, 113, 113, 0.3);
+}
 
 /* PALS specific */
 .pals-info {
@@ -594,7 +617,7 @@ tbody tr:hover { background: var(--section-bg); }
 .pals-card .value { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
 .pals-card .unit { font-size: 0.8rem; color: var(--text-muted); }
 
-.iv-conc-table { font-size: 0.78rem; }
+.iv-conc-table { font-size: 0.78rem; min-width: 0 !important; width: 100%; table-layout: auto !important; }
 .iv-conc-table td { padding: 4px 8px; }
 
 /* Calculate button */
@@ -856,7 +879,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 
 /* Reset button */
 .reset-btn {
-  padding: 10px 20px;
+  padding: 0 14px;
   background: linear-gradient(135deg, #ef4444, #dc2626);
   color: white;
   border: none;
@@ -866,6 +889,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   cursor: pointer;
   letter-spacing: 1px;
   height: 44px;
+  width: 100%;
   white-space: nowrap;
 }
 .reset-btn:hover { opacity: 0.9; }
@@ -907,15 +931,12 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   .picker-group { min-width: 0; }
   .picker-label { font-size: 0.6rem; }
   .picker-value { font-size: 0.65rem; }
-  .wheel-picker { width: 80px; height: 100px; }
-  .wheel-picker .wheel-item { font-size: 0.85rem; height: 32px; }
-  .wheel-picker .wheel-item.selected { font-size: 0.95rem; }
-  .wheel-picker .wheel-highlight { height: 32px; }
-  .ibw-display { width: 80px; height: 100px; padding: 6px 10px; }
+  .mob-select { font-size: 0.8rem; height: 38px; }
+  .ibw-display { height: 38px; }
+  .reset-btn { height: 38px; font-size: 0.75rem; }
   .ibw-display .ibw-val { font-size: 1.1rem; }
   .ibw-display .ibw-unit { font-size: 0.6rem; }
   .ibw-display .ibw-range { font-size: 0.55rem; }
-  .reset-btn { padding: 8px 14px; font-size: 0.75rem; height: 38px; }
 
   .calc-btn-wrap { padding: 10px 12px; }
   .calc-btn { padding: 12px 24px; font-size: 0.95rem; }
@@ -947,13 +968,11 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 
 /* ===== Responsive: Very small phone ===== */
 @media (max-width: 380px) {
-  .wheel-picker { width: 60px; height: 80px; }
-  .wheel-picker .wheel-item { font-size: 0.75rem; height: 28px; }
-  .wheel-picker .wheel-item.selected { font-size: 0.85rem; }
-  .wheel-picker .wheel-highlight { height: 28px; }
+  .mob-select { font-size: 0.72rem; height: 34px; }
   .input-bar { gap: 6px; padding: 8px; }
   .picker-label { font-size: 0.55rem; }
-  .ibw-display { width: 60px; height: 80px; padding: 4px 6px; }
+  .ibw-display { height: 34px; }
+  .reset-btn { height: 34px; }
   .ibw-display .ibw-val { font-size: 0.95rem; }
   table { font-size: 0.65rem; }
   thead th { font-size: 0.6rem; }
@@ -1041,8 +1060,9 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
     </div>
     <!-- IBW mode: Age picker -->
     <div class="picker-group mob-ibw-field">
-      <div class="picker-label-wrap"><span class="picker-label">Age</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddAge" onchange="ddSelect('age', this.value)"></select></label></div>
-      <div class="wheel-picker yellow-border" id="pickerAge"></div>
+      <div class="picker-label-wrap"><span class="picker-label">Age</span></div>
+      <select class="mob-select yellow-border" id="ddAge" onchange="ddSelect('age', this.value)"></select>
+      <div class="wheel-picker yellow-border" id="pickerAge" style="display:none"></div>
       <div class="picker-value" id="ageRangeLabel">NB</div>
     </div>
     <div class="picker-group mob-ibw-field">
@@ -1054,29 +1074,33 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
     </div>
     <!-- RBW mode: BW picker + Age picker -->
     <div class="picker-group mob-rbw-field" style="display:none;">
-      <div class="picker-label-wrap"><span class="picker-label">Real BW (kg)</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddRBW" onchange="ddSelect('rbw', this.value)"></select></label></div>
-      <div class="wheel-picker green-border" id="pickerRBW"></div>
+      <div class="picker-label-wrap"><span class="picker-label">Real BW (kg)</span></div>
+      <select class="mob-select green-border" id="ddRBW" onchange="ddSelect('rbw', this.value)"></select>
+      <div class="wheel-picker green-border" id="pickerRBW" style="display:none"></div>
       <div class="picker-value" id="rbwPickerVal">0 kg</div>
     </div>
     <div class="picker-group mob-rbw-field" style="display:none;">
-      <div class="picker-label-wrap"><span class="picker-label" style="color:var(--warning)">Age</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddRBWAge" onchange="ddSelect('rbwAge', this.value)"></select></label></div>
-      <div class="wheel-picker yellow-border" id="pickerRBWAge"></div>
+      <div class="picker-label-wrap"><span class="picker-label" style="color:var(--warning)">Age</span></div>
+      <select class="mob-select yellow-border" id="ddRBWAge" onchange="ddSelect('rbwAge', this.value)"></select>
+      <div class="wheel-picker yellow-border" id="pickerRBWAge" style="display:none"></div>
       <div class="picker-value" id="rbwAgeLabel">NB</div>
     </div>
     <!-- Common -->
     <div class="picker-group">
-      <div class="picker-label-wrap"><span class="picker-label">% Dehydration</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddDehyd" onchange="ddSelect('dehyd', this.value)"></select></label></div>
-      <div class="wheel-picker red-border" id="pickerDehyd"></div>
+      <div class="picker-label-wrap"><span class="picker-label" style="color:var(--danger)">% Dehydration</span></div>
+      <select class="mob-select red-border" id="ddDehyd" onchange="ddSelect('dehyd', this.value)"></select>
+      <div class="wheel-picker red-border" id="pickerDehyd" style="display:none"></div>
       <div class="picker-value" id="dehydPickerVal">3%</div>
     </div>
     <div class="picker-group">
-      <div class="picker-label-wrap"><span class="picker-label" style="color:var(--pink)">Age PALS (yr)</span><label class="picker-dd-arrow">&#9660;<select class="picker-dropdown" id="ddPals" onchange="ddSelect('pals', this.value)"></select></label></div>
-      <div class="wheel-picker pink-border" id="pickerPals"></div>
+      <div class="picker-label-wrap"><span class="picker-label" style="color:var(--purple)">Age PALS (yr)</span></div>
+      <select class="mob-select purple-border" id="ddPals" onchange="ddSelect('pals', this.value)"></select>
+      <div class="wheel-picker pink-border" id="pickerPals" style="display:none"></div>
       <div class="picker-value" id="palsPickerVal">1 yr</div>
     </div>
     <div class="picker-group">
       <div class="picker-label">&nbsp;</div>
-      <div style="height:80px;display:flex;align-items:center;">
+      <div style="display:flex;align-items:center;">
         <button class="reset-btn" onclick="doReset()">RESET</button>
       </div>
       <div class="picker-value">&nbsp;</div>
@@ -1100,7 +1124,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 <div class="tabs tabs-hidden">
   <div class="tab active" onclick="switchTab('dose')">Pediatric Dose</div>
   <div class="tab" onclick="switchTab('atb')">Pediatric ATB</div>
-  <div class="tab" onclick="switchTab('fluid')">IV Fluid</div>
+  <div class="tab tab-fluid" onclick="switchTab('fluid')">IV Fluid</div>
   <div class="tab tab-pals" onclick="switchTab('pals')">PALS</div>
   <div class="tab tab-reverse" onclick="switchTab('reverse')">Reverse <span class="rev-badge" id="revBadge" style="display:none">0</span></div>
 </div>
@@ -2293,7 +2317,7 @@ function renderFluid(w, dehydParam, ageMonths) {
   html += '</table></div></div></div>';
 
   // Dehydration assessment
-  html += '<div class="fluid-card"><h3>Assessment Level of Dehydration</h3>';
+  html += '<div class="fluid-card"><h3 style="color:var(--danger);">Assessment Level of Dehydration</h3>';
   // Age-based dehydration thresholds
   // < 1 yr: 5-10-15%, >= 1 yr: 3-6-9%, > 12 yr: 3-5-7%
   let mildMax, modMin, modMax, sevMin;
@@ -2311,13 +2335,13 @@ function renderFluid(w, dehydParam, ageMonths) {
     mildLabel = '&lt;3%'; modLabel = '4-5%'; sevLabel = '6-7%';
     ageNote = '&gt; 12 yr: 3-5-7 % deficit';
   }
-  const mildActive = dehyd > 0 && dehyd <= mildMax ? ' active-level' : '';
-  const modActive = dehyd >= modMin && dehyd <= modMax ? ' active-level' : '';
-  const sevActive = dehyd >= sevMin ? ' active-level' : '';
+  const mildActive = dehyd > 0 && dehyd <= mildMax ? ' active-mild' : '';
+  const modActive = dehyd >= modMin && dehyd <= modMax ? ' active-mod' : '';
+  const sevActive = dehyd >= sevMin ? ' active-sev' : '';
   html += '<div class="dehydration-grid">';
-  html += `<div class="dehydration-card${mildActive}"><h4>Mild (${mildLabel})</h4><ul><li>No physical signs</li><li><em style="color:var(--warning);">or</em></li><li>Thirst</li><li>Dry mucous membranes</li><li>Reduced urine output</li></ul></div>`;
-  html += `<div class="dehydration-card${modActive}"><h4>Moderate (${modLabel})</h4><ul><li>Dry mucous membranes</li><li>Reduced urine output</li><li>Tachycardia</li><li>Sunken eyes</li><li>Diminished skin turgor</li><li>Altered neuro status<br>(drowsy, irritability)</li></ul></div>`;
-  html += `<div class="dehydration-card${sevActive}"><h4>Severe (${sevLabel})</h4><ul><li>Increased signs from moderate</li><li><em style="color:var(--warning);">plus</em></li><li>Decreased peripheral perfusion</li><li>(cool, mottled, pale, CRT &gt;2s)</li><li>Anuria</li><li>Hypotension</li><li>Circulatory collapse</li></ul></div>`;
+  html += `<div class="dehydration-card mild-card${mildActive}"><h4>Mild (${mildLabel})</h4><ul><li>No physical signs</li><li><em style="color:var(--warning);">or</em></li><li>Thirst</li><li>Dry mucous membranes</li><li>Reduced urine output</li></ul></div>`;
+  html += `<div class="dehydration-card mod-card${modActive}"><h4>Moderate (${modLabel})</h4><ul><li>Dry mucous membranes</li><li>Reduced urine output</li><li>Tachycardia</li><li>Sunken eyes</li><li>Diminished skin turgor</li><li>Altered neuro status<br>(drowsy, irritability)</li></ul></div>`;
+  html += `<div class="dehydration-card sev-card${sevActive}"><h4>Severe (${sevLabel})</h4><ul><li>Increased signs from moderate</li><li><em style="color:var(--warning);">plus</em></li><li>Decreased peripheral perfusion</li><li>(cool, mottled, pale, CRT &gt;2s)</li><li>Anuria</li><li>Hypotension</li><li>Circulatory collapse</li></ul></div>`;
   html += '</div>';
   html += `<div style="font-size:0.8rem;margin-top:8px;"><span style="color:var(--warning);font-weight:600;">ใช้เกณฑ์: ${ageNote}</span><br><span style="color:var(--text-muted);">&lt; 1 yr: 5-10-15 % | &gt;= 1 yr: 3-6-9 % | &gt; 12 yr: 3-5-7 %</span></div></div>`;
 
@@ -2326,11 +2350,11 @@ function renderFluid(w, dehydParam, ageMonths) {
 
   html += `<div class="fluid-card"><h3>Daily Maintenance</h3><div class="fluid-result">${r(maint,1)} <span>mL/hr</span></div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">= ${r(maint*24,0)} mL/day</div></div>`;
 
-  html += `<div class="fluid-card"><h3>Deficit Fluid (${dehyd}%)</h3><div class="fluid-result">${r(deficit,1)} <span>mL/hr</span></div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">= ${r(deficit*24,0)} mL/day</div></div>`;
+  html += `<div class="fluid-card"><h3 style="color:var(--danger);">Deficit Fluid (${dehyd}%)</h3><div class="fluid-result" style="color:var(--danger);">${r(deficit,1)} <span>mL/hr</span></div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">= ${r(deficit*24,0)} mL/day</div></div>`;
 
   html += `<div class="fluid-card" style="border:2px solid var(--primary);"><h3>Total IV Fluid Rate</h3><div class="fluid-result">${r(total,1)} <span>mL/hr</span></div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">= ${r(total*24,0)} mL/day</div></div>`;
 
-  html += `<div class="fluid-card" style="border:2px solid var(--danger);"><h3>NSS Bolus (mod-severe)</h3><div class="fluid-result">${r(bolus,0)} <span>mL in 1 hr</span></div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">10 mL/kg</div></div>`;
+  html += `<div class="fluid-card" style="border:2px solid var(--success);"><h3>NSS Bolus (mod-severe)</h3><div class="fluid-result">${r(bolus,0)} <span>mL in 1 hr</span></div><div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;">10 mL/kg</div></div>`;
 
   html += '</div>';
 
@@ -3482,15 +3506,22 @@ document.body.appendChild(cartBtn);
 if (window.visualViewport) {
   const repositionBtns = () => {
     const vv = window.visualViewport;
-    const offsetX = vv.offsetLeft + vv.width - window.innerWidth;
-    const offsetY = vv.offsetTop + vv.height - window.innerHeight;
-    const r = 24 - offsetX;
-    const bScroll = 24 - offsetY;
-    const bCart = 76 - offsetY;
+    // Calculate where the visible viewport ends relative to the layout viewport
+    const left = vv.offsetLeft;
+    const top = vv.offsetTop;
+    const scale = vv.scale || 1;
+    // Position buttons at bottom-right of the visible viewport
+    const r = (window.innerWidth - (left + vv.width)) + 16 / scale;
+    const bScroll = (window.innerHeight - (top + vv.height)) + 16 / scale;
+    const bCart = bScroll + 52 / scale;
     scrollBtn.style.right = r + 'px';
     scrollBtn.style.bottom = bScroll + 'px';
+    scrollBtn.style.transform = `scale(${1 / scale})`;
+    scrollBtn.style.transformOrigin = 'bottom right';
     cartBtn.style.right = r + 'px';
     cartBtn.style.bottom = bCart + 'px';
+    cartBtn.style.transform = `scale(${1 / scale})`;
+    cartBtn.style.transformOrigin = 'bottom right';
   };
   window.visualViewport.addEventListener('resize', repositionBtns);
   window.visualViewport.addEventListener('scroll', repositionBtns);
