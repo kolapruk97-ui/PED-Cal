@@ -287,8 +287,14 @@ body {
 .rev-dispense { border-top:1px solid var(--border); margin-top:10px; padding-top:10px; }
 .rev-disp-row { display:flex; gap:8px; align-items:center; margin-bottom:6px; flex-wrap:wrap; }
 .rev-disp-row label { font-size:0.8rem; color:var(--text-muted); min-width:70px; }
-.rev-disp-input { width:70px; padding:6px; border:1px solid var(--border); border-radius:6px; background:var(--section-bg); color:var(--text); font-size:0.85rem; text-align:center; }
+.rev-disp-input { width:70px; padding:6px; border:2px solid var(--border); border-radius:6px; background:var(--section-bg); color:var(--text); font-size:0.85rem; text-align:center; -moz-appearance:textfield; }
+.rev-disp-input::-webkit-inner-spin-button, .rev-disp-input::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
 .rev-disp-input:focus { border-color:#ffa726; outline:none; }
+.rev-input { -moz-appearance:textfield; }
+.rev-input::-webkit-inner-spin-button, .rev-input::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+.spin-wrap { display:inline-flex; align-items:center; gap:2px; }
+.spin-btn { width:28px; height:28px; border-radius:50%; border:1px solid var(--border); background:var(--section-bg); color:var(--text); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.spin-btn:active { background:var(--primary); color:white; }
 .rev-disp-select { padding:6px; border:1px solid var(--border); border-radius:6px; background:var(--section-bg); color:var(--text); font-size:0.85rem; }
 .rev-disp-date { padding:6px; border:2px solid #ffa726; border-radius:6px; background:var(--card); color:var(--text); font-size:0.8rem; }
 .rev-disp-date:focus { border-color:#ffcc80; outline:none; }
@@ -1824,10 +1830,10 @@ function renderDose(w, am) {
     drugRow('Cetirizine syr','','5 mg/5 mL', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, ageYr<2?'q 24 hr':'q 12-24 hr', '6mo-2yr:2.5mg | 2-6yr:5mg | &gt;6yr:10mg'),
     drugRow('Cetirizine tab','','10 mg/tab', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, '', ''),
     drugRow('CPM syrup','','2 mg/5 mL','0.35 mk/Day','10 kg = ½ ช้อนชา', (0.35*w)/3, null, ((0.35*w)/3*5)/2, null, 'q 8 hr', ''),
-    drugRow('CPM tablet','','4 mg/tab','q 6-8 hr','25 kg = ½ tab', (0.35*w)/3, null, ((0.35*w)/3)/4, null, 'q 8 hr', ''),
+    drugRow('CPM tablet','','4 mg/tab','','25 kg = ½ tab', (0.35*w)/3, null, ((0.35*w)/3)/4, null, 'q 8 hr', ''),
     drugRow('CPM IV','','10 mg/mL','0.25 mk/Dose','', 0.25*w, null, (0.25*w)/10, null, '', ''),
     drugRow('Hydroxyzine syr','','10 mg/5 mL','1-2 mk/Day','10 kg = ½-1 ช้อนชา', (1*w)/3, (2*w)/3, ((1*w)/3*5)/10, ((2*w)/3*5)/10, 'q 8 hr', ''),
-    drugRow('Hydroxyzine tab','','10 mg/tab','q 6-8 hr','10 kg = ½-1 tab', (1*w)/3, (2*w)/3, ((1*w)/3)/10, ((2*w)/3)/10, 'q 8 hr', ''),
+    drugRow('Hydroxyzine tab','','10 mg/tab','','10 kg = ½-1 tab', (1*w)/3, (2*w)/3, ((1*w)/3)/10, ((2*w)/3)/10, 'q 8 hr', ''),
     drugRow('Hydroxyzine tab','','25 mg/tab','','', null, null, ((1*w)/3)/25, ((2*w)/3)/25, '', ''),
   ]);
 
@@ -1893,14 +1899,14 @@ function renderDose(w, am) {
   html += sectionHead('Antiemetic', 'ยาแก้อาเจียน');
   html += makeTable(doseHeaders, [
     drugRow('Domperidone syr','(Motilium)','5 mg/5 mL','0.2-0.3 mk/Dose','10 kg = ½ ช้อนชา tid', w*0.2, w*0.3, (w*0.2*5)/5, (w*0.3*5)/5, 'q 8 hr', ''),
-    drugRow('Domperidone tab','','10 mg/tab','q 6-8 hr','25 kg = ½ tab tid', w*0.2, w*0.3, (w*0.2)/10, (w*0.3)/10, 'q 8 hr', ''),
+    drugRow('Domperidone tab','','10 mg/tab','','25 kg = ½ tab tid', w*0.2, w*0.3, (w*0.2)/10, (w*0.3)/10, 'q 8 hr', ''),
     drugRow('Ondansetron IV','','4 mg/amp','0.15-0.3 mk/Dose','', w*0.15, null, null, null, 'IV single dose', ''),
     drugRow('Ondansetron tab','','8 mg/tab','IV/PO q 8 hr','', w*0.15, w*0.3, (w*0.15)/8, (w*0.3)/8, 'q 8 hr', ''),
     drugRow('Metoclopramide IV','(Plasil)','10 mg/amp','0.1 mk/Dose','', w*0.1, null, null, null, 'IV single dose', ''),
-    drugRow('Metoclopramide syr','','5 mg/5 mL','q 6-8 hr','', w*0.1, null, (w*0.1*5)/5, null, 'q 8 hr', ''),
+    drugRow('Metoclopramide syr','','5 mg/5 mL','','', w*0.1, null, (w*0.1*5)/5, null, 'q 8 hr', ''),
     drugRow('Metoclopramide tab','','10 mg/tab','','', w*0.1, null, (w*0.1)/10, null, 'q 8 hr', ''),
     drugRow('Dimenhydrinate IV','','50 mg/amp','1 mk/Dose','', w*1, null, null, null, 'IV single dose', ''),
-    drugRow('Dimenhydrinate tab','','50 mg/tab','q 6-8 hr','', w*1, null, (w*1)/50, null, 'q 8 hr', ''),
+    drugRow('Dimenhydrinate tab','','50 mg/tab','','', w*1, null, (w*1)/50, null, 'q 8 hr', ''),
   ]);
 
   // Antacid
@@ -1982,19 +1988,19 @@ function renderATB(w, am) {
     drugRow('Penicillin G','','1,5 mU/vial','100-250k u/kg/d','q6hr', (w*0.1)/4, (w*0.25)/4, null, null, 'q 6 hr (mU)', 'MAX 24 mU/day'),
     drugRow('Penicillin G','','','250-450k u/kg/d','q4hr', (w*0.25)/6, (w*0.45)/6, null, null, 'q 4 hr (mU)', ''),
     drugRow('Penicillin V syr','','125 mg/5 mL','25-75 mk/Day','', (w*25)/3, (w*75)/3, ((w*25)/3*5)/125, ((w*75)/3*5)/125, 'q 8 hr', 'MAX 2 gm/day'),
-    drugRow('Penicillin V tab','','250 mg/tab','q 6-8 hr','', (w*25)/3, (w*75)/3, ((w*25)/3)/250, ((w*75)/3)/250, 'q 8 hr', ''),
+    drugRow('Penicillin V tab','','250 mg/tab','','', (w*25)/3, (w*75)/3, ((w*25)/3)/250, ((w*75)/3)/250, 'q 8 hr', ''),
     drugRow('Cloxacillin IV','','0.5,1 gm/amp','50-100 mk/Day','', (w*50)/4, (w*100)/4, null, null, 'q 6 hr', 'MAX 4 gm/day'),
-    drugRow('Cloxacillin syr','','125 mg/5 mL','q 6 hr','', (w*50)/4, (w*100)/4, ((w*50)/4*5)/125, ((w*100)/4*5)/125, 'q 6 hr', ''),
+    drugRow('Cloxacillin syr','','125 mg/5 mL','','', (w*50)/4, (w*100)/4, ((w*50)/4*5)/125, ((w*100)/4*5)/125, 'q 6 hr', ''),
     drugRow('Cloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*50)/4, (w*100)/4, ((w*50)/4)/250, ((w*100)/4)/250, 'q 6 hr', ''),
     drugRow('Cloxacillin cap','','500 mg/cap','','', null, null, ((w*50)/4)/500, ((w*100)/4)/500, '', ''),
     drugRow('Dicloxacillin syr','','62.5 mg/5 mL','12.5-50 mk/Day','', (w*12.5)/4, (w*50)/4, ((w*12.5)/4*5)/62.5, ((w*50)/4*5)/62.5, 'q 6 hr', 'MAX 2 gm/day'),
-    drugRow('Dicloxacillin cap','','250 mg/cap','q 6 hr','ใช้ 250mg/cap', (w*12.5)/4, (w*50)/4, ((w*12.5)/4)/250, ((w*50)/4)/250, 'q 6 hr', ''),
+    drugRow('Dicloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*12.5)/4, (w*50)/4, ((w*12.5)/4)/250, ((w*50)/4)/250, 'q 6 hr', ''),
     drugRow('Dicloxacillin cap','','500 mg/cap','','', null, null, ((w*12.5)/4)/500, ((w*50)/4)/500, '', ''),
     drugRow('Amoxicillin syr','','125 mg/5 mL','40-90 mk/Day','', (w*40)/2, (w*90)/2, ((w*40)/2*5)/125, ((w*90)/2*5)/125, 'q 12 hr', 'MAX 4 gm/day'),
     drugRow('Amoxicillin syr','','250 mg/5 mL','','10 kg = 1 ช้อนชา', null, null, ((w*40)/2*5)/250, ((w*90)/2*5)/250, '', ''),
-    drugRow('Amoxicillin cap','','500 mg/cap','q 8-12 hr','', (w*40)/2, (w*90)/2, ((w*40)/2)/500, ((w*90)/2)/500, 'q 12 hr', ''),
+    drugRow('Amoxicillin cap','','500 mg/cap','','', (w*40)/2, (w*90)/2, ((w*40)/2)/500, ((w*90)/2)/500, 'q 6-8 hr', ''),
     drugRow('Amox/Clav IV','(Augmentin)','1.2 gm IV','30-90 mk/Day of Amox','', (w*30)/2, (w*90)/2, null, null, 'q 12 hr', 'MAX 4gm Amox/day'),
-    drugRow('Amox/Clav syr','','400/57 mg/5 mL','q 8-12 hr','', (w*30)/2, (w*90)/2, ((w*30)/2*5)/400, ((w*90)/2*5)/400, 'q 12 hr', ''),
+    drugRow('Amox/Clav syr','','400/57 mg/5 mL','','', (w*30)/2, (w*90)/2, ((w*30)/2*5)/400, ((w*90)/2*5)/400, 'q 6-8 hr', ''),
     drugRow('Amox/Clav tab','','875/125 mg/tab','','', (w*30)/2, (w*90)/2, ((w*30)/2)/875, ((w*90)/2)/875, 'q 12 hr', ''),
     drugRow('Ampicillin','','500,1000 mg/vial','100-200 mk/Day','q 6 hr', (w*100)/4, (w*200)/4, null, null, 'q 6 hr', 'MAX 12 gm/day'),
   ]);
@@ -2004,11 +2010,11 @@ function renderATB(w, am) {
   html += makeTable(doseHeaders, [
     drugRow('Cefazolin (1st)','','1000 mg/vial','50-100 mk/Day','q 6-8 hr', (w*50)/3, (w*100)/3, null, null, 'q 8 hr', 'MAX 6 gm/day'),
     drugRow('Cephalexin syr (1st)','','125 mg/5 mL','25-100 mk/Day','10 kg = 1 ช้อนชา', (w*25)/4, (w*100)/4, ((w*25)/4*5)/125, ((w*100)/4*5)/125, 'q 6 hr', 'MAX 4 gm/day'),
-    drugRow('Cephalexin cap','','250 mg/cap','q 6-8 hr','ใช้ 250mg/cap', (w*25)/4, (w*100)/4, ((w*25)/4)/250, ((w*100)/4)/250, 'q 6 hr', ''),
+    drugRow('Cephalexin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*25)/4, (w*100)/4, ((w*25)/4)/250, ((w*100)/4)/250, 'q 6-8 hr', ''),
     drugRow('Cephalexin cap','','500 mg/cap','','', null, null, ((w*25)/4)/500, ((w*100)/4)/500, '', ''),
     drugRow('Cefaclor syr (2nd)','','125 mg/5 mL','20-40 mk/Day','', (w*20)/2, (w*40)/2, ((w*20)/2*5)/125, ((w*40)/2*5)/125, 'q 12 hr', 'MAX 2 gm/day'),
     drugRow('Cefaclor syr (2nd)','','250 mg/5 mL','','ใช้ 250 mg/5 mL', null, null, ((w*20)/2*5)/250, ((w*40)/2*5)/250, '', ''),
-    drugRow('Cefaclor tab','','375 mg/tab','q 8-12 hr','', (w*20)/2, (w*40)/2, ((w*20)/2)/375, ((w*40)/2)/375, 'q 12 hr', ''),
+    drugRow('Cefaclor tab','','375 mg/tab','','', (w*20)/2, (w*40)/2, ((w*20)/2)/375, ((w*40)/2)/375, 'q 8-12 hr', ''),
     drugRow('Ceftriaxone (3rd)','','500 mg/vial','50-75 mk/Day','q 12-24 hr', w*50, w*75, null, null, 'q 24 hr', 'MAX 4 gm/day<br>CNS: 100 mk/Day'),
     drugRow('Ceftriaxone (3rd)','','1000 mg/vial','','', null, null, null, null, '', ''),
     drugRow('Cefotaxime (3rd)','','500 mg/vial','100-200 mk/Day','q 6-8 hr', (w*100)/3, (w*200)/3, null, null, 'q 8 hr', 'MAX 12 gm/day'),
@@ -2017,20 +2023,20 @@ function renderATB(w, am) {
     drugRow('Ceftazidime (3rd)','','1000 mg/vial','','', null, null, null, null, '', ''),
     drugRow('Ceftazidime (3rd)','','2000 mg/vial','','', null, null, null, null, '', ''),
     drugRow('Cefdinir syr (3rd)','(Omnicef)','125 mg/5 mL','14 mk/Day','', (w*14)/2, null, ((w*14)/2*5)/125, null, 'q 12 hr', 'MAX 600 mg/day'),
-    drugRow('Cefdinir cap','','300 mg/cap','q 12-24 hr','', (w*14)/2, null, ((w*14)/2)/300, null, 'q 12 hr', ''),
+    drugRow('Cefdinir cap','','300 mg/cap','','', (w*14)/2, null, ((w*14)/2)/300, null, 'q 12-24 hr', ''),
     drugRow('Cefixime syr (3rd)','(Cefspan)','100 mg/5 mL','8 mk/Day','', (w*8)/2, null, ((w*8)/2*5)/100, null, 'q 12 hr', 'MAX 400 mg/day'),
-    drugRow('Cefixime cap','','100 mg/cap','q 12-24 hr','', (w*8)/2, null, ((w*8)/2)/100, null, 'q 12 hr', ''),
+    drugRow('Cefixime cap','','100 mg/cap','','', (w*8)/2, null, ((w*8)/2)/100, null, 'q 12 hr', ''),
   ]);
 
   // Macrolides
   html += sectionHead('Macrolides', 'Macrolides');
   html += makeTable(doseHeaders, [
     drugRow('Erythromycin syr','','200 mg/5 mL','30-50 mk/Day','10 kg = ½ ช้อนชา', (w*30)/4, (w*50)/4, ((w*30)/4*5)/200, ((w*50)/4*5)/200, 'q 6 hr', 'MAX 4 gm/day'),
-    drugRow('Erythromycin cap','','250 mg/cap','q 6-8 hr','', (w*30)/4, (w*50)/4, ((w*30)/4)/250, ((w*50)/4)/250, 'q 6 hr', ''),
+    drugRow('Erythromycin cap','','250 mg/cap','','', (w*30)/4, (w*50)/4, ((w*30)/4)/250, ((w*50)/4)/250, 'q 6-8 hr', ''),
     drugRow('Azithromycin syr','','200 mg/5 mL','10-15 mk/Day','10 kg = ½ ช้อนชา', w*10, w*15, (w*10*5)/200, (w*15*5)/200, 'q 24 hr', 'MAX 1 gm/day'),
-    drugRow('Azithromycin cap','','250 mg/cap','q 24 hr','', w*10, w*15, (w*10)/250, (w*15)/250, 'q 24 hr', ''),
+    drugRow('Azithromycin cap','','250 mg/cap','','', w*10, w*15, (w*10)/250, (w*15)/250, 'q 24 hr', ''),
     drugRow('Clarithromycin syr','','125 mg/5 mL','15 mk/Day','', (w*15)/2, null, ((w*15)/2*5)/125, null, 'q 12 hr', 'MAX 1 gm/day'),
-    drugRow('Clarithromycin tab','','250 mg/tab','q 12 hr','ใช้ 250mg/tab', (w*15)/2, null, ((w*15)/2)/250, null, 'q 12 hr', ''),
+    drugRow('Clarithromycin tab','','250 mg/tab','','ใช้ 250mg/tab', (w*15)/2, null, ((w*15)/2)/250, null, 'q 12 hr', ''),
     drugRow('Clarithromycin tab','','500 mg/tab','','', null, null, ((w*15)/2)/500, null, '', ''),
   ]);
 
@@ -2038,7 +2044,7 @@ function renderATB(w, am) {
   html += sectionHead('Lincosamides', 'Lincosamides');
   html += makeTable(doseHeaders, [
     drugRow('Clindamycin IV','','600 mg/vial','20-40 mk/Day','q 6-8 hr', (w*20)/3, (w*40)/3, null, null, 'q 8 hr', 'MAX 2.7gm IV/day'),
-    drugRow('Clindamycin cap','','150 mg/cap','q 6-8 hr','', (w*20)/3, (w*40)/3, ((w*20)/3)/150, ((w*40)/3)/150, 'q 8 hr', 'MAX 1.8gm PO/day'),
+    drugRow('Clindamycin cap','','150 mg/cap','','', (w*20)/3, (w*40)/3, ((w*20)/3)/150, ((w*40)/3)/150, 'q 6-8 hr', 'MAX 1.8gm PO/day'),
     drugRow('Clindamycin cap','','300 mg/cap','','', null, null, ((w*20)/3)/300, ((w*40)/3)/300, '', ''),
   ]);
 
@@ -2046,7 +2052,7 @@ function renderATB(w, am) {
   html += sectionHead('Sulfonamides', 'Sulfonamides');
   html += makeTable(doseHeaders, [
     drugRow('Co-trimoxazole syr','(Bactrim)','40/200 mg/5 mL','8-12 mk/Day TMP','10 kg = 1 ช้อนชา', (w*8)/2, (w*12)/2, ((w*8)/2*5)/40, ((w*12)/2*5)/40, 'q 12 hr', 'MAX 160mg TMP'),
-    drugRow('Co-trimoxazole tab','','80/400 mg/tab','q 12 hr','', (w*8)/2, (w*12)/2, ((w*8)/2)/80, ((w*12)/2)/80, 'q 12 hr', ''),
+    drugRow('Co-trimoxazole tab','','80/400 mg/tab','','', (w*8)/2, (w*12)/2, ((w*8)/2)/80, ((w*12)/2)/80, 'q 12 hr', ''),
   ]);
 
   // Quinolones
@@ -2496,11 +2502,16 @@ function renderReverseDose() {
     </div>
     <div class="rev-disp-row">
       <label>จำนวน:</label>
-      <input type="number" class="rev-disp-input" id="disp-days-global" value="${gDays}" min="1" max="365" placeholder="วัน"
-        oninput="onGlobalDaysChange()">
+      <div class="spin-wrap">
+        <button class="spin-btn" onclick="spinDays(-1)">−</button>
+        <input type="number" class="rev-disp-input" id="disp-days-global" value="${gDays}" min="1" max="365" placeholder="วัน"
+          oninput="onGlobalDaysChange()">
+        <button class="spin-btn" onclick="spinDays(1)">+</button>
+      </div>
       <span class="rev-disp-or">วัน &nbsp;หรือ&nbsp;</span>
       <label>นัดกลับ:</label>
       <input type="date" class="rev-disp-date" id="disp-end-global" value="${gEnd}" onchange="onGlobalEndChange()">
+      <button class="reset-btn" onclick="resetGlobalDate()" style="padding:6px 12px;font-size:0.7rem;height:auto">RESET</button>
     </div>
   </div>`;
 
@@ -2528,8 +2539,12 @@ function renderReverseDose() {
         </div>
         <div class="rev-input-row">
           <span>ครั้งละ:</span>
-          <input type="number" class="rev-input" id="${inputId}" value="${existingVal}" step="any" min="0"
-            oninput="updateRevResult('${id}', this.value, ${w}); updateDispense('${id}')">
+          <div class="spin-wrap">
+            <button class="spin-btn" onclick="spinInput('${inputId}',-0.5,'${id}',${w})">−</button>
+            <input type="number" class="rev-input" id="${inputId}" value="${existingVal}" step="any" min="0"
+              oninput="updateRevResult('${id}', this.value, ${w}); updateDispense('${id}')">
+            <button class="spin-btn" onclick="spinInput('${inputId}',0.5,'${id}',${w})">+</button>
+          </div>
           <span class="rev-unit">${drug.unit}</span>
         </div>
         <div id="${resultId}"></div>
@@ -2627,19 +2642,19 @@ const drugIntervals = {
   'penV-syr':'q 8 hr','penV-tab':'q 8 hr',
   'clox-syr':'q 6 hr','clox-cap-250':'q 6 hr','clox-cap-500':'q 6 hr',
   'diclox-syr':'q 6 hr','diclox-cap-250':'q 6 hr','diclox-cap-500':'q 6 hr',
-  'amox-syr-125':'q 12 hr','amox-syr-250':'q 12 hr','amox-cap':'q 12 hr',
-  'augm-syr':'q 12 hr','augm-tab':'q 12 hr',
+  'amox-syr-125':'q 12 hr','amox-syr-250':'q 12 hr','amox-cap':'q 6-8 hr',
+  'augm-syr':'q 6-8 hr','augm-tab':'q 12 hr',
   // Cephalosporins
-  'cephal-syr':'q 6 hr','cephal-cap-250':'q 6 hr','cephal-cap-500':'q 6 hr',
-  'cefacl-syr-125':'q 12 hr','cefacl-syr-250':'q 12 hr','cefacl-tab':'q 12 hr',
-  'cefdin-syr':'q 12 hr','cefdin-cap':'q 12 hr',
+  'cephal-syr':'q 6 hr','cephal-cap-250':'q 6-8 hr','cephal-cap-500':'q 6-8 hr',
+  'cefacl-syr-125':'q 12 hr','cefacl-syr-250':'q 12 hr','cefacl-tab':'q 8-12 hr',
+  'cefdin-syr':'q 12 hr','cefdin-cap':'q 12-24 hr',
   'cefix-syr':'q 12 hr','cefix-cap':'q 12 hr',
   // Macrolides
-  'eryth-syr':'q 6 hr','eryth-cap':'q 6 hr',
+  'eryth-syr':'q 6 hr','eryth-cap':'q 6-8 hr',
   'azith-syr':'q 24 hr','azith-cap':'q 24 hr',
   'clari-syr':'q 12 hr','clari-tab-250':'q 12 hr','clari-tab-500':'q 12 hr',
   // Lincosamides
-  'clinda-cap-150':'q 8 hr','clinda-cap-300':'q 8 hr',
+  'clinda-cap-150':'q 6-8 hr','clinda-cap-300':'q 6-8 hr',
   // Sulfonamides
   'cotri-syr':'q 12 hr','cotri-tab':'q 12 hr',
   // Quinolones
@@ -2725,6 +2740,32 @@ function onGlobalEndChange() {
     const diffDays = Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
     if (diffDays > 0) document.getElementById('disp-days-global').value = diffDays;
   }
+  updateAllDispense();
+}
+
+function spinInput(inputId, delta, drugId, w) {
+  const el = document.getElementById(inputId);
+  if (!el) return;
+  let val = parseFloat(el.value) || 0;
+  val = Math.max(0, val + delta);
+  el.value = val % 1 === 0 ? val : val.toFixed(1);
+  el.dispatchEvent(new Event('input'));
+}
+
+function spinDays(delta) {
+  const el = document.getElementById('disp-days-global');
+  if (!el) return;
+  let val = parseInt(el.value) || 0;
+  val = Math.max(1, val + delta);
+  el.value = val;
+  onGlobalDaysChange();
+}
+
+function resetGlobalDate() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('disp-start-global').value = today;
+  document.getElementById('disp-days-global').value = '';
+  document.getElementById('disp-end-global').value = '';
   updateAllDispense();
 }
 
