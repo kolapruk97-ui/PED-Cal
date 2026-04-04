@@ -1175,26 +1175,66 @@ class WheelPicker {
 
   showInput() {
     if (this.el.querySelector('.wheel-input-overlay')) return;
+    const hasUnits = this.items.some(i => i.unit);
     const input = document.createElement('input');
-    input.type = 'number';
     input.className = 'wheel-input-overlay';
-    input.value = this.items[this.selectedIdx].value;
-    input.step = 'any';
+    if (hasUnits) {
+      input.type = 'text';
+      input.placeholder = 'เช่น 5yr, 6mo';
+      const cur = this.items[this.selectedIdx];
+      input.value = cur.label;
+    } else {
+      input.type = 'number';
+      input.value = this.items[this.selectedIdx].value;
+      input.step = 'any';
+    }
     this.el.appendChild(input);
     input.focus();
     input.select();
 
     const commit = () => {
-      const val = parseFloat(input.value);
-      if (!isNaN(val)) {
-        let bestIdx = 0;
-        let bestDiff = Infinity;
-        this.items.forEach((item, i) => {
-          const diff = Math.abs(item.value - val);
-          if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
-        });
-        this.scrollToIdx(bestIdx, true);
+      const raw = input.value.trim().toLowerCase();
+      if (!raw) { if (input.parentNode) input.remove(); return; }
+
+      let bestIdx = 0;
+      let bestDiff = Infinity;
+
+      if (hasUnits) {
+        // Parse input like "5yr", "6mo", "5", "NB"
+        if (raw === 'nb' || raw === '0') {
+          bestIdx = 0;
+        } else {
+          const mMatch = raw.match(/^(\d+\.?\d*)\s*(mo|m)?$/i);
+          const yMatch = raw.match(/^(\d+\.?\d*)\s*(yr|y|ปี)?$/i);
+          let targetVal;
+          if (mMatch && (mMatch[2] || parseFloat(mMatch[1]) <= 11)) {
+            // Interpret as months
+            targetVal = parseFloat(mMatch[1]);
+          } else if (yMatch) {
+            // Interpret as years → convert to months
+            targetVal = parseFloat(yMatch[1]) * 12;
+          } else {
+            targetVal = parseFloat(raw);
+            if (!isNaN(targetVal) && targetVal <= 11) targetVal = targetVal; // months
+            else if (!isNaN(targetVal)) targetVal = targetVal * 12; // years
+          }
+          if (!isNaN(targetVal)) {
+            this.items.forEach((item, i) => {
+              const diff = Math.abs(item.value - targetVal);
+              if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+            });
+          }
+        }
+      } else {
+        const val = parseFloat(raw);
+        if (!isNaN(val)) {
+          this.items.forEach((item, i) => {
+            const diff = Math.abs(item.value - val);
+            if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+          });
+        }
       }
+      this.scrollToIdx(bestIdx, true);
       if (input.parentNode) input.remove();
     };
 
@@ -2146,7 +2186,7 @@ function doCalculate() {
 function setupFixedHeader() {
   const fixedEl = document.getElementById('fixedThead');
 
-  window.addEventListener('scroll', () => {
+  function updateFixedHeader() {
     if (!resultsVisible) { fixedEl.classList.remove('visible'); return; }
     const activeTab = document.querySelector('.tab-content.active');
     if (!activeTab) { fixedEl.classList.remove('visible'); return; }
@@ -2160,7 +2200,6 @@ function setupFixedHeader() {
       if (!thead) continue;
       const theadRect = thead.getBoundingClientRect();
       const tblRect = tbl.getBoundingClientRect();
-      // thead hidden behind search bar AND table body still visible
       if (theadRect.bottom < stickyTop && tblRect.bottom > stickyTop) {
         matchTbl = tbl;
         matchThead = thead;
@@ -2168,22 +2207,34 @@ function setupFixedHeader() {
     }
     if (matchTbl) {
       const tblRect2 = matchTbl.getBoundingClientRect();
+      // Clip to tab-content visible area
+      const tabRect = activeTab.getBoundingClientRect();
+      const clipLeft = Math.max(tblRect2.left, tabRect.left);
+      const clipRight = Math.min(tblRect2.right, tabRect.right);
+      const clipWidth = Math.max(0, clipRight - clipLeft);
+
       fixedEl.innerHTML = '';
       const ct = document.createElement('table');
-      // Clone colgroup from original table if exists
       const origCg = matchTbl.querySelector('colgroup');
       if (origCg) ct.appendChild(origCg.cloneNode(true));
       ct.appendChild(matchThead.cloneNode(true));
       ct.style.width = tblRect2.width + 'px';
       ct.style.tableLayout = 'fixed';
+      ct.style.marginLeft = (tblRect2.left - clipLeft) + 'px';
       fixedEl.style.top = stickyTop + 'px';
-      fixedEl.style.left = tblRect2.left + 'px';
+      fixedEl.style.left = clipLeft + 'px';
       fixedEl.style.right = 'auto';
-      fixedEl.style.width = tblRect2.width + 'px';
+      fixedEl.style.width = clipWidth + 'px';
       fixedEl.appendChild(ct);
     }
     fixedEl.classList.toggle('visible', !!matchTbl);
-  }, { passive: true });
+  }
+
+  window.addEventListener('scroll', updateFixedHeader, { passive: true });
+  // Also update on horizontal scroll of tab-content
+  document.querySelectorAll('.tab-content').forEach(tc => {
+    tc.addEventListener('scroll', updateFixedHeader, { passive: true });
+  });
 }
 
 // ===== Tab switching =====
