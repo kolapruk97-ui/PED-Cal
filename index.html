@@ -21,6 +21,8 @@
   --picker-red-bg: #2a1a1a;
   --picker-yellow-bg: #2a2510;
   --picker-green-bg: #0f2a1a;
+  --picker-pink-bg: #2a1a24;
+  --pink: #f48fb1;
   --header-gradient-1: #1e3a5f;
   --header-gradient-2: #0f2440;
   --over-max-bg: #dc2626;
@@ -109,6 +111,7 @@ body {
 .wheel-picker.red-border { border-color: var(--danger); background: var(--picker-red-bg); }
 .wheel-picker.yellow-border { border-color: var(--warning); background: var(--picker-yellow-bg); }
 .wheel-picker.green-border { border-color: var(--success); background: var(--picker-green-bg); }
+.wheel-picker.pink-border { border-color: var(--pink); background: var(--picker-pink-bg); }
 
 .wheel-picker .wheel-highlight {
   position: absolute;
@@ -146,6 +149,27 @@ body {
 .wheel-picker.yellow-border .wheel-mask-bottom { background: linear-gradient(to top, var(--picker-yellow-bg) 20%, transparent); }
 .wheel-picker.green-border .wheel-mask-top { background: linear-gradient(to bottom, var(--picker-green-bg) 20%, transparent); }
 .wheel-picker.green-border .wheel-mask-bottom { background: linear-gradient(to top, var(--picker-green-bg) 20%, transparent); }
+.wheel-picker.pink-border .wheel-mask-top { background: linear-gradient(to bottom, var(--picker-pink-bg) 20%, transparent); }
+.wheel-picker.pink-border .wheel-mask-bottom { background: linear-gradient(to top, var(--picker-pink-bg) 20%, transparent); }
+
+.wheel-input-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 36px;
+  z-index: 10;
+  background: #0f172a;
+  border: 2px solid var(--primary);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  padding: 0 8px;
+}
 
 .wheel-picker .wheel-scroll {
   position: absolute;
@@ -232,6 +256,8 @@ body {
 }
 .tab:hover { color: var(--primary); background: rgba(56,189,248,0.08); }
 .tab.active { color: #00bfa5; border: 2px solid #00bfa5; border-radius: 20px; background: transparent; }
+.tab.tab-pals.active { color: var(--pink); border-color: var(--pink); }
+.tab.tab-pals:hover { color: var(--pink); background: rgba(244,143,177,0.08); }
 
 .tab-content { display: none; padding: 16px; }
 .tab-content.active { display: block; }
@@ -278,7 +304,7 @@ tbody td {
 tbody tr:last-child td { border-bottom: none; }
 tbody tr:hover { background: var(--section-bg); }
 
-.drug-name { font-weight: 600; color: var(--text); white-space: nowrap; }
+.drug-name { font-weight: 600; color: var(--text); white-space: normal; overflow-wrap: break-word; }
 .drug-brand { font-size: 0.75rem; color: var(--text-muted); }
 .prep { font-size: 0.78rem; color: var(--text-muted); }
 .dose-info { font-size: 0.78rem; }
@@ -529,6 +555,13 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
   gap: 10px;
   align-items: end;
   width: 100%;
+  justify-content: center;
+}
+.mobile-pickers.rbw-mode {
+  grid-template-columns: repeat(4, 1fr);
+  max-width: 80%;
+  margin-left: auto;
+  margin-right: auto;
 }
 .mobile-pickers > div:first-child { grid-column: 1 / -1; }
 
@@ -681,7 +714,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
   .search-clear-btn { padding: 8px 10px; font-size: 0.8rem; }
 
   .tab-content { padding: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .section-title { font-size: 0.78rem; padding: 6px 12px; margin: 12px 0 6px; }
+  .section-title { font-size: 0.78rem; padding: 6px 12px; margin: 12px 0 6px; min-width: 700px; }
   table { font-size: 0.7rem; display: table; min-width: 700px; table-layout: fixed !important; }
   thead th { padding: 6px 4px; font-size: 0.65rem; }
   tbody td { padding: 5px 4px; }
@@ -751,7 +784,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
       <input type="number" id="deskAge" value="0" min="0" max="18" step="1" oninput="deskAgeChanged()" style="border-color:var(--warning);background:var(--picker-yellow-bg);">
     </div>
     <div class="desk-field ibw-mode-field">
-      <label>IBW (ใช้คำนวณ)</label>
+      <label>IBW from Age</label>
       <div class="ibw-display" id="ibwCalcDesk">
         <div class="ibw-val">3.0</div>
         <div class="ibw-unit">kg</div>
@@ -798,13 +831,11 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
       <div class="picker-value" id="ageRangeLabel">NB</div>
     </div>
     <div class="picker-group mob-ibw-field">
-      <div class="picker-label">IBW (ใช้คำนวณ)</div>
+      <div class="picker-label">IBW from Age</div>
       <div class="ibw-display" id="ibwCalc">
         <div class="ibw-val">3.0</div>
-        <div class="ibw-unit">kg</div>
-        <div class="ibw-range">NB</div>
       </div>
-      <div class="picker-value">&nbsp;</div>
+      <div class="picker-value" id="ibwPickerVal">3.0 kg · NB</div>
     </div>
     <!-- RBW mode: BW picker -->
     <div class="picker-group mob-rbw-field" style="display:none;">
@@ -814,14 +845,14 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
     </div>
     <!-- Common -->
     <div class="picker-group">
-      <div class="picker-label">Age PALS (yr)</div>
-      <div class="wheel-picker yellow-border" id="pickerPals"></div>
-      <div class="picker-value" id="palsPickerVal">1 yr</div>
-    </div>
-    <div class="picker-group">
       <div class="picker-label">% Dehydration</div>
       <div class="wheel-picker red-border" id="pickerDehyd"></div>
       <div class="picker-value" id="dehydPickerVal">3%</div>
+    </div>
+    <div class="picker-group">
+      <div class="picker-label" style="color:var(--pink)">Age PALS (yr)</div>
+      <div class="wheel-picker pink-border" id="pickerPals"></div>
+      <div class="picker-value" id="palsPickerVal">1 yr</div>
     </div>
     <div class="picker-group">
       <div class="picker-label">&nbsp;</div>
@@ -850,7 +881,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
   <div class="tab active" onclick="switchTab('dose')">Pediatric Dose</div>
   <div class="tab" onclick="switchTab('atb')">Pediatric ATB</div>
   <div class="tab" onclick="switchTab('fluid')">IV Fluid</div>
-  <div class="tab" onclick="switchTab('pals')">PALS</div>
+  <div class="tab tab-pals" onclick="switchTab('pals')">PALS</div>
 </div>
 </div>
 
@@ -930,12 +961,16 @@ class WheelPicker {
     this.el.addEventListener('pointerup', e => this.onUp(e));
     this.el.addEventListener('pointerleave', e => this.onUp(e));
     this.el.addEventListener('wheel', e => this.onWheel(e), { passive: false });
+    this._lastTapTime = 0;
+    this._tapMoved = false;
   }
 
   onDown(e) {
+    if (this.el.querySelector('.wheel-input-overlay')) return;
     e.preventDefault();
     this.el.setPointerCapture(e.pointerId);
     this.dragging = true;
+    this._tapMoved = false;
     this.startY = e.clientY;
     this.startOffset = this.offset;
     this.velocity = 0;
@@ -948,6 +983,7 @@ class WheelPicker {
     if (!this.dragging) return;
     e.preventDefault();
     const dy = e.clientY - this.startY;
+    if (Math.abs(dy) > 5) this._tapMoved = true;
     this.offset = this.startOffset + dy;
     const now = Date.now();
     const dt = now - this.lastTime;
@@ -961,6 +997,15 @@ class WheelPicker {
   onUp(e) {
     if (!this.dragging) return;
     this.dragging = false;
+    if (!this._tapMoved) {
+      const now = Date.now();
+      if (now - this._lastTapTime < 400) {
+        this._lastTapTime = 0;
+        this.showInput();
+        return;
+      }
+      this._lastTapTime = now;
+    }
     if (Math.abs(this.velocity) > 0.3) {
       this.decelerate();
     } else {
@@ -1069,6 +1114,40 @@ class WheelPicker {
   getValue() { return this.items[this.selectedIdx]; }
   getIndex() { return this.selectedIdx; }
 
+  showInput() {
+    if (this.el.querySelector('.wheel-input-overlay')) return;
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.className = 'wheel-input-overlay';
+    input.value = this.items[this.selectedIdx].value;
+    input.step = 'any';
+    this.el.appendChild(input);
+    input.focus();
+    input.select();
+
+    const commit = () => {
+      const val = parseFloat(input.value);
+      if (!isNaN(val)) {
+        let bestIdx = 0;
+        let bestDiff = Infinity;
+        this.items.forEach((item, i) => {
+          const diff = Math.abs(item.value - val);
+          if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+        });
+        this.scrollToIdx(bestIdx, true);
+      }
+      if (input.parentNode) input.remove();
+    };
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      if (e.key === 'Escape') { e.preventDefault(); input.remove(); }
+    });
+    input.addEventListener('blur', () => {
+      setTimeout(() => { if (input.parentNode) commit(); }, 100);
+    });
+  }
+
   setItems(newItems, newIdx) {
     this.items = newItems;
     this.build();
@@ -1156,7 +1235,9 @@ function calcAndUpdateIBW() {
   }
 
   const el = document.getElementById('ibwCalc');
-  el.innerHTML = `<div class="ibw-val">${ibw.toFixed(1)}</div><div class="ibw-unit">kg</div><div class="ibw-range">${range}</div>`;
+  el.innerHTML = `<div class="ibw-val">${ibw.toFixed(1)}</div>`;
+  const ibwPV = document.getElementById('ibwPickerVal');
+  if (ibwPV) ibwPV.textContent = ibw.toFixed(1) + ' kg · ' + range;
 
   // Store calculated IBW for mobile use
   window._mobileIBW = ibw;
@@ -1328,7 +1409,8 @@ function sectionHead(title, th) {
 }
 
 function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, interval, note, maxDose) {
-  const n = brand ? `<span class="drug-name">${name}</span><br><span class="drug-brand">${brand}</span>` : `<span class="drug-name">${name}</span>`;
+  const wbrName = name.replace(/([+\/])/g, '$1<wbr>');
+  const n = brand ? `<span class="drug-name">${wbrName}</span><br><span class="drug-brand">${brand}</span>` : `<span class="drug-name">${wbrName}</span>`;
   const p = `<span class="prep">${prep || ''}</span>`;
   const d = `<span class="dose-info">${dose || ''}</span>`;
   const a = `<span class="approx">${approx || ''}</span>`;
@@ -1346,7 +1428,7 @@ function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, in
 }
 
 const doseHeaders = ['Drug', 'Preparation', 'Dose', 'Approx', 'Min mg', 'Max mg', 'Min mL', 'Max mL', 'Interval', 'Note'];
-const doseColgroup = '<colgroup><col style="width:12%"><col style="width:10%"><col style="width:9%"><col style="width:11%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:7%"><col style="width:8%"><col style="width:22%"></colgroup>';
+const doseColgroup = '<colgroup><col style="width:14%"><col style="width:12%"><col style="width:9%"><col style="width:10%"><col style="width:7%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:7%"><col style="width:23%"></colgroup>';
 
 function renderDose(w, am) {
   const ageYr = (am || 0) / 12;
@@ -1951,6 +2033,7 @@ function setWeightModeMobile(mode) {
   document.getElementById('modeRBWm').classList.toggle('active', mode === 'rbw');
   document.querySelectorAll('.mob-ibw-field').forEach(el => el.style.display = mode === 'ibw' ? '' : 'none');
   document.querySelectorAll('.mob-rbw-field').forEach(el => el.style.display = mode === 'rbw' ? '' : 'none');
+  document.querySelector('.mobile-pickers').classList.toggle('rbw-mode', mode === 'rbw');
   markStale();
 }
 
@@ -2036,9 +2119,9 @@ function doReset() {
   if (pickerRBW) pickerRBW.scrollToIdx(0, true);
   pickerPals.scrollToIdx(0, true);
   pickerDehyd.scrollToIdx(0, true);
-  setWeightModeMobile('ibw');
+  setWeightModeMobile(mobileWeightMode);
   // Reset desktop inputs
-  setWeightMode('ibw');
+  setWeightMode(weightMode || 'ibw');
   document.getElementById('deskAgeRange').value = 'nb';
   document.getElementById('deskAge').value = '0';
   document.getElementById('deskAge').disabled = true;
