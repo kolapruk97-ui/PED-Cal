@@ -258,6 +258,55 @@ body {
 .tab.active { color: #00bfa5; border: 2px solid #00bfa5; border-radius: 20px; background: transparent; }
 .tab.tab-pals.active { color: var(--pink); border-color: var(--pink); }
 .tab.tab-pals:hover { color: var(--pink); background: rgba(244,143,177,0.08); }
+.tab.tab-reverse.active { color: #ffa726; border-color: #ffa726; }
+.tab.tab-reverse:hover { color: #ffa726; background: rgba(255,167,38,0.08); }
+.rev-badge { display:inline-block; background:#ffa726; color:#000; font-size:0.65rem; font-weight:700; padding:1px 6px; border-radius:10px; margin-left:4px; vertical-align:middle; }
+
+/* Reverse Dose Tab */
+.rev-add-bar { display:flex; gap:8px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
+.rev-add-bar select { flex:1; min-width:200px; padding:10px; border:2px solid #ffa726; border-radius:10px; background:var(--section-bg); color:var(--text); font-size:0.85rem; }
+.rev-add-btn { padding:10px 16px; background:#ffa726; color:#000; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.85rem; }
+.rev-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:10px; position:relative; }
+.rev-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.rev-card-name { font-weight:600; font-size:0.9rem; }
+.rev-card-prep { font-size:0.75rem; color:var(--text-muted); }
+.rev-card-remove { background:none; border:none; color:var(--danger); cursor:pointer; font-size:1.2rem; padding:4px 8px; }
+.rev-input-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.rev-input { width:100px; padding:8px; border:2px solid var(--border); border-radius:8px; background:var(--section-bg); color:var(--text); font-size:1rem; text-align:center; }
+.rev-input:focus { border-color:#ffa726; outline:none; }
+.rev-unit { font-size:0.85rem; color:var(--text-muted); }
+.rev-result { padding:8px 12px; border-radius:8px; font-size:0.85rem; }
+.rev-result.ok { background:rgba(102,187,106,0.15); color:#66bb6a; border:1px solid rgba(102,187,106,0.3); }
+.rev-result.low { background:rgba(148,163,184,0.15); color:#94a3b8; border:1px solid rgba(148,163,184,0.3); }
+.rev-result.high { background:rgba(255,167,38,0.15); color:#ffa726; border:1px solid rgba(255,167,38,0.3); }
+.rev-result.danger { background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
+.rev-range { font-size:0.75rem; color:var(--text-muted); margin-top:4px; }
+.rev-empty { text-align:center; color:var(--text-muted); padding:40px 20px; font-size:0.9rem; }
+
+/* Checkbox in drug tables */
+.drug-chk { width:16px; height:16px; cursor:pointer; accent-color:#ffa726; }
+
+/* Scroll to top button */
+.scroll-top-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s;
+}
+.scroll-top-btn.visible { display: flex; }
 
 .tab-content { display: none; padding: 16px; }
 .tab-content.active { display: block; }
@@ -558,10 +607,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
   justify-content: center;
 }
 .mobile-pickers.rbw-mode {
-  grid-template-columns: repeat(4, 1fr);
-  max-width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+  grid-template-columns: repeat(5, 1fr);
 }
 .mobile-pickers > div:first-child { grid-column: 1 / -1; }
 
@@ -574,6 +620,12 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
     width: 100%;
   }
   .desktop-inputs > div:first-child { grid-column: 1 / -1; }
+  .desktop-inputs.desk-rbw-mode {
+    grid-template-columns: repeat(5, 1fr);
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .mobile-pickers { display: none; }
 }
 
@@ -837,11 +889,16 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
       </div>
       <div class="picker-value" id="ibwPickerVal">3.0 kg · NB</div>
     </div>
-    <!-- RBW mode: BW picker -->
+    <!-- RBW mode: BW picker + Age picker -->
     <div class="picker-group mob-rbw-field" style="display:none;">
       <div class="picker-label">Real BW (kg)</div>
       <div class="wheel-picker green-border" id="pickerRBW"></div>
       <div class="picker-value" id="rbwPickerVal">0 kg</div>
+    </div>
+    <div class="picker-group mob-rbw-field" style="display:none;">
+      <div class="picker-label" style="color:var(--warning)">Age</div>
+      <div class="wheel-picker yellow-border" id="pickerRBWAge"></div>
+      <div class="picker-value" id="rbwAgeLabel">NB</div>
     </div>
     <!-- Common -->
     <div class="picker-group">
@@ -882,6 +939,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
   <div class="tab" onclick="switchTab('atb')">Pediatric ATB</div>
   <div class="tab" onclick="switchTab('fluid')">IV Fluid</div>
   <div class="tab tab-pals" onclick="switchTab('pals')">PALS</div>
+  <div class="tab tab-reverse" onclick="switchTab('reverse')">Reverse Dose <span class="rev-badge" id="revBadge" style="display:none">0</span></div>
 </div>
 </div>
 
@@ -893,6 +951,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid var(--warning) !important; 
 <div id="tab-atb" class="tab-content"></div>
 <div id="tab-fluid" class="tab-content"></div>
 <div id="tab-pals" class="tab-content"></div>
+<div id="tab-reverse" class="tab-content"></div>
 </div><!-- /resultsArea -->
 
 <script>
@@ -1266,14 +1325,15 @@ function recalcAll() {
     if (mobileWeightMode === 'rbw' && pickerRBW) {
       w = pickerRBW.getValue().value;
       document.getElementById('rbwPickerVal').textContent = w + ' kg';
+      if (pickerRBWAge) ageMonths = pickerRBWAge.getValue().value;
     } else {
       w = window._mobileIBW || 3;
+      if (pickerAge) ageMonths = pickerAge.getValue().value;
     }
     palsAge = pickerPals.getValue().value;
     dehyd = pickerDehyd.getValue().value;
     document.getElementById('palsPickerVal').textContent = palsAge + ' yr';
     document.getElementById('dehydPickerVal').textContent = dehyd + '%';
-    if (pickerAge) ageMonths = pickerAge.getValue().value;
   }
   renderDose(w, ageMonths);
   renderATB(w, ageMonths);
@@ -1395,12 +1455,38 @@ function cv(v, max, d=2) {
   return `<span class="calc-val">${val}</span>`;
 }
 
+function makeRowHtml(row) {
+  const drugName = row[0].replace(/<[^>]*>/g, '').trim().split('\n')[0];
+  const prepText = row[1].replace(/<[^>]*>/g, '').trim();
+  const drugId = findDrugId(drugName, prepText);
+  const chk = drugId ? `<input type="checkbox" class="drug-chk" data-drug-id="${drugId}" ${selectedDrugs.has(drugId)?'checked':''} onchange="toggleDrugSelect(this)">` : '';
+  return '<tr><td style="padding:2px;text-align:center">' + chk + '</td>' + row.map(c=>`<td>${c}</td>`).join('') + '</tr>';
+}
+
+function makeManualTableHead() {
+  return `<thead><tr><th style="width:20px;padding:2px">✔</th>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead>`;
+}
+
+function findDrugId(name, prep) {
+  const cleanName = name.replace(/<[^>]*>/g, '').trim();
+  const cleanPrep = prep.replace(/<[^>]*>/g, '').trim();
+  const d = drugRegistry.find(d => d.name === cleanName && d.prep === cleanPrep);
+  return d ? d.id : null;
+}
+
 function makeTable(headers, rows) {
   const isDose = headers === doseHeaders;
   const cg = isDose ? doseColgroup : '';
   const tblStyle = isDose ? ' style="table-layout:fixed"' : '';
-  let h = '<table' + tblStyle + '>' + cg + '<thead><tr>' + headers.map(x => `<th>${x}</th>`).join('') + '</tr></thead><tbody>';
-  h += rows.map(row => '<tr>' + row.map(c => `<td>${c}</td>`).join('') + '</tr>').join('');
+  const chkHeader = isDose ? '<th style="width:20px;padding:2px">✔</th>' : '';
+  let h = '<table' + tblStyle + '>' + cg + '<thead><tr>' + chkHeader + headers.map(x => `<th>${x}</th>`).join('') + '</tr></thead><tbody>';
+  h += rows.map(row => {
+    const drugName = row[0].replace(/<[^>]*>/g, '').trim().split('\n')[0];
+    const prepText = row[1].replace(/<[^>]*>/g, '').trim();
+    const drugId = findDrugId(drugName, prepText);
+    const chk = drugId ? `<input type="checkbox" class="drug-chk" data-drug-id="${drugId}" ${selectedDrugs.has(drugId)?'checked':''} onchange="toggleDrugSelect(this)">` : '';
+    return `<tr>${isDose ? `<td style="padding:2px;text-align:center">${chk}</td>` : ''}` + row.map(c => `<td>${c}</td>`).join('') + '</tr>';
+  }).join('');
   return h + '</tbody></table>';
 }
 
@@ -1427,8 +1513,103 @@ function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, in
   return [n, p, d, a, mn, mx, mvn, mvx, iv, nt];
 }
 
+// ===== Drug Registry for Reverse Dose =====
+const drugRegistry = [
+  // Antipyretic
+  {id:'para-syr-120', name:'Paracetamol syrup', prep:'120 mg/5 mL', concMg:120, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Antipyretic'},
+  {id:'para-syr-250', name:'Paracetamol syrup', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Antipyretic'},
+  {id:'para-kit', name:'Paracetamol kit syr', prep:'60 mg/0.6 mL', concMg:60, concVol:0.6, unit:'mL', minD:10, maxD:15, cat:'Antipyretic'},
+  {id:'para-tab-325', name:'Paracetamol tab', prep:'325 mg/tab', concMg:325, concVol:1, unit:'tab', minD:10, maxD:15, cat:'Antipyretic'},
+  {id:'para-tab-500', name:'Paracetamol tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:15, cat:'Antipyretic'},
+  {id:'ibu-syr', name:'Ibuprofen syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:5, maxD:10, cat:'Antipyretic'},
+  {id:'ibu-tab-200', name:'Ibuprofen tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:5, maxD:10, cat:'Antipyretic'},
+  {id:'ibu-tab-400', name:'Ibuprofen tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:5, maxD:10, cat:'Antipyretic'},
+  // Antihistamine
+  {id:'cet-syr', name:'Cetirizine syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.5, cat:'Antihistamine'},
+  {id:'cet-tab', name:'Cetirizine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.5, cat:'Antihistamine'},
+  {id:'cpm-syr', name:'CPM syrup', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.35, cat:'Antihistamine'},
+  {id:'cpm-tab', name:'CPM tablet', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0.1, maxD:0.35, cat:'Antihistamine'},
+  {id:'cpm-iv', name:'CPM IV', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:0.25, maxD:0.25, cat:'Antihistamine'},
+  {id:'hyd-syr', name:'Hydroxyzine syr', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:0.33, maxD:0.67, cat:'Antihistamine'},
+  {id:'hyd-tab', name:'Hydroxyzine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.33, maxD:0.67, cat:'Antihistamine'},
+  // Mucolytic
+  {id:'brom-syr', name:'Bromhexine syr', prep:'4 mg/5 mL', concMg:4, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Mucolytic'},
+  {id:'brom-tab', name:'Bromhexine tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Mucolytic'},
+  // Antitussive
+  {id:'levo-syr', name:'Levodropropizine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Antitussive'},
+  // Decongestant
+  {id:'pseudo-syr', name:'Pseudoephedrine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Decongestant'},
+  // Antiemetic
+  {id:'dom-syr', name:'Domperidone syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.2, maxD:0.3, cat:'Antiemetic'},
+  {id:'dom-tab', name:'Domperidone tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.2, maxD:0.3, cat:'Antiemetic'},
+  {id:'onda-tab', name:'Ondansetron tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0.15, maxD:0.3, cat:'Antiemetic'},
+  {id:'metocl-syr', name:'Metoclopramide syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.1, maxD:0.1, cat:'Antiemetic'},
+  {id:'metocl-tab', name:'Metoclopramide tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.1, maxD:0.1, cat:'Antiemetic'},
+  {id:'dimen-tab', name:'Dimenhydrinate tab', prep:'50 mg/tab', concMg:50, concVol:1, unit:'tab', minD:1, maxD:1, cat:'Antiemetic'},
+  // Antacid
+  {id:'omep-tab', name:'Omeprazole tab', prep:'20 mg/tab', concMg:20, concVol:1, unit:'tab', minD:0.5, maxD:2, cat:'Antacid'},
+  {id:'rani-tab', name:'Ranitidine tab', prep:'150 mg/tab', concMg:150, concVol:1, unit:'tab', minD:1, maxD:2, cat:'Antacid'},
+  {id:'famo-tab', name:'Famotidine tab', prep:'20 mg/tab', concMg:20, concVol:1, unit:'tab', minD:0.5, maxD:0.5, cat:'Antacid'},
+  // Laxatives
+  {id:'lactu-syr', name:'Lactulose', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:1, maxD:3, cat:'Laxatives'},
+  // Steroid
+  {id:'pred-tab', name:'Prednisolone', prep:'5 mg/tab', concMg:5, concVol:1, unit:'tab', minD:0.5, maxD:1, cat:'Steroid'},
+  // Anti-epileptic
+  {id:'diaz-iv', name:'Diazepam IV/PO', prep:'10 mg/2 mL', concMg:10, concVol:2, unit:'mL', minD:0.3, maxD:0.3, cat:'Anti-epileptic'},
+  // Procedural sedation
+  {id:'chloral-syr', name:'Chloral hydrate', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation'},
+  {id:'propofol', name:'Propofol', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:1, maxD:1, cat:'Sedation'},
+  {id:'keta-iv', name:'Ketamine IV', prep:'50 mg/mL', concMg:50, concVol:1, unit:'mL', minD:1, maxD:1.5, cat:'Sedation'},
+  {id:'keta-im', name:'Ketamine IM', prep:'50 mg/mL', concMg:50, concVol:1, unit:'mL', minD:2, maxD:5, cat:'Sedation'},
+  // === ATB ===
+  // Penicillins
+  {id:'penV-syr', name:'Penicillin V syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:8.3, maxD:25, cat:'Penicillins'},
+  {id:'penV-tab', name:'Penicillin V tab', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:8.3, maxD:25, cat:'Penicillins'},
+  {id:'clox-syr', name:'Cloxacillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:12.5, maxD:25, cat:'Penicillins'},
+  {id:'clox-cap', name:'Cloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:12.5, maxD:25, cat:'Penicillins'},
+  {id:'diclox-syr', name:'Dicloxacillin syr', prep:'62.5 mg/5 mL', concMg:62.5, concVol:5, unit:'mL', minD:3.1, maxD:12.5, cat:'Penicillins'},
+  {id:'diclox-cap', name:'Dicloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:3.1, maxD:12.5, cat:'Penicillins'},
+  {id:'amox-syr', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:20, maxD:45, cat:'Penicillins'},
+  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'tab', minD:20, maxD:45, cat:'Penicillins'},
+  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:15, maxD:45, cat:'Penicillins'},
+  {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:15, maxD:45, cat:'Penicillins'},
+  // Cephalosporins
+  {id:'cephal-syr', name:'Cephalexin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:6.25, maxD:25, cat:'Cephalosporins'},
+  {id:'cephal-cap', name:'Cephalexin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:6.25, maxD:25, cat:'Cephalosporins'},
+  {id:'cefacl-syr', name:'Cefaclor syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:20, cat:'Cephalosporins'},
+  {id:'cefacl-tab', name:'Cefaclor tab', prep:'375 mg/tab', concMg:375, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Cephalosporins'},
+  {id:'cefdin-syr', name:'Cefdinir syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:7, maxD:7, cat:'Cephalosporins'},
+  {id:'cefdin-cap', name:'Cefdinir cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'tab', minD:7, maxD:7, cat:'Cephalosporins'},
+  {id:'cefix-syr', name:'Cefixime syr', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:4, maxD:4, cat:'Cephalosporins'},
+  {id:'cefix-cap', name:'Cefixime cap', prep:'100 mg/cap', concMg:100, concVol:1, unit:'tab', minD:4, maxD:4, cat:'Cephalosporins'},
+  // Macrolides
+  {id:'eryth-syr', name:'Erythromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:7.5, maxD:12.5, cat:'Macrolides'},
+  {id:'eryth-cap', name:'Erythromycin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:7.5, maxD:12.5, cat:'Macrolides'},
+  {id:'azith-syr', name:'Azithromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Macrolides'},
+  {id:'azith-cap', name:'Azithromycin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:10, maxD:15, cat:'Macrolides'},
+  {id:'clari-syr', name:'Clarithromycin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:7.5, maxD:7.5, cat:'Macrolides'},
+  {id:'clari-tab', name:'Clarithromycin tab', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:7.5, maxD:7.5, cat:'Macrolides'},
+  // Lincosamides
+  {id:'clinda-cap', name:'Clindamycin cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'tab', minD:6.7, maxD:13.3, cat:'Lincosamides'},
+  // Sulfonamides
+  {id:'cotri-syr', name:'Co-trimoxazole syr', prep:'40/200 mg/5 mL', concMg:40, concVol:5, unit:'mL', minD:4, maxD:6, cat:'Sulfonamides'},
+  {id:'cotri-tab', name:'Co-trimoxazole tab', prep:'80/400 mg/tab', concMg:80, concVol:1, unit:'tab', minD:4, maxD:6, cat:'Sulfonamides'},
+  // Quinolones
+  {id:'cipro-tab', name:'Ciprofloxacin', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Quinolones'},
+  // Others
+  {id:'metro-syr', name:'Metronidazole syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:10, maxD:16.7, cat:'Others'},
+  {id:'metro-tab', name:'Metronidazole tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
+  {id:'doxy-cap', name:'Doxycycline', prep:'100 mg/cap', concMg:100, concVol:1, unit:'tab', minD:1, maxD:2.5, cat:'Others'},
+  // Oseltamivir
+  {id:'osel-30', name:'Oseltamivir', prep:'30 mg/tab', concMg:30, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
+  {id:'osel-45', name:'Oseltamivir', prep:'45 mg/tab', concMg:45, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
+  {id:'osel-75', name:'Oseltamivir', prep:'75 mg/tab', concMg:75, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
+];
+
+const selectedDrugs = new Set();
+
 const doseHeaders = ['Drug', 'Preparation', 'Dose', 'Approx', 'Min mg', 'Max mg', 'Min mL', 'Max mL', 'Interval', 'Note'];
-const doseColgroup = '<colgroup><col style="width:14%"><col style="width:12%"><col style="width:9%"><col style="width:10%"><col style="width:7%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:7%"><col style="width:23%"></colgroup>';
+const doseColgroup = '<colgroup><col style="width:3%"><col style="width:13%"><col style="width:11%"><col style="width:9%"><col style="width:10%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:7%"><col style="width:23%"></colgroup>';
 
 function renderDose(w, am) {
   const ageYr = (am || 0) / 12;
@@ -1529,11 +1710,7 @@ function renderDose(w, am) {
 
   // Antacid
   html += sectionHead('Antacid', 'ยาลดกรด');
-  let antacidRows = `<table style="table-layout:fixed">${doseColgroup}<thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-  antacidRows += drugRow('Omeprazole IV','','40 mg/amp','0.5-2 mk/Day','1 mk/Dose IV OD', w*1, null, null, null, '', '').map(c=>`<td>${c}</td>`).join('');
-  antacidRows = antacidRows.replace(/<td>/, '<tr><td>') + '</tr>';
-  // Simpler: build all rows
-  antacidRows = `<table style="table-layout:fixed">${doseColgroup}<thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
+  let antacidRows = `<table style="table-layout:fixed">${doseColgroup}${makeManualTableHead()}<tbody>`;
   [
     drugRow('Omeprazole IV','','40 mg/amp','0.5-2 mk/Day','1 mk/Dose IV OD', w*1, null, null, null, '', ''),
     drugRow('Omeprazole tab','','20 mg/tab','PO/IV q12-24hr','', w*0.5, w*2, (w*0.5)/20, (w*2)/20, 'q 24 hr', ''),
@@ -1541,18 +1718,18 @@ function renderDose(w, am) {
     drugRow('Ranitidine tab','','150 mg/tab','PO q12hr, IV q8hr','', w*1, w*2, (w*1)/150, (w*2)/150, 'q 12 hr', 'MAX 300 mg/day'),
     drugRow('Famotidine tab','','20 mg/tab','0.5 mk/Dose','PO q12-24hr', w*0.5, null, (w*0.5)/20, null, 'q 12-24 hr', ''),
     drugRow('Alum milk','(Al-Mg Hydroxide)','240 mL/bottle','0.5-1 mL/kg/dose','0.5 mL/kg tid pc', null, null, w*0.5, w*1, 'q 12 hr', 'MAX 30 mL/dose'),
-  ].forEach(row => { antacidRows += '<tr>' + row.map(c=>`<td>${c}</td>`).join('') + '</tr>'; });
+  ].forEach(row => { antacidRows += makeRowHtml(row); });
   const simeDose = ageYr<2?'20 mg (0.3mL)':ageYr<12?'40 mg (0.6mL)':'40-80 mg';
-  antacidRows += '<tr>' + drugRow('Simethicone','(Air-X)','Drop 40mg/0.6mL<br>Tab 80mg/tab',simeDose,'', null, null, null, null, 'q 8 hr', '&lt;2yr:20mg | 2-12yr:40mg | &gt;12yr:40-80mg').map(c=>`<td>${c}</td>`).join('') + '</tr>';
+  antacidRows += makeRowHtml(drugRow('Simethicone','(Air-X)','Drop 40mg/0.6mL<br>Tab 80mg/tab',simeDose,'', null, null, null, null, 'q 8 hr', '&lt;2yr:20mg | 2-12yr:40mg | &gt;12yr:40-80mg'));
   antacidRows += '</tbody></table>';
   html += antacidRows;
 
   // Laxatives
   html += sectionHead('Laxatives', 'ยาระบาย');
-  let laxRows = `<table style="table-layout:fixed">${doseColgroup}<thead><tr>${doseHeaders.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>`;
-  laxRows += '<tr>' + drugRow('Lactulose','(Hepalac, Duphalac)','10 mg/5 mL','1-3 mk/Day','1-3 mL/kg hs', w*1, w*3, (w*1*5)/10, (w*3*5)/10, 'q 24 hr / hs', 'อายุ >1 เดือน<br>MAX 60 mL/dose').map(c=>`<td>${c}</td>`).join('') + '</tr>';
+  let laxRows = `<table style="table-layout:fixed">${doseColgroup}${makeManualTableHead()}<tbody>`;
+  laxRows += makeRowHtml(drugRow('Lactulose','(Hepalac, Duphalac)','10 mg/5 mL','1-3 mk/Day','1-3 mL/kg hs', w*1, w*3, (w*1*5)/10, (w*3*5)/10, 'q 24 hr / hs', 'อายุ >1 เดือน<br>MAX 60 mL/dose'));
   const momDose = ageYr<2?`0.5mL/kg (${r(w*0.5)}mL)`:ageYr<6?'5-15 mL':ageYr<12?'15-30 mL':'30-60 mL';
-  laxRows += '<tr>' + drugRow('Milk of Magnesia','','','0.5-1 mL/kg/dose',momDose, null, null, null, null, 'q 24 hr / hs or bid', '&lt;2yr:0.5mL/kg | 2-5yr:5-15mL | 6-11yr:15-30mL | &gt;12yr:30-60mL').map(c=>`<td>${c}</td>`).join('') + '</tr>';
+  laxRows += makeRowHtml(drugRow('Milk of Magnesia','','','0.5-1 mL/kg/dose',momDose, null, null, null, null, 'q 24 hr / hs or bid', '&lt;2yr:0.5mL/kg | 2-5yr:5-15mL | 6-11yr:15-30mL | &gt;12yr:30-60mL'));
   laxRows += '</tbody></table>';
   html += laxRows;
 
@@ -1698,15 +1875,21 @@ function renderATB(w, am) {
   else if (ageYr <= 12) acyHSVDose = r((w*30)/3) + '-' + r((w*45)/3) + ' mg';
   else acyHSVDose = r((w*30)/3) + ' mg';
 
-  // Find best Oseltamivir preparation: prefer whole tabs, then half, then fewest tabs
+  // Find best Oseltamivir preparation: prefer whole tabs, then half, then closest tab count to 1
   const oselPreps = [30, 45, 75];
   const oselBest = oselPreps.reduce((best, p) => {
     const tabs = oselMg / p;
-    const fracWhole = Math.abs(tabs - Math.round(tabs)); // distance to whole number
-    const fracHalf = Math.abs(tabs - Math.round(tabs * 2) / 2); // distance to nearest 0.5
-    const score = fracWhole < 0.01 ? 0 : fracHalf < 0.01 ? 1 : 2; // 0=whole, 1=half, 2=other
+    const fracWhole = Math.abs(tabs - Math.round(tabs));
+    const fracHalf = Math.abs(tabs - Math.round(tabs * 2) / 2);
+    const score = fracWhole < 0.01 ? 0 : fracHalf < 0.01 ? 1 : 2;
     if (score < best.score) return {p, score, tabs};
-    if (score === best.score && tabs < best.tabs) return {p, score, tabs}; // fewer tabs
+    if (score === best.score && score < 2 && tabs < best.tabs) return {p, score, tabs};
+    // For score=2 (no exact match): prefer tab count closest to 1
+    if (score === best.score && score === 2) {
+      const distOne = Math.abs(tabs - 1);
+      const bestDistOne = Math.abs(best.tabs - 1);
+      if (distOne < bestDistOne) return {p, score, tabs};
+    }
     return best;
   }, {p: 0, score: 999, tabs: 999}).p;
   const oselApprox = (p) => { const t = r(oselMg/p,1); return t + ' tab' + (p === oselBest ? ' ✅' : ''); };
@@ -2005,9 +2188,140 @@ function setupFixedHeader() {
 
 // ===== Tab switching =====
 function switchTab(name) {
-  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', ['dose','atb','fluid','pals'][i] === name));
+  const tabNames = ['dose','atb','fluid','pals','reverse'];
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', tabNames[i] === name));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'reverse') renderReverseDose();
+}
+
+// ===== Reverse Dose Logic =====
+function toggleDrugSelect(el) {
+  const id = el.dataset.drugId;
+  if (el.checked) selectedDrugs.add(id);
+  else selectedDrugs.delete(id);
+  updateRevBadge();
+}
+
+function updateRevBadge() {
+  const badge = document.getElementById('revBadge');
+  if (selectedDrugs.size > 0) {
+    badge.style.display = 'inline-block';
+    badge.textContent = selectedDrugs.size;
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function reverseCalc(drugId, amount, weight) {
+  const drug = drugRegistry.find(d => d.id === drugId);
+  if (!drug || !amount || !weight) return null;
+  const totalMg = (amount * drug.concMg) / drug.concVol;
+  const mgPerKg = totalMg / weight;
+  let status = 'ok';
+  if (drug.minD > 0 && mgPerKg < drug.minD) status = 'low';
+  else if (drug.maxD > 0 && mgPerKg > drug.maxD * 1.2) status = 'danger';
+  else if (drug.maxD > 0 && mgPerKg > drug.maxD) status = 'high';
+  return { totalMg, mgPerKg, status, minD: drug.minD, maxD: drug.maxD };
+}
+
+function getActiveWeight() {
+  if (window.innerWidth >= 769) {
+    if (weightMode === 'rbw') return parseFloat(document.getElementById('deskRBW').value) || 0;
+    return deskCalcIBW() || 0;
+  }
+  if (mobileWeightMode === 'rbw' && pickerRBW) return pickerRBW.getValue().value;
+  return window._mobileIBW || 3;
+}
+
+function renderReverseDose() {
+  const w = getActiveWeight();
+  const container = document.getElementById('tab-reverse');
+
+  // Build dropdown options grouped by category
+  const cats = [...new Set(drugRegistry.map(d => d.cat))];
+  let opts = '<option value="">-- เลือกยา --</option>';
+  cats.forEach(cat => {
+    opts += `<optgroup label="${cat}">`;
+    drugRegistry.filter(d => d.cat === cat).forEach(d => {
+      opts += `<option value="${d.id}">${d.name} — ${d.prep}</option>`;
+    });
+    opts += '</optgroup>';
+  });
+
+  let html = `<div class="rev-add-bar">
+    <select id="revDrugSelect">${opts}</select>
+    <button class="rev-add-btn" onclick="addDrugFromDropdown()">+ เพิ่มยา</button>
+  </div>`;
+
+  if (selectedDrugs.size === 0) {
+    html += '<div class="rev-empty">ยังไม่ได้เลือกยา<br>ติ๊กเลือกจากตาราง Dose/ATB หรือเลือกจาก dropdown ด้านบน</div>';
+  } else {
+    selectedDrugs.forEach(id => {
+      const drug = drugRegistry.find(d => d.id === id);
+      if (!drug) return;
+      const inputId = 'rev-input-' + id;
+      const resultId = 'rev-result-' + id;
+      const existingVal = document.querySelector('#' + inputId)?.value || '';
+      html += `<div class="rev-card">
+        <div class="rev-card-header">
+          <div>
+            <div class="rev-card-name">${drug.name}</div>
+            <div class="rev-card-prep">${drug.prep}</div>
+          </div>
+          <button class="rev-card-remove" onclick="removeDrugFromReverse('${id}')" title="ลบ">✕</button>
+        </div>
+        <div class="rev-input-row">
+          <span>กรอก:</span>
+          <input type="number" class="rev-input" id="${inputId}" value="${existingVal}" step="any" min="0"
+            oninput="updateRevResult('${id}', this.value, ${w})">
+          <span class="rev-unit">${drug.unit}</span>
+        </div>
+        <div id="${resultId}"></div>
+        ${drug.minD > 0 ? `<div class="rev-range">Safe range: ${drug.minD}–${drug.maxD} mg/kg/dose</div>` : ''}
+      </div>`;
+    });
+  }
+
+  container.innerHTML = html;
+
+  // Re-calculate existing values
+  selectedDrugs.forEach(id => {
+    const input = document.getElementById('rev-input-' + id);
+    if (input && input.value) updateRevResult(id, input.value, w);
+  });
+}
+
+function updateRevResult(drugId, val, weight) {
+  const amount = parseFloat(val);
+  const el = document.getElementById('rev-result-' + drugId);
+  if (!el) return;
+  if (!amount || amount <= 0) { el.innerHTML = ''; return; }
+  const r = reverseCalc(drugId, amount, weight);
+  if (!r) { el.innerHTML = ''; return; }
+
+  const statusLabel = {ok:'✅ OK', low:'⚪ ต่ำกว่า therapeutic', high:'⚠️ สูงกว่า max', danger:'🔴 เกิน max!'}[r.status];
+  el.innerHTML = `<div class="rev-result ${r.status}">
+    → <strong>${r.totalMg.toFixed(1)} mg</strong> = <strong>${r.mgPerKg.toFixed(2)} mg/kg</strong> &nbsp; ${statusLabel}
+  </div>`;
+}
+
+function addDrugFromDropdown() {
+  const sel = document.getElementById('revDrugSelect');
+  if (!sel.value) return;
+  selectedDrugs.add(sel.value);
+  updateRevBadge();
+  // Also check checkbox in tables if visible
+  document.querySelectorAll(`.drug-chk[data-drug-id="${sel.value}"]`).forEach(cb => cb.checked = true);
+  sel.value = '';
+  renderReverseDose();
+}
+
+function removeDrugFromReverse(id) {
+  selectedDrugs.delete(id);
+  updateRevBadge();
+  document.querySelectorAll(`.drug-chk[data-drug-id="${id}"]`).forEach(cb => cb.checked = false);
+  renderReverseDose();
 }
 
 // ===== Desktop input handlers =====
@@ -2024,6 +2338,7 @@ function setWeightMode(mode) {
   document.getElementById('modeRBW').classList.toggle('active', mode === 'rbw');
   document.querySelectorAll('.ibw-mode-field').forEach(el => el.style.display = mode === 'ibw' ? '' : 'none');
   document.querySelectorAll('.rbw-mode-field').forEach(el => el.style.display = mode === 'rbw' ? '' : 'none');
+  document.querySelector('.desktop-inputs')?.classList.toggle('desk-rbw-mode', mode === 'rbw');
   markStale();
 }
 
@@ -2034,6 +2349,12 @@ function setWeightModeMobile(mode) {
   document.querySelectorAll('.mob-ibw-field').forEach(el => el.style.display = mode === 'ibw' ? '' : 'none');
   document.querySelectorAll('.mob-rbw-field').forEach(el => el.style.display = mode === 'rbw' ? '' : 'none');
   document.querySelector('.mobile-pickers').classList.toggle('rbw-mode', mode === 'rbw');
+  if (mode === 'rbw') {
+    requestAnimationFrame(() => {
+      if (pickerRBW) pickerRBW.scrollToIdx(pickerRBW.selectedIdx, false);
+      if (pickerRBWAge) pickerRBWAge.scrollToIdx(pickerRBWAge.selectedIdx, false);
+    });
+  }
   markStale();
 }
 
@@ -2117,6 +2438,7 @@ function doReset() {
   // Reset mobile pickers
   pickerAge.scrollToIdx(0, true);
   if (pickerRBW) pickerRBW.scrollToIdx(0, true);
+  if (pickerRBWAge) pickerRBWAge.scrollToIdx(0, true);
   pickerPals.scrollToIdx(0, true);
   pickerDehyd.scrollToIdx(0, true);
   setWeightModeMobile(mobileWeightMode);
@@ -2362,6 +2684,17 @@ if (pickerRBWEl) {
   pickerRBW = new WheelPicker(pickerRBWEl, ibwItems, 0, () => { markStale(); recalcAll(); });
 }
 
+let pickerRBWAge;
+const pickerRBWAgeEl = document.getElementById('pickerRBWAge');
+if (pickerRBWAgeEl) {
+  pickerRBWAge = new WheelPicker(pickerRBWAgeEl, simpleAgeItems, 0, (item) => {
+    const lbl = document.getElementById('rbwAgeLabel');
+    if (lbl) lbl.textContent = item.label;
+    markStale();
+    recalcAll();
+  });
+}
+
 pickerPals = new WheelPicker(
   document.getElementById('pickerPals'),
   palsItems,
@@ -2384,6 +2717,16 @@ setTimeout(() => {
 }, 50);
 
 setupFixedHeader();
+
+// Scroll to top button
+const scrollBtn = document.createElement('button');
+scrollBtn.className = 'scroll-top-btn';
+scrollBtn.innerHTML = '&#9650;';
+scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+document.body.appendChild(scrollBtn);
+window.addEventListener('scroll', () => {
+  scrollBtn.classList.toggle('visible', window.scrollY > 300);
+});
 </script>
 </body>
 </html>
