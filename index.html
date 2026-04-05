@@ -31,12 +31,12 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html { overflow-x: hidden; }
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
-  overflow-x: hidden;
 }
 
 .header {
@@ -175,6 +175,22 @@ body {
 .mob-select.pink-border { border-color: var(--pink); background: var(--picker-pink-bg); }
 .mob-select.purple-border { border-color: var(--purple); background: var(--picker-purple-bg); }
 .mob-select:focus { outline: none; box-shadow: 0 0 0 2px rgba(96,165,250,0.4); }
+.mob-input-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  background: #0f172a;
+  border: 2px solid var(--primary);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
 .picker-label-wrap {
   display: flex;
   align-items: flex-end;
@@ -386,6 +402,10 @@ body {
 .rev-result.high { background:rgba(255,167,38,0.15); color:#ffa726; border:1px solid rgba(255,167,38,0.3); }
 .rev-result.danger { background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
 .rev-range { font-size:0.75rem; color:var(--text-muted); margin-top:4px; }
+.rev-note-toggle { display:inline-block; margin-top:4px; font-size:0.7rem; color:#ffa726; cursor:pointer; border:1px solid #ffa726; border-radius:4px; padding:2px 8px; }
+.rev-note-toggle:active { background:rgba(255,167,38,0.15); }
+.rev-note-body { display:none; margin-top:4px; padding:6px 8px; font-size:0.7rem; color:var(--text); background:var(--section-bg); border-radius:6px; border-left:3px solid #ffa726; line-height:1.6; }
+.rev-note-body.open { display:block; }
 .rev-empty { text-align:center; color:var(--text-muted); padding:40px 20px; font-size:0.9rem; }
 
 /* Dispense calculator */
@@ -427,7 +447,7 @@ td:has(.drug-chk) { cursor:pointer; }
   font-size: 1.3rem;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  z-index: 100;
+  z-index: 9999;
   display: none;
   align-items: center;
   justify-content: center;
@@ -449,7 +469,7 @@ td:has(.drug-chk) { cursor:pointer; }
   font-size: 1.2rem;
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  z-index: 100;
+  z-index: 9999;
   display: none;
   align-items: center;
   justify-content: center;
@@ -949,7 +969,8 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   .search-btn { padding: 8px 14px; font-size: 0.8rem; }
   .search-clear-btn { padding: 8px 10px; font-size: 0.8rem; }
 
-  .tab-content { padding: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tab-content { padding: 8px; }
+  .tab-content .table-scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .section-title { font-size: 0.78rem; padding: 6px 12px; margin: 12px 0 6px; min-width: 700px; }
   table { font-size: 0.7rem; display: table; min-width: 700px; table-layout: fixed !important; }
   thead th { padding: 6px 4px; font-size: 0.65rem; }
@@ -989,7 +1010,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 
 <div class="header">
   <h1>Pediatric Calculator</h1>
-  <div class="warning"><span class="warn-label">BETA V.3</span>กรุณา re-check dose ซ้ำ<br>หากพบข้อผิดพลาด แจ้งแพทย์ธนกฤต</div>
+  <div class="warning"><span class="warn-label">BETA V.4</span>กรุณา re-check dose ซ้ำ<br>หากพบข้อผิดพลาด แจ้งแพทย์ธนกฤต</div>
   <div class="subtitle">Source: ER TSH Ped Cal, Rx QSNICH</div>
 </div>
 
@@ -1140,6 +1161,9 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 <div id="tab-pals" class="tab-content"><div class="calc-placeholder">กรอกอายุ / น้ำหนัก แล้วกด <strong>CALCULATE</strong></div></div>
 <div id="tab-reverse" class="tab-content"></div>
 </div><!-- /resultsArea -->
+
+<button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#9650;</button>
+<button class="cart-btn" id="cartBtnEl">&#128722;<span class="cart-count">0</span></button>
 
 <script>
 // ===== iOS Wheel Picker Engine =====
@@ -1747,18 +1771,18 @@ function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, in
 const drugRegistry = [
   // === DOSE TAB ===
   // Antipyretic
-  {id:'para-syr-120', name:'Paracetamol syrup', prep:'120 mg/5 mL', concMg:120, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Antipyretic'},
-  {id:'para-syr-250', name:'Paracetamol syrup', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Antipyretic'},
+  {id:'para-syr-120', name:'Paracetamol syrup', prep:'120 mg/5 mL', concMg:120, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Antipyretic', note:'MAX 90 mk/Day'},
+  {id:'para-syr-250', name:'Paracetamol syrup', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Antipyretic', note:'MAX 90 mk/Day'},
   {id:'para-kit', name:'Paracetamol kit syr', prep:'60 mg/0.6 mL', concMg:60, concVol:0.6, unit:'mL', minD:10, maxD:15, cat:'Antipyretic'},
   {id:'para-tab-325', name:'Paracetamol tab', prep:'325 mg/tab', concMg:325, concVol:1, unit:'tab', minD:10, maxD:15, cat:'Antipyretic'},
   {id:'para-tab-500', name:'Paracetamol tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:15, cat:'Antipyretic'},
-  {id:'ibu-syr', name:'Ibuprofen syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:5, maxD:10, cat:'Antipyretic'},
+  {id:'ibu-syr', name:'Ibuprofen syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:5, maxD:10, cat:'Antipyretic', note:'MAX 40 mk/Day'},
   {id:'ibu-tab-200', name:'Ibuprofen tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:5, maxD:10, cat:'Antipyretic'},
   {id:'ibu-tab-400', name:'Ibuprofen tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:5, maxD:10, cat:'Antipyretic'},
   // Antihistamine
   {id:'cet-syr', name:'Cetirizine syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.5, cat:'Antihistamine'},
   {id:'cet-tab', name:'Cetirizine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.5, cat:'Antihistamine'},
-  {id:'cpm-syr', name:'CPM syrup', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.35, cat:'Antihistamine'},
+  {id:'cpm-syr', name:'CPM syrup', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.35, cat:'Antihistamine', note:'ห้ามใช้ &lt;1yr'},
   {id:'cpm-tab', name:'CPM tablet', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0.1, maxD:0.35, cat:'Antihistamine'},
   {id:'cpm-iv', name:'CPM IV', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:0.25, maxD:0.25, cat:'Antihistamine'},
   {id:'hyd-syr', name:'Hydroxyzine syr', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:0.33, maxD:0.67, cat:'Antihistamine'},
@@ -1768,11 +1792,12 @@ const drugRegistry = [
   {id:'brom-syr', name:'Bromhexine syr', prep:'4 mg/5 mL', concMg:4, concVol:5, unit:'mL', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   {id:'brom-tab', name:'Bromhexine tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   // Antitussive
-  {id:'gg-syr', name:'GG syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive'},
+  {id:'gg-syr', name:'GG syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin'},
   {id:'levo-syr', name:'Levodropropizine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Antitussive'},
   // Decongestant
   {id:'pseudo-syr', name:'Pseudoephedrine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Decongestant'},
   // Asthma
+  {id:'salb-syr', name:'Salbutamol syr', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.2, cat:'Asthma', note:'2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d'},
   {id:'salb-sol', name:'Salbutamol NEB', prep:'Solution 5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.05, maxD:0.15, cat:'Asthma'},
   {id:'terb', name:'Terbutaline', prep:'0.5 mg/mL', concMg:0.5, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Asthma'},
   // Adrenaline
@@ -1835,10 +1860,10 @@ const drugRegistry = [
   {id:'diclox-syr', name:'Dicloxacillin syr', prep:'62.5 mg/5 mL', concMg:62.5, concVol:5, unit:'mL', minD:3.1, maxD:12.5, cat:'Penicillins'},
   {id:'diclox-cap-250', name:'Dicloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:3.1, maxD:12.5, cat:'Penicillins'},
   {id:'diclox-cap-500', name:'Dicloxacillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'tab', minD:3.1, maxD:12.5, cat:'Penicillins'},
-  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:20, maxD:45, cat:'Penicillins'},
-  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:20, maxD:45, cat:'Penicillins'},
-  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'tab', minD:20, maxD:45, cat:'Penicillins'},
-  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:15, maxD:45, cat:'Penicillins'},
+  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild:25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild:25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'tab', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild:25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:15, maxD:45, cat:'Penicillins', note:'MAX 4gm Amox/day'},
   {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:15, maxD:45, cat:'Penicillins'},
   // Cephalosporins
   {id:'cephal-syr', name:'Cephalexin syr (1st)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:6.25, maxD:25, cat:'Cephalosporins'},
@@ -1854,7 +1879,7 @@ const drugRegistry = [
   // Macrolides
   {id:'eryth-syr', name:'Erythromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:7.5, maxD:12.5, cat:'Macrolides'},
   {id:'eryth-cap', name:'Erythromycin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:7.5, maxD:12.5, cat:'Macrolides'},
-  {id:'azith-syr', name:'Azithromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Macrolides'},
+  {id:'azith-syr', name:'Azithromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Macrolides', note:'MAX 1gm/day<br>Day1:10mk then 5mk x4d<br>or 10mk x3d'},
   {id:'azith-cap', name:'Azithromycin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:10, maxD:15, cat:'Macrolides'},
   {id:'clari-syr', name:'Clarithromycin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:7.5, maxD:7.5, cat:'Macrolides'},
   {id:'clari-tab-250', name:'Clarithromycin tab', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:7.5, maxD:7.5, cat:'Macrolides'},
@@ -1914,6 +1939,7 @@ const drugRegistry = [
   {id:'phenyl', name:'Phenylephrine', prep:'5mg PE/5mL', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Decongestant'},
   // ATB IV/Vials
   {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins'},
+  {id:'benz-penG', name:'Benzathine Pen G', prep:'1.2 MU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins'},
   {id:'clox-iv', name:'Cloxacillin IV', prep:'0.5,1 gm/amp', concMg:1000, concVol:1, unit:'gm', minD:12.5, maxD:25, cat:'Penicillins'},
   {id:'augm-iv', name:'Amox/Clav IV', prep:'1.2 gm IV', concMg:1200, concVol:1, unit:'gm', minD:15, maxD:45, cat:'Penicillins'},
   {id:'ampi', name:'Ampicillin', prep:'500,1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:25, maxD:50, cat:'Penicillins'},
@@ -1960,7 +1986,7 @@ function renderDose(w, am) {
   html += makeTable(doseHeaders, [
     drugRow('Cetirizine syr','','5 mg/5 mL', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, ageYr<2?'q 24 hr':'q 12-24 hr', '6mo-2yr:2.5mg | 2-6yr:5mg | &gt;6yr:10mg'),
     drugRow('Cetirizine tab','','10 mg/tab', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, '', ''),
-    drugRow('CPM syrup','','2 mg/5 mL','0.35 mk/Day','10 kg = ½ ช้อนชา', (0.35*w)/3, null, ((0.35*w)/3*5)/2, null, 'q 8 hr', ''),
+    drugRow('CPM syrup','','2 mg/5 mL','0.35 mk/Day','10 kg = ½ ช้อนชา', (0.35*w)/3, null, ((0.35*w)/3*5)/2, null, 'q 8 hr', 'ห้ามใช้ &lt;1yr'),
     drugRow('CPM tablet','','4 mg/tab','','25 kg = ½ tab', (0.35*w)/3, null, ((0.35*w)/3)/4, null, 'q 8 hr', ''),
     drugRow('CPM IV','','10 mg/mL','0.25 mk/Dose','', 0.25*w, null, (0.25*w)/10, null, '', ''),
     drugRow('Hydroxyzine syr','','10 mg/5 mL','1-2 mk/Day','10 kg = ½-1 ช้อนชา', (1*w)/3, (2*w)/3, ((1*w)/3*5)/10, ((2*w)/3*5)/10, 'q 8 hr', ''),
@@ -2007,8 +2033,16 @@ function renderDose(w, am) {
   const montelDose = ageYr<5?'4 mg':ageYr<15?'5 mg':'10 mg';
   const nebDose = w<20?'½ neb':'1 neb';
   const ipratDose = w<20?'250 mcg (½ neb)':'500 mcg (1 neb)';
+  const salbSyrDose = am<24?'':am<72?'0.1-0.2 mk/Dose':'2 mg/Dose';
+  const salbSyrMin = am<24?null:am<72?w*0.1:2;
+  const salbSyrMax = am<24?null:am<72?w*0.2:2;
+  const salbSyrMinMl = salbSyrMin!=null?(salbSyrMin/2*5):null;
+  const salbSyrMaxMl = salbSyrMax!=null?(salbSyrMax/2*5):null;
+  const salbSyrInterval = am<72?'tid':'tid-qid';
+  const salbSyrNote = '2-6yr:0.1-0.2mk tid MAX 12mg/d<br>6-14yr:2mg tid-qid MAX 24mg/d';
   html += makeTable(doseHeaders, [
     drugRow('Montelukast','(Singulair, Montek)','Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg',montelDose,'', null, null, null, null, 'q 24 hr', '6mo-5yr:4mg | 6-14yr:5mg | &gt;15yr:10mg'),
+    drugRow('Salbutamol syr','(Ventolin)','2 mg/5 mL',salbSyrDose,'', salbSyrMin, salbSyrMax, salbSyrMinMl, salbSyrMaxMl, salbSyrInterval, salbSyrNote),
     drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.05-0.15 mk/Dose','0.03 mL/kg', null, null, w*0.03, null, 'neb q 20 min<br>x 2-3 doses', 'S/E: tachycardia, hypoK'),
     drugRow('Salbutamol NEB','','Nebule 2.5mg/2.5mL',nebDose,'ผสม NSS up to 4 mL', null, null, null, null, '', '&lt;20kg:½neb | &gt;20kg:1neb'),
     drugRow('Ipratropium+Fenoterol','(Berodual)','500 mcg/neb (4mL)',ipratDose,'', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
@@ -2106,7 +2140,7 @@ function renderDose(w, am) {
     drugRow('Ketamine IM','','50 mg/mL','2-5 mg/kg','', w*2, w*5, (w*2)/50, (w*5)/50, 'IM', ''),
   ]);
 
-  document.getElementById('tab-dose').innerHTML = html;
+  document.getElementById('tab-dose').innerHTML = '<div class="table-scroll-wrap">' + html + '</div>';
 }
 
 function renderATB(w, am) {
@@ -2120,6 +2154,7 @@ function renderATB(w, am) {
     drugRow('Penicillin G','','','250-450k u/kg/d','q4hr', (w*0.25)/6, (w*0.45)/6, null, null, 'q 4 hr (mU)', ''),
     drugRow('Penicillin V syr','','125 mg/5 mL','25-75 mk/Day','', (w*25)/3, (w*75)/3, ((w*25)/3*5)/125, ((w*75)/3*5)/125, 'q 8 hr', 'MAX 2 gm/day'),
     drugRow('Penicillin V tab','','250 mg/tab','','', (w*25)/3, (w*75)/3, ((w*25)/3)/250, ((w*75)/3)/250, 'q 8 hr', ''),
+    drugRow('Benzathine Pen G','','1.2 MU/vial','50k u/kg IM','IM only',w*50000,null,null,null,'single dose','NB Syphilis:50k u/kg IM x1<br>RF:&le;27kg 600k u q3-4wk | &gt;27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/wk x3wk MAX 2.4MU'),
     drugRow('Cloxacillin IV','','0.5,1 gm/amp','50-100 mk/Day','', (w*50)/4, (w*100)/4, null, null, 'q 6 hr', 'MAX 4 gm/day'),
     drugRow('Cloxacillin syr','','125 mg/5 mL','','', (w*50)/4, (w*100)/4, ((w*50)/4*5)/125, ((w*100)/4*5)/125, 'q 6 hr', ''),
     drugRow('Cloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*50)/4, (w*100)/4, ((w*50)/4)/250, ((w*100)/4)/250, 'q 6 hr', ''),
@@ -2127,9 +2162,9 @@ function renderATB(w, am) {
     drugRow('Dicloxacillin syr','','62.5 mg/5 mL','12.5-50 mk/Day','', (w*12.5)/4, (w*50)/4, ((w*12.5)/4*5)/62.5, ((w*50)/4*5)/62.5, 'q 6 hr', 'MAX 2 gm/day'),
     drugRow('Dicloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*12.5)/4, (w*50)/4, ((w*12.5)/4)/250, ((w*50)/4)/250, 'q 6 hr', ''),
     drugRow('Dicloxacillin cap','','500 mg/cap','','', null, null, ((w*12.5)/4)/500, ((w*50)/4)/500, '', ''),
-    drugRow('Amoxicillin syr','','125 mg/5 mL','40-90 mk/Day','', (w*40)/2, (w*90)/2, ((w*40)/2*5)/125, ((w*90)/2*5)/125, 'q 12 hr', 'MAX 4 gm/day'),
-    drugRow('Amoxicillin syr','','250 mg/5 mL','','10 kg = 1 ช้อนชา', null, null, ((w*40)/2*5)/250, ((w*90)/2*5)/250, '', ''),
-    drugRow('Amoxicillin cap','','500 mg/cap','','', (w*40)/2, (w*90)/2, ((w*40)/2)/500, ((w*90)/2)/500, 'q 6-8 hr', ''),
+    drugRow('Amoxicillin syr','','125 mg/5 mL','25-100 mk/Day','', (w*25)/3, (w*100)/3, ((w*25)/3*5)/125, ((w*100)/3*5)/125, 'q 8-12 hr', 'Mild:25-50mk q8hr MAX500mg/dose<br>Severe:80-100mk q8hr<br>AOM:80-90mk q12hr<br>Pneumonia:90-100mk q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'),
+    drugRow('Amoxicillin syr','','250 mg/5 mL','','10 kg = 1 ช้อนชา', null, null, ((w*25)/3*5)/250, ((w*100)/3*5)/250, '', ''),
+    drugRow('Amoxicillin cap','','500 mg/cap','','', (w*25)/3, (w*100)/3, ((w*25)/3)/500, ((w*100)/3)/500, 'q 8-12 hr', ''),
     drugRow('Amox/Clav IV','(Augmentin)','1.2 gm IV','30-90 mk/Day of Amox','', (w*30)/2, (w*90)/2, null, null, 'q 12 hr', 'MAX 4gm Amox/day'),
     drugRow('Amox/Clav syr','','400/57 mg/5 mL','','', (w*30)/2, (w*90)/2, ((w*30)/2*5)/400, ((w*90)/2*5)/400, 'q 6-8 hr', ''),
     drugRow('Amox/Clav tab','','875/125 mg/tab','','', (w*30)/2, (w*90)/2, ((w*30)/2)/875, ((w*90)/2)/875, 'q 12 hr', ''),
@@ -2262,7 +2297,7 @@ function renderATB(w, am) {
     drugRow('Acyclovir susp','','20 mg/mL (susp)','10-20 mk/Dose','', w*10, w*20, (w*10)/20, (w*20)/20, 'tid-5x/d', 'ยาเตรียมเฉพาะราย'),
   ]);
 
-  document.getElementById('tab-atb').innerHTML = html;
+  document.getElementById('tab-atb').innerHTML = '<div class="table-scroll-wrap">' + html + '</div>';
 }
 
 function renderFluid(w, dehydParam, ageMonths) {
@@ -2724,6 +2759,7 @@ function renderReverseDose() {
           }
           return `<div class="rev-range">Min: <strong>${minShow}</strong> ${u} — Max: <strong>${maxShow}</strong> ${u}<br>Safe range: ${drug.minD}–${drug.maxD} mg/kg/dose</div>`;
         })() : ''}
+        ${drug.note ? `<span class="rev-note-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Note</span><div class="rev-note-body">${drug.note}</div>` : ''}
         <div class="rev-dispense" id="${dispId}">
           <div class="rev-disp-row">
             <label>Interval:</label>
@@ -2799,7 +2835,7 @@ const drugIntervals = {
   // Decongestant
   'pseudo-syr':'q 8 hr','pseudo-tab':'q 8 hr',
   // Asthma
-  'salb-sol':'prn','terb':'prn','montel':'q 24 hr',
+  'salb-syr':'tid','salb-sol':'prn','terb':'prn','montel':'q 24 hr',
   // Antiemetic
   'dom-syr':'q 8 hr','dom-tab':'q 8 hr','onda-iv':'single','onda-tab':'q 8 hr',
   'metocl-iv':'single','metocl-syr':'q 8 hr','metocl-tab':'q 8 hr',
@@ -3209,7 +3245,7 @@ const allDrugs = [
   // Procedural sedation
   'Chloral hydrate','Fentanyl','Propofol','Ketamine',
   // Penicillins
-  'Penicillin','Penicillin G','Penicillin V',
+  'Penicillin','Penicillin G','Penicillin V','Benzathine','Benzathine Pen G',
   'Cloxacillin','Dicloxacillin',
   'Amoxicillin','Augmentin','Amox/Clav','Clavulanic','Ampicillin',
   // Cephalosporins
@@ -3311,7 +3347,7 @@ function doSearch() {
   }
   if (activeTab && activeTab.id === 'tab-reverse') {
     const matches = drugRegistry.filter(d => {
-      const searchText = (d.name + ' ' + d.prep + ' ' + d.cat).toLowerCase();
+      const searchText = (d.name + ' ' + d.prep + ' ' + d.cat + ' ' + (d.alias || '')).toLowerCase();
       return searchText.includes(val);
     });
     if (matches.length > 0) showRevSearchResults(matches);
@@ -3484,44 +3520,55 @@ setTimeout(() => {
 
 setupFixedHeader();
 
-// Scroll to top button
-const scrollBtn = document.createElement('button');
-scrollBtn.className = 'scroll-top-btn';
-scrollBtn.innerHTML = '&#9650;';
-scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
-document.body.appendChild(scrollBtn);
-
-// Cart button
-const cartBtn = document.createElement('button');
-cartBtn.className = 'cart-btn';
-cartBtn.innerHTML = '&#128722;<span class="cart-count">0</span>';
+// Scroll to top & Cart buttons (from HTML)
+const scrollBtn = document.getElementById('scrollTopBtn');
+const cartBtn = document.getElementById('cartBtnEl');
 cartBtn.onclick = () => {
   if (selectedDrugs.size === 0) return;
   switchTab('reverse');
   document.querySelector('.tab-reverse')?.scrollIntoView({ behavior: 'smooth' });
 };
-document.body.appendChild(cartBtn);
 
-// Keep fixed buttons visible during pinch-zoom on mobile
+// Keep buttons visible during pinch-zoom on mobile
 if (window.visualViewport) {
   const repositionBtns = () => {
     const vv = window.visualViewport;
-    // Calculate where the visible viewport ends relative to the layout viewport
-    const left = vv.offsetLeft;
-    const top = vv.offsetTop;
     const scale = vv.scale || 1;
-    // Position buttons at bottom-right of the visible viewport
-    const r = (window.innerWidth - (left + vv.width)) + 16 / scale;
-    const bScroll = (window.innerHeight - (top + vv.height)) + 16 / scale;
-    const bCart = bScroll + 52 / scale;
-    scrollBtn.style.right = r + 'px';
-    scrollBtn.style.bottom = bScroll + 'px';
+    if (scale <= 1.01) {
+      // Not zoomed: reset to default fixed position
+      scrollBtn.style.transform = '';
+      scrollBtn.style.left = '';
+      scrollBtn.style.top = '';
+      scrollBtn.style.right = '24px';
+      scrollBtn.style.bottom = '24px';
+      cartBtn.style.transform = '';
+      cartBtn.style.left = '';
+      cartBtn.style.top = '';
+      cartBtn.style.right = '24px';
+      cartBtn.style.bottom = '76px';
+      return;
+    }
+    // Zoomed: reposition using top/left relative to visual viewport
+    const margin = 16;
+    const btnSize = 44;
+    const gap = 8;
+    // visual viewport position in CSS pixels (fixed coords)
+    const vRight = vv.offsetLeft + vv.width;
+    const vBottom = vv.offsetTop + vv.height;
+
+    scrollBtn.style.right = 'auto';
+    scrollBtn.style.bottom = 'auto';
+    scrollBtn.style.left = (vRight - margin / scale - btnSize / scale) + 'px';
+    scrollBtn.style.top = (vBottom - margin / scale - btnSize / scale) + 'px';
     scrollBtn.style.transform = `scale(${1 / scale})`;
-    scrollBtn.style.transformOrigin = 'bottom right';
-    cartBtn.style.right = r + 'px';
-    cartBtn.style.bottom = bCart + 'px';
+    scrollBtn.style.transformOrigin = 'top left';
+
+    cartBtn.style.right = 'auto';
+    cartBtn.style.bottom = 'auto';
+    cartBtn.style.left = (vRight - margin / scale - btnSize / scale) + 'px';
+    cartBtn.style.top = (vBottom - margin / scale - btnSize / scale - gap / scale - btnSize / scale) + 'px';
     cartBtn.style.transform = `scale(${1 / scale})`;
-    cartBtn.style.transformOrigin = 'bottom right';
+    cartBtn.style.transformOrigin = 'top left';
   };
   window.visualViewport.addEventListener('resize', repositionBtns);
   window.visualViewport.addEventListener('scroll', repositionBtns);
@@ -3548,6 +3595,117 @@ removeDrugFromReverse = function(id) { origRemove(id); updateCartBtn(); };
 window.addEventListener('scroll', () => {
   scrollBtn.classList.toggle('visible', window.scrollY > 300);
 });
+
+// Double-tap on mob-select → show text input for direct number entry
+(() => {
+  const selectItems = {
+    ddAge: { items: simpleAgeItems, hasUnits: true },
+    ddRBW: { items: ibwItems, hasUnits: false },
+    ddRBWAge: { items: simpleAgeItems, hasUnits: true },
+    ddDehyd: { items: dehydItems, hasUnits: false },
+    ddPals: { items: palsItems, hasUnits: false }
+  };
+
+  document.querySelectorAll('.mob-select').forEach(sel => {
+    let lastTap = 0;
+    sel.addEventListener('touchstart', (e) => {
+      const now = Date.now();
+      if (now - lastTap < 400) {
+        e.preventDefault();
+        lastTap = 0;
+        showMobInput(sel);
+      } else {
+        lastTap = now;
+      }
+    }, { passive: false });
+  });
+
+  function showMobInput(sel) {
+    const group = sel.closest('.picker-group');
+    if (group.querySelector('.mob-input-overlay')) return;
+    const cfg = selectItems[sel.id];
+    if (!cfg) return;
+
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;width:100%;';
+
+    const input = document.createElement('input');
+    input.className = 'mob-input-overlay';
+    if (cfg.hasUnits) {
+      input.type = 'text';
+      input.inputMode = 'text';
+      input.placeholder = 'เช่น 5yr, 6mo';
+      input.value = sel.options[sel.selectedIndex]?.text || '';
+    } else {
+      input.type = 'number';
+      input.inputMode = 'decimal';
+      input.value = cfg.items[parseInt(sel.value)]?.value ?? '';
+      input.step = 'any';
+    }
+
+    // Insert input over the select
+    sel.style.display = 'none';
+    wrap.appendChild(input);
+    sel.parentNode.insertBefore(wrap, sel.nextSibling);
+    input.focus();
+    input.select();
+
+    const commit = () => {
+      const raw = input.value.trim().toLowerCase();
+      if (!raw) { cleanup(); return; }
+      let bestIdx = 0, bestDiff = Infinity;
+
+      if (cfg.hasUnits) {
+        if (raw === 'nb' || raw === '0') {
+          bestIdx = 0;
+        } else {
+          const mMatch = raw.match(/^(\d+\.?\d*)\s*(mo|m)?$/i);
+          const yMatch = raw.match(/^(\d+\.?\d*)\s*(yr|y)?$/i);
+          let targetVal;
+          if (mMatch && (mMatch[2] || parseFloat(mMatch[1]) <= 11)) {
+            targetVal = parseFloat(mMatch[1]);
+          } else if (yMatch) {
+            targetVal = parseFloat(yMatch[1]) * 12;
+          } else {
+            targetVal = parseFloat(raw);
+            if (!isNaN(targetVal) && targetVal > 11) targetVal *= 12;
+          }
+          if (!isNaN(targetVal)) {
+            cfg.items.forEach((item, i) => {
+              const diff = Math.abs(item.value - targetVal);
+              if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+            });
+          }
+        }
+      } else {
+        const val = parseFloat(raw);
+        if (!isNaN(val)) {
+          cfg.items.forEach((item, i) => {
+            const diff = Math.abs(item.value - val);
+            if (diff < bestDiff) { bestDiff = diff; bestIdx = i; }
+          });
+        }
+      }
+
+      sel.value = String(bestIdx);
+      sel.dispatchEvent(new Event('change'));
+      cleanup();
+    };
+
+    const cleanup = () => {
+      sel.style.display = '';
+      if (wrap.parentNode) wrap.remove();
+    };
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+      if (e.key === 'Escape') { e.preventDefault(); cleanup(); }
+    });
+    input.addEventListener('blur', () => {
+      setTimeout(() => { if (wrap.parentNode) commit(); }, 150);
+    });
+  }
+})();
 </script>
 </body>
 </html>
