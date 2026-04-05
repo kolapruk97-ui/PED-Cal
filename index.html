@@ -381,17 +381,17 @@ body {
 .rev-card-prep { font-size:0.75rem; color:var(--text-muted); }
 .rev-card-remove { background:none; border:2px solid var(--danger); color:var(--danger); cursor:pointer; font-size:0.85rem; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0; line-height:1; }
 .rev-card-remove:active { background:var(--danger); color:white; }
-.rev-search-panel { background:var(--card); border:1px solid #ffa726; border-radius:8px; padding:8px; margin-bottom:8px; }
-.rev-search-header { display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:0.75rem; margin-bottom:4px; color:#ffa726; }
+.rev-search-panel { background:var(--card); border:1px solid var(--primary); border-radius:8px; padding:8px; margin-bottom:8px; }
+.rev-search-header { display:flex; justify-content:space-between; align-items:center; font-weight:600; font-size:0.75rem; margin-bottom:4px; color:var(--primary); }
 .rev-search-close { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:0.9rem; padding:2px 4px; }
 .rev-search-list { max-height:180px; overflow-y:auto; display:flex; flex-direction:column; gap:2px; margin-bottom:6px; }
 .rev-search-item { display:flex; align-items:center; gap:6px; padding:5px 8px; border-radius:6px; background:var(--section-bg); cursor:pointer; font-size:0.75rem; }
 .rev-search-item:hover { background:var(--border); }
-.rev-search-item input[type=checkbox] { accent-color:#ffa726; width:15px; height:15px; flex-shrink:0; }
+.rev-search-item input[type=checkbox] { accent-color:var(--primary); width:15px; height:15px; flex-shrink:0; }
 .rev-search-name { font-weight:600; }
 .rev-search-prep { color:var(--text-muted); font-size:0.65rem; }
-.rev-search-confirm { width:100%; padding:7px; border:none; border-radius:6px; background:#ffa726; color:#000; font-weight:700; font-size:0.75rem; cursor:pointer; }
-.rev-search-confirm:active { background:#ff9800; }
+.rev-search-confirm { width:100%; padding:7px; border:none; border-radius:6px; background:var(--primary); color:white; font-weight:700; font-size:0.75rem; cursor:pointer; }
+.rev-search-confirm:active { background:#3b82f6; }
 .rev-input-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
 .rev-input { width:100px; padding:8px; border:2px solid var(--border); border-radius:8px; background:var(--section-bg); color:var(--text); font-size:1rem; text-align:center; }
 .rev-input:focus { border-color:#ffa726; outline:none; }
@@ -2544,6 +2544,7 @@ function doCalculate() {
   btn.classList.remove('stale');
   btn.textContent = 'CALCULATED';
   clearSearch();
+  switchTab('reverse');
   document.querySelector('.search-bar').scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -3134,12 +3135,20 @@ function getDeskValues() {
 // ===== Reset =====
 function doReset() {
   initializing = true;
-  // Reset mobile pickers
+  // Reset mobile pickers + mob-select dropdowns
   pickerAge.scrollToIdx(0, true);
   if (pickerRBW) pickerRBW.scrollToIdx(0, true);
   if (pickerRBWAge) pickerRBWAge.scrollToIdx(0, true);
   pickerPals.scrollToIdx(0, true);
   pickerDehyd.scrollToIdx(0, true);
+  // Sync mob-select dropdowns
+  document.getElementById('ddAge').value = '0';
+  document.getElementById('ddDehyd').value = '0';
+  document.getElementById('ddPals').value = '0';
+  const ddRBW = document.getElementById('ddRBW');
+  if (ddRBW) ddRBW.value = '0';
+  const ddRBWAge = document.getElementById('ddRBWAge');
+  if (ddRBWAge) ddRBWAge.value = '0';
   setWeightModeMobile(mobileWeightMode);
   // Reset desktop inputs
   setWeightMode(weightMode || 'ibw');
@@ -3166,8 +3175,8 @@ function doReset() {
   updateRevBadge();
   updateCartBtn();
   resetGlobalDate();
-  const revContainer = document.getElementById('tab-reverse');
-  if (revContainer) revContainer.innerHTML = '';
+  // Switch back to Dose tab
+  switchTab('dose');
   setTimeout(() => {
     initializing = false;
     calcAndUpdateIBW();
@@ -3441,6 +3450,7 @@ function confirmRevSearch() {
   });
   panel.remove();
   updateRevBadge();
+  updateCartBtn();
   renderReverseDose();
 }
 
