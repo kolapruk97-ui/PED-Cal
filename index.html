@@ -102,6 +102,62 @@ body {
   vertical-align: middle;
 }
 
+.changelog-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.55rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  z-index: 5;
+  letter-spacing: 0.3px;
+}
+.changelog-btn:active { background: rgba(255,255,255,0.2); }
+.changelog-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.changelog-overlay.open { display: flex; }
+.changelog-modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
+  position: relative;
+}
+.changelog-modal h2 { font-size: 1rem; color: var(--primary); margin-bottom: 12px; }
+.changelog-modal h3 { font-size: 0.85rem; color: #ffa726; margin: 12px 0 6px; }
+.changelog-modal ul { list-style: none; padding: 0; margin: 0 0 8px; }
+.changelog-modal li { font-size: 0.72rem; color: var(--text-muted); padding: 2px 0 2px 12px; position: relative; }
+.changelog-modal li::before { content: ''; position: absolute; left: 0; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--primary); }
+.changelog-modal .cl-new li::before { background: var(--success); }
+.changelog-modal .cl-fix li::before { background: var(--danger); }
+.changelog-modal .cl-ui li::before { background: #ffa726; }
+.changelog-close {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: none; border: none;
+  color: var(--text-muted); font-size: 1.2rem;
+  cursor: pointer; padding: 4px 8px;
+}
+
 .input-bar {
   background: var(--card);
   padding: 16px 20px;
@@ -556,6 +612,7 @@ tbody tr:hover { background: var(--section-bg); }
 }
 .interval { font-size: 0.78rem; color: var(--text-muted); text-align: center; }
 .note { font-size: 0.72rem; color: var(--danger); font-style: italic; }
+.note.note-warn { color: var(--danger); font-weight: 700; }
 .note.note-age { color: #4fc3f7; font-weight: 600; }
 .note.note-bw { color: #ce93d8; font-weight: 600; }
 .note-age-match { color: #66bb6a; font-weight: 700; }
@@ -1009,9 +1066,85 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 <body>
 
 <div class="header">
+  <button class="changelog-btn" onclick="document.getElementById('changelogOverlay').classList.add('open')">Change Log</button>
   <h1>Pediatric Calculator</h1>
   <div class="warning"><span class="warn-label">BETA V.4</span>กรุณา re-check dose ซ้ำ<br>หากพบข้อผิดพลาด แจ้งแพทย์ธนกฤต</div>
   <div class="subtitle">Source: ER TSH Ped Cal, Rx QSNICH</div>
+</div>
+
+<div class="changelog-overlay" id="changelogOverlay" onclick="if(event.target===this)this.classList.remove('open')">
+<div class="changelog-modal">
+  <button class="changelog-close" onclick="document.getElementById('changelogOverlay').classList.remove('open')">&#10005;</button>
+  <h2>Change Log</h2>
+
+  <h3>V.4</h3>
+  <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
+  <ul>
+    <li>Salbutamol syr 2mg/5mL (2-6yr / 6-14yr dosing)</li>
+    <li>Benzathine Penicillin G 1.2MU (Syphilis / RF)</li>
+    <li>Amoxicillin dose update 25-100mk/Day + note ทุก indication</li>
+    <li>Reverse: Note toggle button ใต้ Safe range</li>
+    <li>Reverse search: category color strip + best prep</li>
+    <li>Double-tap dropdown เพื่อพิมพ์ค่าตรง</li>
+    <li>QSNICH update: GG syr 50mg/5mL + age-based dose</li>
+    <li>QSNICH: Carbocysteine age-based + tab 375mg (Flemex)</li>
+    <li>QSNICH: Acetylcysteine + NAC IV/PO protocol note</li>
+    <li>QSNICH: Montelukast cutoff &lt;6yr + indications</li>
+    <li>QSNICH: Salbutamol tab 2mg + NEB continuous/MDI + Adolescent dose</li>
+    <li>QSNICH: Simethicone qid + MAX dose ตามอายุ</li>
+    <li>QSNICH: Oxymetazoline แยก Drop/Spray + bid + ห้ามใช้ &lt;2yr</li>
+    <li>QSNICH: Al(OH)3 tab 500mg (50-150mk/d CRF)</li>
+    <li>QSNICH: Benzathine Pen G + GAS pharyngitis Adult</li>
+    <li>QSNICH: PGS NB dosing + severity-based + Renal</li>
+    <li>QSNICH: Amoxicillin Rhinosinusitis + Mild(&gt;3mo)</li>
+    <li>QSNICH: Acyclovir NB BW/PNA + immunocomp + Renal + cream 5%</li>
+  </ul></div>
+  <div class="cl-ui"><strong style="font-size:0.7rem;color:#ffa726;">UI</strong>
+  <ul>
+    <li>Mobile picker: wheel -> dropdown (กด 1 ครั้ง)</li>
+    <li>IV Fluid: ไม่ scroll แนวนอน</li>
+    <li>Dehydration assessment: 3 สี (เขียว/เหลือง/แดง)</li>
+    <li>Tab IV Fluid สีแดง, PALS สีม่วง</li>
+    <li>Deficit Fluid ตัวเลขแดง, NSS Bolus กรอบเขียว</li>
+    <li>CPM note "ห้ามใช้" สีแดง</li>
+    <li>Search panel: กรอบสีฟ้าเหมือนปุ่ม SEARCH</li>
+    <li>Default tab หลัง Calculate -> Reverse</li>
+  </ul></div>
+  <div class="cl-fix"><strong style="font-size:0.7rem;color:var(--danger);">FIX</strong>
+  <ul>
+    <li>Reset: sync mob-select dropdown + switch tab</li>
+    <li>Cart: อัปเดตหลัง search เลือกยา</li>
+    <li>ddSelect: force callback สำหรับ hidden picker</li>
+    <li>Guaifenesin: search alias ใน Reverse</li>
+  </ul></div>
+
+  <h3>V.3</h3>
+  <ul>
+    <li>Oseltamivir: Preterm dosing (PMA-based)</li>
+    <li>Alum milk: interval q 6-8 hr</li>
+    <li>Reverse Dose tab + dispense calculator</li>
+    <li>Search in Reverse: picker panel</li>
+    <li>Drug cards: category color strip</li>
+    <li>Picker dropdowns + pinch-zoom buttons</li>
+    <li>Date timezone fix (local time)</li>
+    <li>Shock calculator + spin buttons</li>
+  </ul>
+
+  <h3>V.2</h3>
+  <ul>
+    <li>Desktop inputs + responsive layout</li>
+    <li>Autocomplete search</li>
+    <li>Fixed table header on scroll</li>
+    <li>Drug checkbox + cart system</li>
+    <li>Age/BW-based note highlighting</li>
+  </ul>
+
+  <h3>V.1</h3>
+  <ul>
+    <li>Initial release: Pediatric Dose + ATB + IV Fluid + PALS</li>
+    <li>iOS wheel picker for mobile</li>
+  </ul>
+</div>
 </div>
 
 <div class="input-bar">
@@ -1760,9 +1893,10 @@ function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, in
   const mvx = maxMl !== null ? cv(maxMl, null, 2) : '';
   const iv = `<span class="interval">${interval || ''}</span>`;
   const noteDec = note ? note.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&') : '';
+  const hasWarn = note && /ห้าม/.test(noteDec);
   const hasAge = note && /\d+\s*(yr|mo|เดือน|ขวบ)|[<>≤≥]\s*\d+\s*(yr|mo)|อายุ/.test(noteDec);
   const hasBW = note && /[<>≤≥]\s*\d+\s*kg|\d+\s*-\s*\d+\s*kg/.test(noteDec);
-  const noteClass = hasAge ? ' note-age' : hasBW ? ' note-bw' : '';
+  const noteClass = hasWarn ? ' note-warn' : hasAge ? ' note-age' : hasBW ? ' note-bw' : '';
   const nt = note ? `<span class="note${noteClass}">${note}</span>` : '';
   return [n, p, d, a, mn, mx, mvn, mvx, iv, nt];
 }
@@ -1782,7 +1916,7 @@ const drugRegistry = [
   // Antihistamine
   {id:'cet-syr', name:'Cetirizine syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.5, cat:'Antihistamine'},
   {id:'cet-tab', name:'Cetirizine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.5, cat:'Antihistamine'},
-  {id:'cpm-syr', name:'CPM syrup', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.35, cat:'Antihistamine', note:'ห้ามใช้ &lt;1yr'},
+  {id:'cpm-syr', name:'CPM syrup', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.35, cat:'Antihistamine', note:'ห้ามใช้ &lt;2yr'},
   {id:'cpm-tab', name:'CPM tablet', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0.1, maxD:0.35, cat:'Antihistamine'},
   {id:'cpm-iv', name:'CPM IV', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:0.25, maxD:0.25, cat:'Antihistamine'},
   {id:'hyd-syr', name:'Hydroxyzine syr', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:0.33, maxD:0.67, cat:'Antihistamine'},
@@ -1792,13 +1926,14 @@ const drugRegistry = [
   {id:'brom-syr', name:'Bromhexine syr', prep:'4 mg/5 mL', concMg:4, concVol:5, unit:'mL', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   {id:'brom-tab', name:'Bromhexine tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   // Antitussive
-  {id:'gg-syr', name:'GG syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin'},
+  {id:'gg-syr', name:'GG syrup', prep:'50 mg/5 mL', concMg:50, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin', note:'<2yr:12mk/d÷6 | 2-<6yr:50-100mg | 6-<12yr:100-200mg | ≥12yr:200-400mg<br>q4hr max 6x/d'},
   {id:'levo-syr', name:'Levodropropizine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Antitussive'},
   // Decongestant
   {id:'pseudo-syr', name:'Pseudoephedrine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Decongestant'},
   // Asthma
-  {id:'salb-syr', name:'Salbutamol syr', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.2, cat:'Asthma', note:'2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d'},
-  {id:'salb-sol', name:'Salbutamol NEB', prep:'Solution 5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.05, maxD:0.15, cat:'Asthma'},
+  {id:'salb-syr', name:'Salbutamol syr', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.2, cat:'Asthma', note:'2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d<br>Adolescent:2-4mg tid-qid MAX32mg/d'},
+  {id:'salb-tab', name:'Salbutamol tab', prep:'2 mg/tab', concMg:2, concVol:1, unit:'tab', minD:0.1, maxD:0.2, cat:'Asthma'},
+  {id:'salb-sol', name:'Salbutamol NEB', prep:'Solution 5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.15, maxD:0.15, cat:'Asthma', note:'0.15mk/dose min2.5mg<br>Continuous:0.3-0.5mk/hr'},
   {id:'terb', name:'Terbutaline', prep:'0.5 mg/mL', concMg:0.5, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Asthma'},
   // Adrenaline
   {id:'adr-neb', name:'Adrenaline NEB', prep:'1:1,000', concMg:1, concVol:1, unit:'mL', minD:0.05, maxD:0.5, cat:'Adrenaline'},
@@ -1860,9 +1995,9 @@ const drugRegistry = [
   {id:'diclox-syr', name:'Dicloxacillin syr', prep:'62.5 mg/5 mL', concMg:62.5, concVol:5, unit:'mL', minD:3.1, maxD:12.5, cat:'Penicillins'},
   {id:'diclox-cap-250', name:'Dicloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'tab', minD:3.1, maxD:12.5, cat:'Penicillins'},
   {id:'diclox-cap-500', name:'Dicloxacillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'tab', minD:3.1, maxD:12.5, cat:'Penicillins'},
-  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild:25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild:25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'tab', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild:25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'tab', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
   {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:15, maxD:45, cat:'Penicillins', note:'MAX 4gm Amox/day'},
   {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:15, maxD:45, cat:'Penicillins'},
   // Cephalosporins
@@ -1907,16 +2042,17 @@ const drugRegistry = [
   {id:'osel-30', name:'Oseltamivir', prep:'30 mg/tab', concMg:30, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
   {id:'osel-45', name:'Oseltamivir', prep:'45 mg/tab', concMg:45, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
   {id:'osel-75', name:'Oseltamivir', prep:'75 mg/tab', concMg:75, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
-  {id:'acy-iv', name:'Acyclovir IV', prep:'250 mg/vial', concMg:250, concVol:1, unit:'vial', minD:5, maxD:20, cat:'Antivirals'},
-  {id:'acy-tab-200', name:'Acyclovir', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Antivirals'},
+  {id:'acy-iv', name:'Acyclovir IV', prep:'250 mg/vial', concMg:250, concVol:1, unit:'vial', minD:5, maxD:20, cat:'Antivirals', note:'NB HSV:20mk | HSV encepha:10-15mk q8hr x21d<br>VZV:10-15mk q8hr | Zoster:10mk q8hr<br>Renal:CrCl25-50 q12hr | 10-25 q24hr | <10 50%dose'},
+  {id:'acy-tab-200', name:'Acyclovir', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Antivirals', note:'Genital HSV:40-80mk/d÷3-4 x7-10d<br>VZV:20mk qid x5d MAX3200mg/d<br>Zoster:≥12yr 800mg 5x/d'},
   {id:'acy-tab-400', name:'Acyclovir', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Antivirals'},
   {id:'acy-tab-800', name:'Acyclovir', prep:'800 mg/tab', concMg:800, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Antivirals'},
-  {id:'acy-susp', name:'Acyclovir susp', prep:'20 mg/mL (susp)', concMg:20, concVol:1, unit:'mL', minD:10, maxD:20, cat:'Antivirals'},
+  {id:'acy-susp', name:'Acyclovir susp', prep:'200 mg/5 mL (susp)', concMg:40, concVol:1, unit:'mL', minD:10, maxD:20, cat:'Antivirals', note:'ยาเตรียมเฉพาะราย'},
   // === Remaining drugs ===
   // Mucolytic
-  // Carbocysteine: <5yr:125mg, 5-12yr:250mg, >12yr:500mg tid
-  {id:'carbo-syr-250', name:'Carbocysteine syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Mucolytic'},
+  // Carbocysteine: 2-4yr:62.5-125mg bid-qid, 5-11yr:250mg tid, 12-17yr:1500-2250mg/d tid-qid
+  {id:'carbo-syr-250', name:'Carbocysteine syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Mucolytic', note:'2-4yr:62.5-125mg bid-qid<br>5-11yr:250mg tid<br>12-17yr:1500-2250mg/d tid-qid'},
   {id:'carbo-syr-100', name:'Carbocysteine syr', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Mucolytic'},
+  {id:'carbo-tab', name:'Carbocysteine tab', prep:'375 mg/tab', concMg:375, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Mucolytic', note:'12-17yr:4-6 tab/d tid-qid'},
   // Carbocysteine lysine: 2-5yr:2.5mL bid, 5-12yr:5mL bid, >12yr:20mL od
   {id:'carbo-lys', name:'Carbocysteine lysine', prep:'90 mg/mL', concMg:90, concVol:1, unit:'mL', minD:0, maxD:0, cat:'Mucolytic'},
   // Decongestant
@@ -1927,19 +2063,22 @@ const drugRegistry = [
   {id:'ipra-feno', name:'Ipratropium+Fenoterol', prep:'500 mcg/neb (4mL)', concMg:0.5, concVol:4, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
   {id:'ipra-albu', name:'Ipratropium+Albuterol', prep:'500 mcg/2.5mL/vial', concMg:0.5, concVol:2.5, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
   {id:'bude', name:'Budesonide', prep:'1 mg/2mL/respule', concMg:1, concVol:2, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
-  {id:'montel', name:'Montelukast', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma'},
+  {id:'montel', name:'Montelukast', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma', note:'6mo-<6yr:4mg | 6-<15yr:5mg | ≥15yr:10mg<br>รับประทานตอนเย็น'},
+  {id:'montel-10', name:'Montelukast', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma'},
   // Adrenaline
   {id:'adr-ncpr', name:'Adrenaline NCPR', prep:'1:10,000', concMg:0.1, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Adrenaline'},
   // Antacid
   {id:'alum', name:'Alum milk', prep:'240 mL/bottle', concMg:0, concVol:1, unit:'mL', minD:0, maxD:0, cat:'Antacid'},
-  {id:'sime-drop', name:'Simethicone', prep:'Drop 40mg/0.6mL', concMg:40, concVol:0.6, unit:'mL', minD:0, maxD:0, cat:'Antacid'},
+  {id:'alum-tab', name:'Al(OH)3 tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:12.5, maxD:37.5, cat:'Antacid', note:'50-150mk/d ÷4-6 พร้อมอาหาร<br>Hyperphosphatemia CRF'},
+  {id:'sime-drop', name:'Simethicone', prep:'Drop 40mg/0.6mL', concMg:40, concVol:0.6, unit:'mL', minD:0, maxD:0, cat:'Antacid', note:'<2yr:20mg qid MAX240mg/d<br><12yr:40mg qid MAX480mg/d<br>≥12yr:40-125mg qid MAX500mg/d'},
   {id:'sime-tab', name:'Simethicone', prep:'Tab 80mg/tab', concMg:80, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Antacid'},
   // Decongestant
-  {id:'oxy', name:'Oxymetazoline', prep:'0.025%', concMg:0.25, concVol:1, unit:'drop', minD:0, maxD:0, cat:'Decongestant'},
+  {id:'oxy-drop', name:'Oxymetazoline', prep:'Drop 0.025%', concMg:0.25, concVol:1, unit:'drop', minD:0, maxD:0, cat:'Decongestant', note:'2-5yr:0.025% bid | ≥6yr:0.05% bid<br>ห้ามใช้ <2yr | ไม่ควรใช้ >3-5 วัน'},
+  {id:'oxy-spray', name:'Oxymetazoline', prep:'Spray 0.05%', concMg:0.5, concVol:1, unit:'puff', minD:0, maxD:0, cat:'Decongestant', note:'≥6yr เท่านั้น bid'},
   {id:'phenyl', name:'Phenylephrine', prep:'5mg PE/5mL', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Decongestant'},
   // ATB IV/Vials
-  {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins'},
-  {id:'benz-penG', name:'Benzathine Pen G', prep:'1.2 MU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins'},
+  {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB:25-50k u/kg/dose(Bact) 75-100k(Mening)<br>Mild-mod:100-150k/d Severe:200-400k/d<br>MAX 24MU/day'},
+  {id:'benz-penG', name:'Benzathine Pen G', prep:'1.2 MU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB Syphilis:50k u/kg IM x1<br>RF:≤27kg 600k q3-4wk | >27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/wk x3wk MAX2.4MU'},
   {id:'clox-iv', name:'Cloxacillin IV', prep:'0.5,1 gm/amp', concMg:1000, concVol:1, unit:'gm', minD:12.5, maxD:25, cat:'Penicillins'},
   {id:'augm-iv', name:'Amox/Clav IV', prep:'1.2 gm IV', concMg:1200, concVol:1, unit:'gm', minD:15, maxD:45, cat:'Penicillins'},
   {id:'ampi', name:'Ampicillin', prep:'500,1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:25, maxD:50, cat:'Penicillins'},
@@ -1952,7 +2091,7 @@ const drugRegistry = [
   {id:'ceftaz-1000', name:'Ceftazidime (3rd)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'vial', minD:33.3, maxD:50, cat:'Cephalosporins'},
   {id:'ceftaz-2000', name:'Ceftazidime (3rd)', prep:'2000 mg/vial', concMg:2000, concVol:1, unit:'vial', minD:33.3, maxD:50, cat:'Cephalosporins'},
   // Acetylcysteine
-  {id:'acetyl-100', name:'Acetylcysteine', prep:'Sachet 100mg', concMg:100, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic'},
+  {id:'acetyl-100', name:'Acetylcysteine', prep:'Sachet 100mg', concMg:100, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic', alias:'NAC,Fluimucil', note:'Mucolytic:<6yr 50-100mg tid-qid | >6yr 200mg bid-tid<br>NAC IV:150mk/60min→50mk/4hr→100mk/16hr<br>NAC PO:140mk load→70mk q4hr x17doses'},
   {id:'acetyl-200', name:'Acetylcysteine', prep:'Sachet 200mg', concMg:200, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic'},
   {id:'acetyl-600', name:'Acetylcysteine', prep:'Tab 600mg', concMg:600, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Mucolytic'},
   {id:'phenyl2', name:'Phenylephrine', prep:'5mg PE + 2mg BPM/5mL', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Decongestant'},
@@ -1986,7 +2125,7 @@ function renderDose(w, am) {
   html += makeTable(doseHeaders, [
     drugRow('Cetirizine syr','','5 mg/5 mL', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, ageYr<2?'q 24 hr':'q 12-24 hr', '6mo-2yr:2.5mg | 2-6yr:5mg | &gt;6yr:10mg'),
     drugRow('Cetirizine tab','','10 mg/tab', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, '', ''),
-    drugRow('CPM syrup','','2 mg/5 mL','0.35 mk/Day','10 kg = ½ ช้อนชา', (0.35*w)/3, null, ((0.35*w)/3*5)/2, null, 'q 8 hr', 'ห้ามใช้ &lt;1yr'),
+    drugRow('CPM syrup','','2 mg/5 mL','0.35 mk/Day','10 kg = ½ ช้อนชา', (0.35*w)/3, null, ((0.35*w)/3*5)/2, null, 'q 8 hr', 'ห้ามใช้ &lt;2yr'),
     drugRow('CPM tablet','','4 mg/tab','','25 kg = ½ tab', (0.35*w)/3, null, ((0.35*w)/3)/4, null, 'q 8 hr', ''),
     drugRow('CPM IV','','10 mg/mL','0.25 mk/Dose','', 0.25*w, null, (0.25*w)/10, null, '', ''),
     drugRow('Hydroxyzine syr','','10 mg/5 mL','1-2 mk/Day','10 kg = ½-1 ช้อนชา', (1*w)/3, (2*w)/3, ((1*w)/3*5)/10, ((2*w)/3*5)/10, 'q 8 hr', ''),
@@ -1997,24 +2136,32 @@ function renderDose(w, am) {
   // Mucolytic
   html += sectionHead('Mucolytic', 'ยาละลายเสมหะ');
   const bromDose = ageYr<2?'1 mg':ageYr<5?'2 mg':ageYr<10?'4 mg':'8 mg';
-  const carboSyrDose = ageYr<5?'125 mg':ageYr<12?'250 mg':'500 mg';
+  const carboSyrDose = ageYr<5?'62.5-125 mg':ageYr<12?'250 mg':'375-562.5 mg';
+  const carboSyrInt = ageYr<5?'bid-qid':ageYr<12?'tid':'tid-qid';
   const carboLysDose = ageYr<5?'2.5 mL':ageYr<12?'5 mL':'20 mL';
   const carboLysInt = ageYr>=2&&ageYr<=12?'bid':'od';
+  const carboTabDose = ageYr>=12?'4-6 tab/d':'';
   html += makeTable(doseHeaders, [
     drugRow('Bromhexine syr','(Bisolvon)','4 mg/5 mL',bromDose,'', null, null, null, null, 'tid', '&lt;2yr:1mg | 2-5yr:2mg | 5-10yr:4mg | &gt;10yr:8mg'),
     drugRow('Bromhexine tab','','8 mg/tab',bromDose,'', null, null, null, null, 'tid', ''),
-    drugRow('Carbocysteine syr','(Flemex)','250 mg/5 mL',carboSyrDose,'', null, null, null, null, 'tid', '&lt;5yr:125mg | 5-12yr:250mg | &gt;12yr:500mg'),
+    drugRow('Carbocysteine syr','(Flemex)','250 mg/5 mL',carboSyrDose,'', null, null, null, null, carboSyrInt, '2-4yr:62.5-125mg bid-qid | 5-11yr:250mg tid | 12-17yr:1500-2250mg/d tid-qid'),
     drugRow('Carbocysteine syr','','100 mg/5 mL',carboSyrDose,'', null, null, null, null, '', 'kids formula'),
+    drugRow('Carbocysteine tab','(Flemex)','375 mg/tab',carboTabDose,'', null, null, null, null, carboSyrInt, '12-17yr:4-6 tab/d tid-qid'),
     drugRow('Carbocysteine lysine','(Fluifort)','90 mg/mL',carboLysDose,'', null, null, null, null, carboLysInt, '2-5yr:2.5mL bid | 5-12yr:5mL bid | &gt;12yr:20mL od'),
-    drugRow('Acetylcysteine','(Fluimucil)','Sachet 100mg','½-1 sac','', null, null, null, null, 'bid/tid/qid pc', ''),
+    drugRow('Acetylcysteine','(Fluimucil)','Sachet 100mg','½-1 sac','', null, null, null, null, 'bid/tid/qid pc', 'Mucolytic:&lt;6yr 50-100mg tid-qid | &gt;6yr 200mg bid-tid<br>Neb:10-15% 1-10mL tid-qid<br>NAC IV:150mk/60min→50mk/4hr→100mk/16hr<br>NAC PO:140mk load→70mk q4hr x17doses'),
     drugRow('Acetylcysteine','','Sachet 200mg','½-1 sac','', null, null, null, null, '', ''),
     drugRow('Acetylcysteine','','Tab 600mg','½-1 tab','', null, null, null, null, '', ''),
   ]);
 
   // Antitussive
   html += sectionHead('Antitussive', 'ยาแก้ไอ');
+  const ggDose = ageYr<2?'2 mk/Dose':ageYr<6?'50-100 mg':ageYr<12?'100-200 mg':'200-400 mg';
+  const ggMin = ageYr<2?(w*2):null;
+  const ggMax = ageYr<2?null:null;
+  const ggMinMl = ageYr<2?((w*2)*5/50):null;
+  const ggMaxMl = null;
   html += makeTable(doseHeaders, [
-    drugRow('GG syrup','(Guaifenesin)','100 mg/5 mL','50-100 mg','½-1 ช้อนชา tid', null, null, null, null, 'q 6-8 hr', ''),
+    drugRow('GG syrup','(Guaifenesin)','50 mg/5 mL',ggDose,'', ggMin, ggMax, ggMinMl, ggMaxMl, 'q 4 hr (max 6x/d)', '&lt;2yr:12mk/d÷6 MAX600mg/d | 2-&lt;6yr:50-100mg MAX600mg/d | 6-&lt;12yr:100-200mg MAX1.2g/d | &ge;12yr:200-400mg MAX2.4g/d'),
     drugRow('Levodropropizine','(Levopront)','30 mg/5 mL','1 mk/Dose','10 kg = ½ ช้อนชา bid', w*1, null, (w*1*5)/30, null, 'q 12 hr', 'MAX 60 mg/dose'),
   ]);
 
@@ -2022,7 +2169,8 @@ function renderDose(w, am) {
   html += sectionHead('Decongestant', 'ยาลดคัดจมูก');
   const oxyConc = ageYr<6?'0.025%':'0.05%';
   html += makeTable(doseHeaders, [
-    drugRow('Oxymetazoline','(Iliadin)','Drop 0.025%, 0.05%<br>Spray 0.05%',oxyConc,'1-2 หยด/puff แต่ละข้าง', null, null, null, null, 'q 8-24 hr', 'ใช้นาน 3-5 วัน<br>S/E: rhinitis medicamentosa'),
+    drugRow('Oxymetazoline','(Iliadin)','Drop 0.025%',ageYr<6?'0.025% sol':'','2-3 หยด แต่ละข้าง', null, null, null, null, 'bid', 'ห้ามใช้ &lt;2yr<br>ไม่ควรใช้ต่อเนื่อง &gt;3-5 วัน'),
+    drugRow('Oxymetazoline','','Spray 0.05%',ageYr>=6?'0.05% sol':'','2-3 หยด/puff แต่ละข้าง', null, null, null, null, 'bid', '&ge;6yr เท่านั้น'),
     drugRow('Pseudoephedrine','(Maxiphed, Nasolin)','30 mg/5 mL','1 mk/Dose','', w*1, null, (w*1*5)/30, null, 'q 8 hr', ''),
     drugRow('Pseudoephedrine','','60 mg/tab','','', null, null, (w*1)/60, null, '', ''),
     drugRow('Phenylephrine','(Dimetapp)','5mg PE + 2mg BPM/5mL','0.25 mg','10 kg = ½ ช้อนชา', null, null, null, null, 'q 6-8 hr', 'BPM 0.5 mk/Day'),
@@ -2030,7 +2178,7 @@ function renderDose(w, am) {
 
   // Asthma
   html += sectionHead('Asthma', 'ยาโรคหอบ / พ่น / ขยายหลอดลม');
-  const montelDose = ageYr<5?'4 mg':ageYr<15?'5 mg':'10 mg';
+  const montelDose = ageYr<6?'4 mg':ageYr<15?'5 mg':'10 mg';
   const nebDose = w<20?'½ neb':'1 neb';
   const ipratDose = w<20?'250 mcg (½ neb)':'500 mcg (1 neb)';
   const salbSyrDose = am<24?'':am<72?'0.1-0.2 mk/Dose':'2 mg/Dose';
@@ -2039,11 +2187,13 @@ function renderDose(w, am) {
   const salbSyrMinMl = salbSyrMin!=null?(salbSyrMin/2*5):null;
   const salbSyrMaxMl = salbSyrMax!=null?(salbSyrMax/2*5):null;
   const salbSyrInterval = am<72?'tid':'tid-qid';
-  const salbSyrNote = '2-6yr:0.1-0.2mk tid MAX 12mg/d<br>6-14yr:2mg tid-qid MAX 24mg/d';
+  const salbSyrNote = '2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d<br>Adolescent:2-4mg tid-qid MAX32mg/d';
+  const salbTabDose = am<72?'':ageYr<14?'2 mg':'2-4 mg';
   html += makeTable(doseHeaders, [
-    drugRow('Montelukast','(Singulair, Montek)','Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg',montelDose,'', null, null, null, null, 'q 24 hr', '6mo-5yr:4mg | 6-14yr:5mg | &gt;15yr:10mg'),
+    drugRow('Montelukast','(Singulair, Montek)','Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg',montelDose,'รับประทานตอนเย็น', null, null, null, null, 'q 24 hr', '6mo-&lt;6yr:4mg | 6-&lt;15yr:5mg | &ge;15yr:10mg<br>Allergic rhinitis / Asthma maint / Acute exacerbation(adjunct)'),
     drugRow('Salbutamol syr','(Ventolin)','2 mg/5 mL',salbSyrDose,'', salbSyrMin, salbSyrMax, salbSyrMinMl, salbSyrMaxMl, salbSyrInterval, salbSyrNote),
-    drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.05-0.15 mk/Dose','0.03 mL/kg', null, null, w*0.03, null, 'neb q 20 min<br>x 2-3 doses', 'S/E: tachycardia, hypoK'),
+    drugRow('Salbutamol tab','','2 mg/tab',salbTabDose,'', null, null, null, null, salbSyrInterval, ''),
+    drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.15 mk/Dose','min 2.5mg', w*0.15, null, (w*0.15)/5, null, 'neb q 20 min<br>x 2-3 then q1-4hr', 'MAX 10mg/dose<br>Continuous:0.3-0.5mk/hr<br>MDI:&lt;5yr 2-6puff | &gt;6yr 4-10puff'),
     drugRow('Salbutamol NEB','','Nebule 2.5mg/2.5mL',nebDose,'ผสม NSS up to 4 mL', null, null, null, null, '', '&lt;20kg:½neb | &gt;20kg:1neb'),
     drugRow('Ipratropium+Fenoterol','(Berodual)','500 mcg/neb (4mL)',ipratDose,'', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
     drugRow('Ipratropium+Albuterol','(Combivent)','500 mcg/2.5mL/vial',ipratDose,'ผสม NSS up to 4 mL', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
@@ -2084,9 +2234,10 @@ function renderDose(w, am) {
     drugRow('Ranitidine tab','','150 mg/tab','PO q12hr, IV q8hr','', w*1, w*2, (w*1)/150, (w*2)/150, 'q 12 hr', 'MAX 300 mg/day'),
     drugRow('Famotidine tab','','20 mg/tab','0.5 mk/Dose','PO q12-24hr', w*0.5, null, (w*0.5)/20, null, 'q 12-24 hr', ''),
     drugRow('Alum milk','(Al-Mg Hydroxide)','240 mL/bottle','0.5-1 mL/kg/dose','0.5 mL/kg tid pc', null, null, w*0.5, w*1, 'q 6-8 hr', 'MAX 30 mL/dose'),
+    drugRow('Al(OH)3 tab','','500 mg/tab','50-150 mk/Day','÷4-6 พร้อมอาหาร', (w*50)/4, (w*150)/4, ((w*50)/4)/500, ((w*150)/4)/500, 'q 4-6 hr pc', 'Hyperphosphatemia CRF<br>50-150mk/d ÷4-6 พร้อมอาหาร'),
   ].forEach(row => { antacidRows += makeRowHtml(row); });
-  const simeDose = ageYr<2?'20 mg (0.3mL)':ageYr<12?'40 mg (0.6mL)':'40-80 mg';
-  antacidRows += makeRowHtml(drugRow('Simethicone','(Air-X)','Drop 40mg/0.6mL',simeDose,'', null, null, null, null, 'q 8 hr', '&lt;2yr:20mg | 2-12yr:40mg | &gt;12yr:40-80mg'));
+  const simeDose = ageYr<2?'20 mg (0.3mL)':ageYr<12?'40 mg (0.6mL)':'40-125 mg';
+  antacidRows += makeRowHtml(drugRow('Simethicone','(Air-X)','Drop 40mg/0.6mL',simeDose,'', null, null, null, null, 'qid (ac &amp; hs)', '&lt;2yr(&lt;10.9kg):20mg qid MAX240mg/d | &lt;12yr(&ge;10.9kg):40mg qid MAX480mg/d | &ge;12yr:40-125mg qid MAX500mg/d'));
   antacidRows += makeRowHtml(drugRow('Simethicone','','Tab 80mg/tab','','', null, null, null, null, '', ''));
   antacidRows += '</tbody></table>';
   html += antacidRows;
@@ -2150,11 +2301,11 @@ function renderATB(w, am) {
   // Penicillins
   html += sectionHead('Penicillins', 'Penicillins');
   html += makeTable(doseHeaders, [
-    drugRow('Penicillin G','','1,5 mU/vial','100-250k u/kg/d','q6hr', (w*0.1)/4, (w*0.25)/4, null, null, 'q 6 hr (mU)', 'MAX 24 mU/day'),
-    drugRow('Penicillin G','','','250-450k u/kg/d','q4hr', (w*0.25)/6, (w*0.45)/6, null, null, 'q 4 hr (mU)', ''),
+    drugRow('Penicillin G','(PGS)','1,5 mU/vial','100-250k u/kg/d','q6hr', (w*0.1)/4, (w*0.25)/4, null, null, 'q 6 hr (mU)', 'NB Bacteremia:25-50k u/kg/dose<br>NB Meningitis:75-100k u/kg/dose<br>NB interval:PNA0-7d q12hr 8-28d q8hr 29-44d q6hr<br>Mild-mod:100-150k u/kg/d | Severe:200-400k u/kg/d<br>Pneumonia:200-250k u/kg/d q4-6hr<br>MAX 24MU/day (8.4MU/dose)'),
+    drugRow('Penicillin G','','','250-450k u/kg/d','q4hr Meningitis', (w*0.25)/6, (w*0.45)/6, null, null, 'q 4 hr (mU)', 'Meningitis:250-450k u/kg/d q4-6hr'),
     drugRow('Penicillin V syr','','125 mg/5 mL','25-75 mk/Day','', (w*25)/3, (w*75)/3, ((w*25)/3*5)/125, ((w*75)/3*5)/125, 'q 8 hr', 'MAX 2 gm/day'),
     drugRow('Penicillin V tab','','250 mg/tab','','', (w*25)/3, (w*75)/3, ((w*25)/3)/250, ((w*75)/3)/250, 'q 8 hr', ''),
-    drugRow('Benzathine Pen G','','1.2 MU/vial','50k u/kg IM','IM only',w*50000,null,null,null,'single dose','NB Syphilis:50k u/kg IM x1<br>RF:&le;27kg 600k u q3-4wk | &gt;27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/wk x3wk MAX 2.4MU'),
+    drugRow('Benzathine Pen G','','1.2 MU/vial','50k u/kg IM','IM only',w*50000,null,null,null,'single dose','NB Congenital Syphilis:50k u/kg IM x1<br>RF 2nd prevention:&le;27kg 600k u q3-4wk | &gt;27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/dose IM weekly x3wk MAX2.4MU/dose<br>GAS pharyngitis(Adult):1.2MU IM x1'),
     drugRow('Cloxacillin IV','','0.5,1 gm/amp','50-100 mk/Day','', (w*50)/4, (w*100)/4, null, null, 'q 6 hr', 'MAX 4 gm/day'),
     drugRow('Cloxacillin syr','','125 mg/5 mL','','', (w*50)/4, (w*100)/4, ((w*50)/4*5)/125, ((w*100)/4*5)/125, 'q 6 hr', ''),
     drugRow('Cloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*50)/4, (w*100)/4, ((w*50)/4)/250, ((w*100)/4)/250, 'q 6 hr', ''),
@@ -2162,7 +2313,7 @@ function renderATB(w, am) {
     drugRow('Dicloxacillin syr','','62.5 mg/5 mL','12.5-50 mk/Day','', (w*12.5)/4, (w*50)/4, ((w*12.5)/4*5)/62.5, ((w*50)/4*5)/62.5, 'q 6 hr', 'MAX 2 gm/day'),
     drugRow('Dicloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*12.5)/4, (w*50)/4, ((w*12.5)/4)/250, ((w*50)/4)/250, 'q 6 hr', ''),
     drugRow('Dicloxacillin cap','','500 mg/cap','','', null, null, ((w*12.5)/4)/500, ((w*50)/4)/500, '', ''),
-    drugRow('Amoxicillin syr','','125 mg/5 mL','25-100 mk/Day','', (w*25)/3, (w*100)/3, ((w*25)/3*5)/125, ((w*100)/3*5)/125, 'q 8-12 hr', 'Mild:25-50mk q8hr MAX500mg/dose<br>Severe:80-100mk q8hr<br>AOM:80-90mk q12hr<br>Pneumonia:90-100mk q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'),
+    drugRow('Amoxicillin syr','','125 mg/5 mL','25-100 mk/Day','', (w*25)/3, (w*100)/3, ((w*25)/3*5)/125, ((w*100)/3*5)/125, 'q 8-12 hr', 'Mild(&gt;3mo):25-50mk q8hr MAX500mg/dose<br>Severe:80-100mk q8hr<br>AOM:80-90mk q12hr<br>Pneumonia:90-100mk q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'),
     drugRow('Amoxicillin syr','','250 mg/5 mL','','10 kg = 1 ช้อนชา', null, null, ((w*25)/3*5)/250, ((w*100)/3*5)/250, '', ''),
     drugRow('Amoxicillin cap','','500 mg/cap','','', (w*25)/3, (w*100)/3, ((w*25)/3)/500, ((w*100)/3)/500, 'q 8-12 hr', ''),
     drugRow('Amox/Clav IV','(Augmentin)','1.2 gm IV','30-90 mk/Day of Amox','', (w*30)/2, (w*90)/2, null, null, 'q 12 hr', 'MAX 4gm Amox/day'),
@@ -2288,13 +2439,15 @@ function renderATB(w, am) {
     drugRow('Oseltamivir','','45 mg/tab','', oselApprox(45), null, null, null, null, '', ''),
     drugRow('Oseltamivir','','75 mg/tab','', oselApprox(75), null, null, null, null, '', ''),
     // Acyclovir IV
-    drugRow('Acyclovir IV','','250 mg/vial','5-20 mk/Dose','', w*5, w*20, null, null, 'q 8-12 hr', 'NB HSV:20mk BW&lt;1kg:q12hr BW1-2kg:PNA&lt;7d q12hr,8-28d q8hr BW&gt;2kg:q8hr (CNS21d skin14d)<br>HSV encepha:10-15mk q8hr x21d<br>HSV severe:5-10mk q8hr<br>VZV:10-15mk q8hr 5-10d<br>Zoster:10mk q8hr 7-10d'),
+    drugRow('Acyclovir IV','','250 mg/vial','5-20 mk/Dose','', w*5, w*20, null, null, 'q 8-12 hr', 'NB HSV:20mk BW&lt;1kg:q12hr all PNA<br>BW1-2kg:PNA&le;14d q12hr,15-28d q8hr<br>BW&gt;2kg:PNA&le;7d q12hr,8-28d q8hr<br>(CNS 21d skin 14d)<br>HSV encepha:10-15mk q8hr x21d<br>HSV severe:5-10mk q8hr 5-7d<br>VZV:10-15mk q8hr 5-10d<br>VZV immunocomp:10-15mk q8hr 7-14d<br>Zoster:10mk q8hr 7-10d<br>Zoster immunocomp:10mk q8hr 7-10d<br>Renal:CrCl25-50 q12hr | 10-25 q24hr | &lt;10 50%dose q24hr'),
     // Acyclovir Oral
-    drugRow('Acyclovir','','200 mg/tab','10-20 mk/Dose','MAX 800mg', w*10, w*20, (w*10)/200, (w*20)/200, 'tid-5x/d', 'Genital HSV:40-80mk/day÷3-4 x7-10d (MAX1200mg/day)<br>Orolabial:20mk qid(MAX800) หรือ ≤6yr:15mk 5x/d(MAX200) x5-7d<br>Recurrent &lt;12yr:20mk tid x5d(MAX400)<br>VZV:20mk qid x5d(&gt;2yr) MAX3200mg/day<br>Zoster:20mk qid x5d ≥12yr:800mg q4hr 5x/d'),
+    drugRow('Acyclovir','','200 mg/tab','10-20 mk/Dose','MAX 800mg', w*10, w*20, (w*10)/200, (w*20)/200, 'tid-5x/d', 'Genital HSV mild:40-80mk/d÷3-4 x7-10d MAX1200mg/d<br>Genital severe:IV 5-10mk q8hr<br>Orolabial:20mk qid MAX800 หรือ &le;6yr 15mk 5x/d MAX200 x5-7d<br>Recurrent &lt;12yr:20mk tid x5d MAX400<br>VZV(&gt;2yr):20mk qid x5d MAX3200mg/d<br>VZV immunocomp:500mg/m2 q8hr or IV<br>Zoster:20mk qid x5d &ge;12yr 800mg 5x/d<br>Suppression:400mg bid or 200mg tid-5x/d'),
     drugRow('Acyclovir','','400 mg/tab','','', null, null, (w*10)/400, (w*20)/400, '', ''),
     drugRow('Acyclovir','','800 mg/tab','','', null, null, (w*10)/800, (w*20)/800, '', ''),
     // Acyclovir susp
-    drugRow('Acyclovir susp','','20 mg/mL (susp)','10-20 mk/Dose','', w*10, w*20, (w*10)/20, (w*20)/20, 'tid-5x/d', 'ยาเตรียมเฉพาะราย'),
+    drugRow('Acyclovir susp','','200 mg/5 mL (susp)','10-20 mk/Dose','ยาเตรียมเฉพาะราย', w*10, w*20, (w*10*5)/200, (w*20*5)/200, 'tid-5x/d', ''),
+    // Acyclovir cream
+    drugRow('Acyclovir cream','','5% cream 10g','','ทาบาง ๆ q4hr 5x/d x5-10d', null, null, null, null, '5x/d', 'HSV skin/cold sore'),
   ]);
 
   document.getElementById('tab-atb').innerHTML = '<div class="table-scroll-wrap">' + html + '</div>';
@@ -3417,6 +3570,14 @@ function clearSearch() {
 }
 
 function showRevSearchResults(matches) {
+  const catColors = {
+    'Antipyretic':'#66bb6a','Antihistamine':'#42a5f5','Mucolytic':'#78909c','Antitussive':'#78909c',
+    'Decongestant':'#ab47bc','Asthma':'#26c6da','Adrenaline':'#ef5350','Antiemetic':'#ffa726',
+    'Antacid':'#8d6e63','Laxatives':'#a1887f','Steroid':'#ec407a','Anti-epileptic':'#7e57c2',
+    'Sedation':'#5c6bc0','Penicillins':'#29b6f6','Cephalosporins':'#26a69a','Macrolides':'#9ccc65',
+    'Lincosamides':'#d4e157','Sulfonamides':'#ffca28','Quinolones':'#ff7043','Others':'#bdbdbd',
+    'Antivirals':'#ce93d8'
+  };
   let panel = document.getElementById('revSearchPanel');
   if (panel) panel.remove();
   panel = document.createElement('div');
@@ -3424,12 +3585,42 @@ function showRevSearchResults(matches) {
   panel.className = 'rev-search-panel';
   let html = '<div class="rev-search-header">เลือกยาที่ต้องการ<button class="rev-search-close" onclick="this.parentElement.parentElement.remove()">✕</button></div>';
   html += '<div class="rev-search-list">';
+  // Calculate best Oseltamivir prep if applicable
+  const w = getActiveWeight();
+  let oselBestPrep = 0;
+  if (matches.some(d => d.name === 'Oseltamivir') && w > 0) {
+    const am = pickerAge ? pickerAge.getValue().value : 0;
+    const ageYr = am / 12;
+    let oMg;
+    if (am === 0 && w < 2) oMg = w*1;
+    else if (am === 0 && w < 3) oMg = w*1.5;
+    else if (am < 9) oMg = w*3;
+    else if (am < 12) oMg = w*3.5;
+    else if (ageYr >= 13) oMg = 75;
+    else { if (w<=15) oMg=30; else if (w<=23) oMg=45; else if (w<=40) oMg=60; else oMg=75; }
+    oselBestPrep = [30,45,75].reduce((best,p) => {
+      const tabs=oMg/p, fw=Math.abs(tabs-Math.round(tabs)), fh=Math.abs(tabs-Math.round(tabs*2)/2);
+      const sc=fw<0.01?0:fh<0.01?1:2;
+      if(sc<best.sc) return {p,sc,tabs};
+      if(sc===best.sc&&sc<2&&tabs<best.tabs) return {p,sc,tabs};
+      if(sc===best.sc&&sc===2&&Math.abs(tabs-1)<Math.abs(best.tabs-1)) return {p,sc,tabs};
+      return best;
+    },{p:0,sc:999,tabs:999}).p;
+  }
   matches.forEach(d => {
     const checked = selectedDrugs.has(d.id) ? ' checked' : '';
-    html += `<label class="rev-search-item">
+    const cc = catColors[d.cat] || '#607d8b';
+    // Best prep indicator for Oseltamivir
+    let bestTag = '';
+    if (d.name === 'Oseltamivir' && oselBestPrep > 0) {
+      const prepMg = parseInt(d.prep);
+      bestTag = prepMg === oselBestPrep ? ' ✅' : '';
+    }
+    html += `<label class="rev-search-item" style="border-left:3px solid ${cc};">
       <input type="checkbox" value="${d.id}"${checked}>
       <span class="rev-search-name">${d.name}</span>
-      <span class="rev-search-prep">${d.prep}</span>
+      <span class="rev-search-prep">${d.prep}${bestTag}</span>
+      <span style="font-size:0.6rem;color:${cc};margin-left:auto;white-space:nowrap;">${d.cat}</span>
     </label>`;
   });
   html += '</div>';
@@ -3468,11 +3659,17 @@ populateDD('ddPals', palsItems);
 
 function ddSelect(type, idx) {
   idx = parseInt(idx);
-  if (type === 'age') { pickerAge.scrollToIdx(idx, true); }
-  else if (type === 'rbw' && pickerRBW) { pickerRBW.scrollToIdx(idx, true); }
-  else if (type === 'rbwAge' && pickerRBWAge) { pickerRBWAge.scrollToIdx(idx, true); }
-  else if (type === 'dehyd') { pickerDehyd.scrollToIdx(idx, true); }
-  else if (type === 'pals') { pickerPals.scrollToIdx(idx, true); }
+  // Directly set selectedIdx and fire onChange (picker may be hidden/suppressed)
+  function forceSelect(picker, i) {
+    picker.selectedIdx = i;
+    picker._suppressEvents = false;
+    picker.fireChange();
+  }
+  if (type === 'age') { forceSelect(pickerAge, idx); }
+  else if (type === 'rbw' && pickerRBW) { forceSelect(pickerRBW, idx); }
+  else if (type === 'rbwAge' && pickerRBWAge) { forceSelect(pickerRBWAge, idx); }
+  else if (type === 'dehyd') { forceSelect(pickerDehyd, idx); }
+  else if (type === 'pals') { forceSelect(pickerPals, idx); }
 }
 
 // Sync dropdown when picker scrolls
