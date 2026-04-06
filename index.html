@@ -1742,9 +1742,16 @@ function highlightAgeNotes(am, w) {
       if (/^\s*\|\s*$/.test(tok) || /^<br/i.test(tok)) return tok;
       if (!tok.trim()) return tok;
       const t = tok.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
-      if (!matched && !isBW && matchesAgeRange(t, am, ageYr)) {
-        matched = true;
-        return '<span class="' + matchClass + '">' + tok + '</span>';
+      const hasKg = /\d+\s*kg/i.test(t);
+      const hasAgeMarker = /\d+\s*(yr|mo)/i.test(t) || /term/i.test(t);
+      if (!matched && !isBW && hasAgeMarker) {
+        const ageOk = matchesAgeRange(t, am, ageYr);
+        // If segment has both age+weight, require both to match
+        if (ageOk && hasKg) {
+          if (matchesWeightRange(t, w)) { matched = true; return '<span class="' + matchClass + '">' + tok + '</span>'; }
+        } else if (ageOk) {
+          matched = true; return '<span class="' + matchClass + '">' + tok + '</span>';
+        }
       }
       if (!matched && matchesWeightRange(t, w)) {
         matched = true;
@@ -2435,7 +2442,7 @@ function renderATB(w, am) {
 
   html += sectionHead('Antivirals', 'Antivirals');
   html += makeTable(doseHeaders, [
-    drugRow('Oseltamivir','','30 mg/tab',oselDose, oselApprox(30), oselMg, null, null, null, 'bid x10 days', 'Preterm PMA&lt;38wk:1mk | 38-40wk:1.5mk | &gt;40wk:3mk<br>Term-9mo:3mk/Dose | 9-11mo:3.5mk/Dose<br>1-12yr: ≤15kg 30mg | 15-23kg 45mg | 23-40kg 60mg | &gt;40kg 75mg'),
+    drugRow('Oseltamivir','','30 mg/tab',oselDose, oselApprox(30), oselMg, null, null, null, 'bid x10 days', 'Preterm PMA&lt;38wk:1mk | 38-40wk:1.5mk | &gt;40wk:3mk<br>Term-9mo:3mk/Dose | 9-11mo:3.5mk/Dose<br>1-12yr ≤15kg:30mg | 1-12yr 15-23kg:45mg | 1-12yr 23-40kg:60mg | 1-12yr &gt;40kg:75mg'),
     drugRow('Oseltamivir','','45 mg/tab','', oselApprox(45), null, null, null, null, '', ''),
     drugRow('Oseltamivir','','75 mg/tab','', oselApprox(75), null, null, null, null, '', ''),
     // Acyclovir IV
