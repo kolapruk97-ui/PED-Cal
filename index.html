@@ -1098,6 +1098,9 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
     <li>QSNICH: PGS NB dosing + severity-based + Renal</li>
     <li>QSNICH: Amoxicillin Rhinosinusitis + Mild(&gt;3mo)</li>
     <li>QSNICH: Acyclovir NB BW/PNA + immunocomp + Renal + cream 5%</li>
+    <li>QSNICH: CPM oral age-based (1/2/4mg q4-6hr) + IV anaphylaxis dose</li>
+    <li>QSNICH: Prednisolone note ครบทุก indication (Asthma/Nephrotic/Kawasaki/Anaphylaxis)</li>
+    <li>QSNICH: Prednisolone susp 5mg/mL row</li>
   </ul></div>
   <div class="cl-ui"><strong style="font-size:0.7rem;color:#ffa726;">UI</strong>
   <ul>
@@ -1923,9 +1926,9 @@ const drugRegistry = [
   // Antihistamine
   {id:'cet-syr', name:'Cetirizine syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.5, cat:'Antihistamine'},
   {id:'cet-tab', name:'Cetirizine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.5, cat:'Antihistamine'},
-  {id:'cpm-syr', name:'CPM syrup', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.35, cat:'Antihistamine', note:'ห้ามใช้ &lt;2yr'},
-  {id:'cpm-tab', name:'CPM tablet', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0.1, maxD:0.35, cat:'Antihistamine'},
-  {id:'cpm-iv', name:'CPM IV', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:0.25, maxD:0.25, cat:'Antihistamine'},
+  {id:'cpm-syr', name:'CPM syrup', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antihistamine', note:'ห้ามใช้ <2yr<br>2-<6yr:1mg q4-6hr MAX6mg/d<br>6-<12yr:2mg MAX12mg/d<br>>12yr:4mg MAX24mg/d'},
+  {id:'cpm-tab', name:'CPM tablet', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Antihistamine'},
+  {id:'cpm-iv', name:'CPM IV', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:0.25, maxD:0.25, cat:'Antihistamine', note:'Anaphylaxis/Allergy<br>1-5mo:0.25mk MAX2.5mg<br>6mo-5yr:2.5mg | 6-11yr:5mg | 12-17yr:10mg qid'},
   {id:'hyd-syr', name:'Hydroxyzine syr', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:0.33, maxD:0.67, cat:'Antihistamine'},
   {id:'hyd-tab-10', name:'Hydroxyzine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.33, maxD:0.67, cat:'Antihistamine'},
   {id:'hyd-tab-25', name:'Hydroxyzine tab', prep:'25 mg/tab', concMg:25, concVol:1, unit:'tab', minD:0.33, maxD:0.67, cat:'Antihistamine'},
@@ -1967,7 +1970,8 @@ const drugRegistry = [
   // Steroid
   {id:'hydro-iv', name:'Hydrocortisone', prep:'100 mg/vial', concMg:100, concVol:1, unit:'mL', minD:5, maxD:5, cat:'Steroid'},
   {id:'dexa-iv', name:'Dexamethasone', prep:'5 mg/vial', concMg:5, concVol:1, unit:'mL', minD:0.15, maxD:0.6, cat:'Steroid'},
-  {id:'pred-tab', name:'Prednisolone', prep:'5 mg/tab', concMg:5, concVol:1, unit:'tab', minD:0.5, maxD:1, cat:'Steroid'},
+  {id:'pred-tab', name:'Prednisolone', prep:'5 mg/tab', concMg:5, concVol:1, unit:'tab', minD:0.5, maxD:1, cat:'Steroid', note:'Asthma:2mk/d x3-5d | Anaphylaxis:1-2mk/d<br>Kawasaki:2mk/d q8hr MAX60mg/d<br>Nephrotic:2mk/d or 60mg/m²/d x4-6wk'},
+  {id:'pred-susp', name:'Prednisolone', prep:'5 mg/mL (susp)', concMg:5, concVol:1, unit:'mL', minD:0.5, maxD:1, cat:'Steroid'},
   // Anti-epileptic
   {id:'diaz-iv', name:'Diazepam IV/PO', prep:'10 mg/2 mL', concMg:10, concVol:2, unit:'mL', minD:0.3, maxD:0.3, cat:'Anti-epileptic'},
   {id:'diaz-pr-2', name:'Diazepam PR', prep:'2 mg/tab', concMg:2, concVol:1, unit:'tab', minD:0.5, maxD:0.5, cat:'Anti-epileptic'},
@@ -2132,9 +2136,9 @@ function renderDose(w, am) {
   html += makeTable(doseHeaders, [
     drugRow('Cetirizine syr','','5 mg/5 mL', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, ageYr<2?'q 24 hr':'q 12-24 hr', '6mo-2yr:2.5mg | 2-6yr:5mg | &gt;6yr:10mg'),
     drugRow('Cetirizine tab','','10 mg/tab', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, '', ''),
-    drugRow('CPM syrup','','2 mg/5 mL','0.35 mk/Day','10 kg = ½ ช้อนชา', (0.35*w)/3, null, ((0.35*w)/3*5)/2, null, 'q 8 hr', 'ห้ามใช้ &lt;2yr'),
-    drugRow('CPM tablet','','4 mg/tab','','25 kg = ½ tab', (0.35*w)/3, null, ((0.35*w)/3)/4, null, 'q 8 hr', ''),
-    drugRow('CPM IV','','10 mg/mL','0.25 mk/Dose','', 0.25*w, null, (0.25*w)/10, null, '', ''),
+    drugRow('CPM syrup','','2 mg/5 mL',ageYr<6?'1 mg':ageYr<12?'2 mg':'4 mg','', ageYr<6?1:ageYr<12?2:4, null, ageYr<6?(1*5/2):ageYr<12?(2*5/2):(4*5/2), null, 'q 4-6 hr', 'ห้ามใช้ &lt;2yr<br>2-&lt;6yr:1mg q4-6hr MAX6mg/d | 6-&lt;12yr:2mg MAX12mg/d | &gt;12yr:4mg MAX24mg/d'),
+    drugRow('CPM tablet','','4 mg/tab',ageYr<6?'¼ tab':ageYr<12?'½ tab':'1 tab','', ageYr<6?1:ageYr<12?2:4, null, ageYr<6?(1/4):ageYr<12?(2/4):(4/4), null, 'q 4-6 hr', ''),
+    drugRow('CPM IV','','10 mg/mL',am<6?'0.25 mk':ageYr<6?'2.5 mg':ageYr<12?'5 mg':'10 mg','', am<6?(0.25*w):ageYr<6?2.5:ageYr<12?5:10, null, am<6?((0.25*w)/10):ageYr<6?(2.5/10):ageYr<12?(5/10):(10/10), null, 'qid (IM/IV)', '1-5mo:0.25mk MAX2.5mg | 6mo-5yr:2.5mg | 6-11yr:5mg | 12-17yr:10mg<br>Anaphylaxis/Allergy emergency'),
     drugRow('Hydroxyzine syr','','10 mg/5 mL','1-2 mk/Day','10 kg = ½-1 ช้อนชา', (1*w)/3, (2*w)/3, ((1*w)/3*5)/10, ((2*w)/3*5)/10, 'q 8 hr', ''),
     drugRow('Hydroxyzine tab','','10 mg/tab','','10 kg = ½-1 tab', (1*w)/3, (2*w)/3, ((1*w)/3)/10, ((2*w)/3)/10, 'q 8 hr', ''),
     drugRow('Hydroxyzine tab','','25 mg/tab','','', null, null, ((1*w)/3)/25, ((2*w)/3)/25, '', ''),
@@ -2263,7 +2267,8 @@ function renderDose(w, am) {
   html += makeTable(doseHeaders, [
     drugRow('Hydrocortisone','','100 mg/vial','5 mk/Dose','', w*5, null, null, null, 'q 6 hr', 'MAX 250 mg/dose'),
     drugRow('Dexamethasone','','5 mg/vial','0.15-0.6 mk/Dose','', w*0.15, w*0.6, null, null, '', 'MAX 10 mg/dose'),
-    drugRow('Prednisolone','','5 mg/tab','1-2 mk/Day','', (w*1)/2, (w*2)/2, ((w*1)/2)/5, ((w*2)/2)/5, 'q 12 hr', 'MAX 60 mg/day (30/dose)'),
+    drugRow('Prednisolone','','5 mg/tab','1-2 mk/Day','', (w*1)/2, (w*2)/2, ((w*1)/2)/5, ((w*2)/2)/5, 'q 12-24 hr', 'Asthma exacerbation:2mk/d x3-5d<br>MAX &lt;2yr 20mg/d | 2-5yr 30mg/d | &gt;5yr 40mg/d<br>Asthma maint:&lt;12yr 0.25-2mk/d qd AM/qod MAX60mg/d<br>Anaphylaxis:1-2mk/d ÷2-3 MAX40mg/d<br>Anti-inflam:0.1-2mk/d ÷1-4<br>Kawasaki:2mk/d ÷q8hr MAX60mg/d จนCRPปกติ taper 2-3wk<br>Nephrotic:2mk/d or 60mg/m²/d qd MAX60mg/d x4-6wk<br>then 1.5mk/dose or 40mg/m²/dose qod MAX40mg/dose taper'),
+    drugRow('Prednisolone','','5 mg/mL (susp)','1-2 mk/Day','ยาเตรียมเฉพาะราย', (w*1)/2, (w*2)/2, ((w*1)/2)/5, ((w*2)/2)/5, 'q 12-24 hr', ''),
   ]);
 
   // Anti-epileptic
