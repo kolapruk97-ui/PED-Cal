@@ -1085,6 +1085,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <h3>V.5</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
   <ul>
+    <li>QSNICH: Amox/Clav update — syr 7:1 (25-45mk q12hr), ES syr 14:1 (AOM 90mk/CAP 80-100mk), IV 0.6+1.2g vial (30mk/dose total q6-8hr), tab adult dosing</li>
     <li>PALS: ETCO2 monitoring targets (CPR quality + ROSC)</li>
     <li>PALS: Post-Cardiac Arrest Care checklist (TTM/BP/O2/Neuro)</li>
     <li>PALS: ECPR guidance</li>
@@ -1963,7 +1964,13 @@ const drugRegistry = [
   {id:'brom-syr', name:'Bromhexine syr', prep:'4 mg/5 mL', concMg:4, concVol:5, unit:'mL', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   {id:'brom-tab', name:'Bromhexine tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   // Antitussive
-  {id:'gg-syr', name:'GG syrup', prep:'50 mg/5 mL', concMg:50, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin', note:'<2yr:12mk/d÷6 | 2-<6yr:50-100mg | 6-<12yr:100-200mg | ≥12yr:200-400mg<br>q4hr max 6x/d'},
+  {id:'gg-syr', name:'GG syrup', prep:'50 mg/5 mL', concMg:50, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin',
+    autoByAge:true, indications:[
+      {label:'<2yr', minMo:0, maxMo:23, minD:2, maxD:2, iv:'q 4 hr (max 6x/d)', note:'12mk/d÷6 MAX600mg/d'},
+      {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:75, maxDay:600, iv:'q 4 hr (max 6x/d)', note:'50-100mg q4hr MAX600mg/d'},
+      {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:150, maxDay:1200, iv:'q 4 hr (max 6x/d)', note:'100-200mg q4hr MAX1.2g/d'},
+      {label:'≥12yr', minMo:144, maxMo:999, fixedMg:300, maxDay:2400, iv:'q 4 hr (max 6x/d)', note:'200-400mg q4hr MAX2.4g/d'}
+    ]},
   {id:'levo-syr', name:'Levodropropizine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Antitussive'},
   // Decongestant
   {id:'pseudo-syr', name:'Pseudoephedrine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Decongestant'},
@@ -2054,8 +2061,9 @@ const drugRegistry = [
   {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
   {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
   {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:15, maxD:45, cat:'Penicillins', note:'MAX 4gm Amox/day'},
-  {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:15, maxD:45, cat:'Penicillins'},
+  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:12.5, maxD:22.5, cat:'Penicillins', alias:'Augmentin,Ranclav,Clavulanic', note:'7:1 General:25-45mk/d q12hr or 20-40mk/d q8hr<br>MAX 4gm Amox/day'},
+  {id:'augm-es', name:'Amox/Clav ES syr', prep:'600/42.9 mg/5 mL', concMg:600, concVol:5, unit:'mL', minD:40, maxD:50, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'14:1 AOM/Sinusitis:90mk/d q12hr<br>CAP:80-100mk/d q12hr<br>MAX 4gm Amox/day'},
+  {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:12.5, maxD:22.5, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'≥40kg:250-500mg q8hr<br>Sinusitis:2g q12hr x10d<br>Bite/Abscess:875mg q12hr<br>CAP:2g q12hr(extended)'},
   // Cephalosporins
   {id:'cephal-syr', name:'Cephalexin syr (1st)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:6.25, maxD:25, cat:'Cephalosporins'},
   {id:'cephal-cap-250', name:'Cephalexin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:6.25, maxD:25, cat:'Cephalosporins'},
@@ -2133,7 +2141,8 @@ const drugRegistry = [
   {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB:25-50k u/kg/dose(Bact) 75-100k(Mening)<br>Mild-mod:100-150k/d Severe:200-400k/d<br>MAX 24MU/day'},
   {id:'benz-penG', name:'Benzathine Pen G', prep:'1.2 MU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB Syphilis:50k u/kg IM x1<br>RF:≤27kg 600k q3-4wk | >27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/wk x3wk MAX2.4MU'},
   {id:'clox-iv', name:'Cloxacillin IV', prep:'0.5,1 gm/amp', concMg:1000, concVol:1, unit:'gm', minD:12.5, maxD:25, cat:'Penicillins'},
-  {id:'augm-iv', name:'Amox/Clav IV', prep:'1.2 gm IV', concMg:1200, concVol:1, unit:'gm', minD:15, maxD:45, cat:'Penicillins'},
+  {id:'augm-iv-06', name:'Amox/Clav IV', prep:'0.6 gm/vial', concMg:600, concVol:1, unit:'vial', minD:30, maxD:30, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'คำนวณ total Amox+Clav<br><3mo(<4kg):30mk q12hr | >4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg:1.2g q8hr Severe:q4-6hr'},
+  {id:'augm-iv-12', name:'Amox/Clav IV', prep:'1.2 gm/vial', concMg:1200, concVol:1, unit:'vial', minD:30, maxD:30, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic'},
   {id:'ampi', name:'Ampicillin', prep:'500,1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:25, maxD:50, cat:'Penicillins'},
   {id:'cefaz', name:'Cefazolin (1st)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:16.7, maxD:33.3, cat:'Cephalosporins'},
   {id:'ceftri-500', name:'Ceftriaxone (3rd)', prep:'500 mg/vial', concMg:500, concVol:1, unit:'vial', minD:50, maxD:75, cat:'Cephalosporins'},
@@ -2370,9 +2379,10 @@ function renderATB(w, am) {
     drugRow('Amoxicillin syr','','125 mg/5 mL','25-100 mk/Day','', (w*25)/3, (w*100)/3, ((w*25)/3*5)/125, ((w*100)/3*5)/125, 'q 8-12 hr', 'Mild(&gt;3mo):25-50mk q8hr MAX500mg/dose<br>Severe:80-100mk q8hr<br>AOM:80-90mk q12hr<br>Pneumonia:90-100mk q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'),
     drugRow('Amoxicillin syr','','250 mg/5 mL','','10 kg = 1 ช้อนชา', null, null, ((w*25)/3*5)/250, ((w*100)/3*5)/250, '', ''),
     drugRow('Amoxicillin cap','','500 mg/cap','','', (w*25)/3, (w*100)/3, ((w*25)/3)/500, ((w*100)/3)/500, 'q 8-12 hr', ''),
-    drugRow('Amox/Clav IV','(Augmentin)','1.2 gm IV','30-90 mk/Day of Amox','', (w*30)/2, (w*90)/2, null, null, 'q 12 hr', 'MAX 4gm Amox/day'),
-    drugRow('Amox/Clav syr','','400/57 mg/5 mL','','', (w*30)/2, (w*90)/2, ((w*30)/2*5)/400, ((w*90)/2*5)/400, 'q 12 hr', ''),
-    drugRow('Amox/Clav tab','','875/125 mg/tab','','', (w*30)/2, (w*90)/2, ((w*30)/2)/875, ((w*90)/2)/875, 'q 12 hr', ''),
+    drugRow('Amox/Clav IV','(Cavumox)','0.6, 1.2 gm/vial','30 mk/dose (total)','q 6-8 hr', w*30, w*30, null, null, 'q 6-8 hr', 'คำนวณ total Amox+Clav<br>&lt;3mo(&lt;4kg):30mk q12hr | &gt;4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg&amp;Adult:1.2g q8hr<br>Severe:q4-6hr'),
+    drugRow('Amox/Clav syr','(Ranclav 7:1)','400/57 mg/5 mL','25-45 mk/Day of Amox','', (w*25)/2, (w*45)/2, ((w*25)/2*5)/400, ((w*45)/2*5)/400, 'q 12 hr', '7:1 General:25-45mk/d q12hr<br>or 20-40mk/d q8hr<br>MAX 4gm Amox/day'),
+    drugRow('Amox/Clav ES syr','(Cavumox ES 14:1)','600/42.9 mg/5 mL','80-100 mk/Day of Amox','', (w*80)/2, (w*100)/2, ((w*80)/2*5)/600, ((w*100)/2*5)/600, 'q 12 hr', 'AOM/Sinusitis:90mk/d q12hr<br>CAP:80-100mk/d q12hr<br>MAX 4gm Amox/day'),
+    drugRow('Amox/Clav tab','(Cavumox 7:1)','875/125 mg/tab','','', (w*25)/2, (w*45)/2, ((w*25)/2)/875, ((w*45)/2)/875, 'q 12 hr', '≥40kg:250-500mg q8hr<br>Sinusitis:2g q12hr x10d<br>Bite/Abscess:875mg q12hr<br>CAP:2g q12hr(extended)'),
     drugRow('Ampicillin','','500,1000 mg/vial','100-200 mk/Day','q 6 hr', (w*100)/4, (w*200)/4, null, null, 'q 6 hr', 'MAX 12 gm/day'),
   ]);
 
@@ -3240,7 +3250,7 @@ const drugIntervals = {
   'carbo-syr-250':'tid','carbo-syr-100':'tid','carbo-lys':'bid',
   'acetyl-100':'bid-qid','acetyl-200':'bid-qid','acetyl-600':'bid-qid',
   // Antitussive
-  'gg-syr':'q 6-8 hr','levo-syr':'q 12 hr',
+  'gg-syr':'q 4 hr','levo-syr':'q 12 hr',
   // Decongestant
   'pseudo-syr':'q 8 hr','pseudo-tab':'q 8 hr',
   // Asthma
@@ -3263,7 +3273,7 @@ const drugIntervals = {
   'clox-syr':'q 6 hr','clox-cap-250':'q 6 hr','clox-cap-500':'q 6 hr',
   'diclox-syr':'q 6 hr','diclox-cap-250':'q 6 hr','diclox-cap-500':'q 6 hr',
   'amox-syr-125':'q 12 hr','amox-syr-250':'q 12 hr','amox-cap':'q 6-8 hr',
-  'augm-syr':'q 12 hr','augm-tab':'q 12 hr',
+  'augm-syr':'q 12 hr','augm-es':'q 12 hr','augm-tab':'q 12 hr','augm-iv-06':'q 8 hr','augm-iv-12':'q 8 hr',
   // Cephalosporins
   'cephal-syr':'q 6 hr','cephal-cap-250':'q 6-8 hr','cephal-cap-500':'q 6-8 hr',
   'cefacl-syr-125':'q 12 hr','cefacl-syr-250':'q 12 hr','cefacl-tab':'q 8-12 hr',
@@ -3635,7 +3645,7 @@ const allDrugs = [
   // Penicillins
   'Penicillin','Penicillin G','Penicillin V','Benzathine','Benzathine Pen G',
   'Cloxacillin','Dicloxacillin',
-  'Amoxicillin','Augmentin','Amox/Clav','Clavulanic','Ampicillin',
+  'Amoxicillin','Augmentin','Amox/Clav','Clavulanic','Cavumox','Ranclav','Ampicillin',
   // Cephalosporins
   'Cefazolin','Cephalexin','Cefaclor','Ceftriaxone','Cefotaxime',
   'Ceftazidime','Cefdinir','Omnicef','Cefixime','Cefspan',
