@@ -1085,7 +1085,11 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <h3>V.5</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
   <ul>
-    <li>QSNICH: Amox/Clav update — syr 7:1 (25-45mk q12hr), ES syr 14:1 (AOM 90mk/CAP 80-100mk), IV 0.6+1.2g vial (30mk/dose total q6-8hr), tab adult dosing</li>
+    <li>QSNICH: Amox/Clav update — syr 7:1 (25-45mk q12hr), ES syr 14:1 (AOM 90mk/CAP 80-100mk), IV 0.6+1.2g vial (30mk/dose total q6-8hr), tab adult dosing + alias Augmentin/Cavumox/Ranclav</li>
+    <li>QSNICH: GG syrup reverse — autoByAge + fixedMg 4 กลุ่มอายุ (&lt;2yr/2-6/6-12/≥12)</li>
+    <li>QSNICH: Hydrocortisone 11 indications (Anaphylaxis/Adrenal/Anti-inflam/CAH/Hypoglycemia/Asthma/Septic Shock/Stress/Resistant hypotension/Thyroid storm) + mg/m² note</li>
+    <li>CPM IV reverse — แก้ unit เป็น mg (ไม่ใช่ mL)</li>
+    <li>Reverse tab: recalcAll() re-render เมื่อเปลี่ยนอายุ/น้ำหนักขณะ active</li>
     <li>PALS: ETCO2 monitoring targets (CPR quality + ROSC)</li>
     <li>PALS: Post-Cardiac Arrest Care checklist (TTM/BP/O2/Neuro)</li>
     <li>PALS: ECPR guidance</li>
@@ -1736,6 +1740,9 @@ function recalcAll() {
   renderFluid(w, dehyd, ageMonths);
   renderPALS(w, palsAge);
   highlightAgeNotes(ageMonths, w);
+  // Re-render reverse tab if it's active so safe ranges update with new age/weight
+  const revTab = document.getElementById('tab-reverse');
+  if (revTab && revTab.classList.contains('active')) renderReverseDose();
 }
 
 function highlightAgeNotes(am, w) {
@@ -1949,7 +1956,7 @@ const drugRegistry = [
       {label:'>12yr', minMo:144, maxMo:999, fixedMg:4, maxDay:24, iv:'q 4-6 hr', note:'4mg q4-6hr MAX24mg/d (1 tab)'}
     ],
     note:'ห้ามใช้ <2yr'},
-  {id:'cpm-iv', name:'CPM IV', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:0.25, maxD:0.25, cat:'Antihistamine',
+  {id:'cpm-iv', name:'CPM IV', prep:'10 mg/mL', concMg:1, concVol:1, unit:'mg', minD:0.25, maxD:0.25, cat:'Antihistamine',
     autoByAge:true, indications:[
       {label:'1-5mo', minMo:0, maxMo:5, minD:0.25, maxD:0.25, iv:'qid', note:'0.25mk/dose MAX2.5mg qid'},
       {label:'6mo-5yr', minMo:6, maxMo:71, fixedMg:2.5, maxDay:10, iv:'qid', note:'2.5mg qid'},
@@ -2003,7 +2010,20 @@ const drugRegistry = [
   // Laxatives
   {id:'lactu-syr', name:'Lactulose', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:1, maxD:3, cat:'Laxatives'},
   // Steroid
-  {id:'hydro-iv', name:'Hydrocortisone', prep:'100 mg/vial', concMg:100, concVol:1, unit:'mL', minD:5, maxD:5, cat:'Steroid'},
+  {id:'hydro-iv', name:'Hydrocortisone', prep:'100 mg/vial', concMg:1, concVol:1, unit:'mg', minD:1, maxD:5, cat:'Steroid', alias:'Solu-Cortef',
+    indications:[
+      {label:'Anaphylaxis', minD:4, maxD:8, iv:'q 6 hr', note:'Children:4-8mk/dose q6hr MAX100mg/dose<br>Adult:200mg/dose q6hr'},
+      {label:'Adrenal crisis', minD:1, maxD:5, iv:'q 6 hr', note:'เริ่ม 2-3mk/dose MAX100mg<br>จากนั้น 1-5mk/dose(infants) q6hr<br>Adult:100mg bolus→25-75mg q6hr'},
+      {label:'Adrenal maint', minD:0, maxD:0, daily:true, iv:'q 8 hr', note:'NB oral:8-10 mg/m²/d ÷3<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
+      {label:'Anti-inflam', minD:1, maxD:10, daily:true, iv:'q 6-8 hr', note:'Oral:2.5-10mk/d q6-8hr<br>IV:1-5mk/d q12-24hr<br>Adolescent:15-240mg q12hr<br>Adult IV:100-500mg q2-6hr'},
+      {label:'Congenital AH', minD:0, maxD:0, daily:true, iv:'q 8 hr', note:'8-15 mg/m²/d oral ÷3<br>อาจให้ได้ถึง 20 mg/m²/d<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
+      {label:'Hypoglycemia', minD:1, maxD:2, iv:'q 6 hr', note:'NB:5mk/d ÷q8-12hr<br>หรือ 1-2mk/dose q6hr'},
+      {label:'Asthma', minD:5, maxD:5, iv:'q 6 hr', note:'Children:5mk/dose q6hr นาน3-5d<br>MAX250mg/dose<br>Adult:Oral 200mg แบ่งให้ 5-7d'},
+      {label:'Septic Shock', minD:2, maxD:3, daily:true, iv:'q 8 hr', note:'NB:3mk/d q8hr นาน5d<br>Children:50-100mg/m²/d หรือ 2mk single MAX100mg/d<br>Adult:50mg q6hr หรือ 200mg/d continuous 3-7d'},
+      {label:'Stress', minD:0, maxD:0, daily:true, iv:'q 6-8 hr', note:'Mild:20-50 mg/m²/d q6-8hr<br>Major/Surgery:100 mg/m²/d q6hr<br>Planned surgery:50mg/m²/dose pre-op→q6hr x24hr<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
+      {label:'Resistant hypotension', minD:1, maxD:1, iv:'q 8 hr', note:'NB:20-30mg/m²/d ÷2-3<br>หรือ ~1mk/dose q8hr'},
+      {label:'Thyroid storm', fixedMg:300, iv:'q 8 hr', note:'Adult:เริ่ม 300mg/dose<br>จากนั้น 100mg/dose q8hr'}
+    ]},
   {id:'dexa-iv', name:'Dexamethasone', prep:'5 mg/vial', concMg:5, concVol:1, unit:'mL', minD:0.15, maxD:0.6, cat:'Steroid'},
   {id:'pred-tab', name:'Prednisolone', prep:'5 mg/tab', concMg:5, concVol:1, unit:'tab', minD:0.1, maxD:2, daily:true, cat:'Steroid',
     indications:[
@@ -2316,7 +2336,7 @@ function renderDose(w, am) {
   // Steroid
   html += sectionHead('Steroid', 'Steroid');
   html += makeTable(doseHeaders, [
-    drugRow('Hydrocortisone','','100 mg/vial','5 mk/Dose','', w*5, null, null, null, 'q 6 hr', 'MAX 250 mg/dose'),
+    drugRow('Hydrocortisone','(Solu-Cortef)','100 mg/vial','1-5 mk/Dose','', w*1, w*5, null, null, 'q 6-8 hr', 'Anaphylaxis:4-8mk/dose q6hr MAX100mg | Adult200mg q6hr<br>Adrenal crisis:เริ่ม2-3mk MAX100mg→1-5mk q6hr<br>Adrenal maint:8-10mg/m²/d oral ÷3<br>Anti-inflam:Oral2.5-10mk/d q6-8hr | IV1-5mk/d q12-24hr<br>Congenital AH:8-15mg/m²/d ÷3 (MAX20mg/m²/d)<br>Hypoglycemia:NB5mk/d q8-12hr | Child1-2mk/dose q6hr<br>Asthma:5mk/dose q6hr x3-5d MAX250mg | Adult200mg ÷5-7d<br>Septic Shock:NB3mk/d | Child50-100mg/m²/d หรือ2mk single<br>Stress:Mild20-50mg/m²/d | Major100mg/m²/d q6hr<br>Thyroid storm:Adult เริ่ม300mg→100mg q8hr'),
     drugRow('Dexamethasone','','5 mg/vial','0.15-0.6 mk/Dose','', w*0.15, w*0.6, null, null, '', 'MAX 10 mg/dose'),
     drugRow('Prednisolone','','5 mg/tab','1-2 mk/Day','mg/kg/day', w*1, w*2, (w*1)/5, (w*2)/5, 'qd-qid', 'Asthma exacerbation:2mk/d qd x3-5d<br>MAX &lt;2yr 20mg/d | 2-5yr 30mg/d | &gt;5yr 40mg/d<br>Asthma maint:&lt;12yr 0.25-2mk/d qd AM/qod MAX60mg/d<br>Anaphylaxis:1-2mk/d ÷2-3 MAX40mg/d<br>Anti-inflam:0.1-2mk/d ÷1-4<br>Kawasaki:2mk/d ÷q8hr MAX60mg/d จนCRPปกติ taper 2-3wk<br>Nephrotic:2mk/d or 60mg/m²/d qd MAX60mg/d x4-6wk<br>then 1.5mk/dose or 40mg/m²/dose qod MAX40mg/dose taper'),
     drugRow('Prednisolone','','5 mg/mL (susp)','1-2 mk/Day','ยาเตรียมเฉพาะราย', w*1, w*2, (w*1)/5, (w*2)/5, 'qd-qid', ''),
@@ -3263,7 +3283,7 @@ const drugIntervals = {
   'omep-iv':'q 24 hr','omep-tab':'q 24 hr','rani-iv':'q 12 hr','rani-tab':'q 12 hr','famo-tab':'q 12-24 hr',
   'lactu-syr':'q 24 hr',
   // Steroid
-  'hydro-iv':'q 6 hr','dexa-iv':'single','pred-tab':'qd-qid','pred-susp':'qd-qid',
+  'hydro-iv':'q 6-8 hr','dexa-iv':'single','pred-tab':'qd-qid','pred-susp':'qd-qid',
   // Anti-epileptic
   'pheno-maint-30':'q 12 hr','pheno-maint-60':'q 12 hr',
   'phenyt-maint':'q 8 hr','valp-maint':'q 8 hr',
@@ -3636,7 +3656,7 @@ const allDrugs = [
   // Laxatives
   'Lactulose','Hepalac','Duphalac','Milk of Magnesia',
   // Steroid
-  'Hydrocortisone','Dexamethasone','Prednisolone',
+  'Hydrocortisone','Solu-Cortef','Dexamethasone','Prednisolone',
   // Anti-epileptic
   'Diazepam','Midazolam','Phenobarbital','Phenytoin',
   'Valproate','Sodium valproate','Levetiracetam',
