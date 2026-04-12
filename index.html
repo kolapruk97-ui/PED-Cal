@@ -105,10 +105,17 @@ body {
   vertical-align: middle;
 }
 
-.changelog-btn {
+.header-btns {
   position: absolute;
   top: 10px;
   right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  z-index: 5;
+}
+.changelog-btn {
   background: rgba(255,255,255,0.1);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -119,7 +126,6 @@ body {
   padding: 4px 8px;
   border-radius: 6px;
   cursor: pointer;
-  z-index: 5;
   letter-spacing: 0.3px;
 }
 .changelog-btn:active { background: rgba(255,255,255,0.2); }
@@ -159,6 +165,68 @@ body {
   background: none; border: none;
   color: var(--text-muted); font-size: 1.2rem;
   cursor: pointer; padding: 4px 8px;
+}
+/* Hospital Drug List */
+.hospital-btn {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.55rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+}
+.hospital-btn:active { background: rgba(255,255,255,0.2); }
+.hospital-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+.hospital-overlay.open { display: flex; }
+.hospital-modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-width: 550px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 20px;
+  position: relative;
+}
+.hospital-modal h2 { font-size: 1rem; color: var(--primary); margin-bottom: 8px; }
+.hospital-toolbar {
+  display: flex; gap: 8px; margin-bottom: 10px; align-items: center;
+}
+.hospital-toolbar button {
+  font-size: 0.65rem; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);
+  background: var(--section-bg); color: var(--text); cursor: pointer;
+}
+.hospital-toolbar button:active { background: var(--primary); color: #fff; }
+.hospital-toolbar .hosp-count { font-size: 0.65rem; color: var(--text-muted); margin-left: auto; }
+.hospital-cat {
+  font-size: 0.75rem; font-weight: 700; margin: 10px 0 4px; padding: 4px 8px;
+  border-radius: 6px; background: var(--section-bg);
+}
+.hospital-item {
+  display: flex; align-items: center; gap: 6px; padding: 3px 8px; font-size: 0.7rem;
+  cursor: pointer; border-radius: 4px;
+}
+.hospital-item:hover { background: var(--section-bg); }
+.hospital-item input[type=checkbox] { accent-color: var(--success); width: 14px; height: 14px; flex-shrink: 0; }
+.hospital-item .hosp-prep { color: var(--text-muted); font-size: 0.6rem; margin-left: 4px; }
+.rev-not-in-hospital {
+  font-size: 0.55rem; color: var(--danger); background: rgba(239,83,80,0.15);
+  padding: 1px 5px; border-radius: 4px; margin-left: 4px; white-space: nowrap;
 }
 
 .input-bar {
@@ -429,6 +497,7 @@ body {
 .rev-badge { display:inline-block; background:#ffa726; color:#000; font-size:0.65rem; font-weight:700; padding:1px 6px; border-radius:10px; margin-left:4px; vertical-align:middle; }
 
 /* Reverse Dose Tab */
+#tab-reverse { max-width:600px; margin-left:auto; margin-right:auto; }
 .rev-add-bar { display:flex; gap:8px; margin-bottom:16px; align-items:center; flex-wrap:wrap; }
 .rev-add-bar select { flex:1; min-width:200px; padding:10px; border:2px solid #ffa726; border-radius:10px; background:var(--section-bg); color:var(--text); font-size:0.85rem; }
 .rev-add-btn { padding:10px 16px; background:#ffa726; color:#000; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.85rem; }
@@ -871,17 +940,16 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 @media (min-width: 769px) {
   .desktop-inputs {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 16px;
     align-items: end;
-    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .desktop-inputs > div:first-child { grid-column: 1 / -1; }
   .desktop-inputs.desk-rbw-mode {
     grid-template-columns: repeat(5, 1fr);
-    max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
   }
   .mobile-pickers { display: none; }
 }
@@ -1071,7 +1139,10 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 <body>
 
 <div class="header">
-  <button class="changelog-btn" onclick="document.getElementById('changelogOverlay').classList.add('open')">Change Log</button>
+  <div class="header-btns">
+    <button class="changelog-btn" onclick="document.getElementById('changelogOverlay').classList.add('open')">Change Log</button>
+    <button class="hospital-btn" onclick="openHospitalList()">รายการยา รพ.</button>
+  </div>
   <h1>Pediatric Calculator</h1>
   <div class="warning"><span class="warn-label">BETA V.5</span>กรุณา re-check dose ซ้ำ<br>หากพบข้อผิดพลาด แจ้งแพทย์ธนกฤต</div>
   <div class="subtitle">Source: ER TSH Ped Cal, Rx QSNICH</div>
@@ -1085,15 +1156,19 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <h3>V.5</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
   <ul>
-    <li>QSNICH: Amox/Clav update — syr 7:1 (25-45mk q12hr), ES syr 14:1 (AOM 90mk/CAP 80-100mk), IV 0.6+1.2g vial (30mk/dose total q6-8hr), tab adult dosing + alias Augmentin/Cavumox/Ranclav</li>
-    <li>QSNICH: GG syrup reverse — autoByAge + fixedMg 4 กลุ่มอายุ (&lt;2yr/2-6/6-12/≥12)</li>
-    <li>QSNICH: Hydrocortisone 11 indications (Anaphylaxis/Adrenal/Anti-inflam/CAH/Hypoglycemia/Asthma/Septic Shock/Stress/Resistant hypotension/Thyroid storm) + mg/m² note</li>
-    <li>CPM IV reverse — แก้ unit เป็น mg (ไม่ใช่ mL)</li>
-    <li>Reverse tab: recalcAll() re-render เมื่อเปลี่ยนอายุ/น้ำหนักขณะ active</li>
-    <li>PALS: ETCO2 monitoring targets (CPR quality + ROSC)</li>
-    <li>PALS: Post-Cardiac Arrest Care checklist (TTM/BP/O2/Neuro)</li>
-    <li>PALS: ECPR guidance</li>
-    <li>PALS: SVT second-line agents (Procainamide/Sotalol/Amiodarone/Verapamil)</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH: Dexamethasone 11 indications (Croup/Asthma/Airway edema/Anaphylaxis/Anti-inflam/Meningitis/Cerebral edema/COVID-19/BPD DART/Antiemetic/Physiologic) + byAge + maxDose + tab 0.5mg</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> รายการยา รพ. — checkbox modal + localStorage persist + Reverse tab indicator "ไม่มีใน รพ."</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH audit ทุกยา: Salbutamol +Exercise px/Hyperkalemia, PGS +BW interval/Renal/GBS, Prednisolone +Nephrotic relapse/Adult MAX, Amox/Clav +Renal, Acetylcysteine fix tid-qid, Montelukast +Urticaria, Amoxicillin +Tonsillopharyngitis</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH: Amox/Clav update — syr 7:1, ES syr 14:1, IV 0.6+1.2g vial, tab adult dosing + alias</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH: Hydrocortisone 13 indications + byAge (Children/Adult/NB) + maxDose cap + mg/m² note</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH: GG syrup reverse — autoByAge + fixedMg 4 กลุ่มอายุ</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> CPM IV reverse — แก้ unit เป็น mg (ไม่ใช่ mL)</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> Reverse tab: recalcAll() re-render + byAge system + maxDose safe range cap + indication note byAge highlight</li>
+    <li><span style="color:#ffa726;">[2026/04/12]</span> Desktop: แก้ SyntaxError (indNote duplicate) + grid center 5 columns</li>
+    <li><span style="color:#ffa726;">[2026/04/10]</span> PALS: ETCO2 monitoring targets (CPR quality + ROSC)</li>
+    <li><span style="color:#ffa726;">[2026/04/10]</span> PALS: Post-Cardiac Arrest Care checklist (TTM/BP/O2/Neuro)</li>
+    <li><span style="color:#ffa726;">[2026/04/10]</span> PALS: ECPR guidance</li>
+    <li><span style="color:#ffa726;">[2026/04/10]</span> PALS: SVT second-line agents (Procainamide/Sotalol/Amiodarone/Verapamil)</li>
   </ul></div>
 
   <h3>V.4</h3>
@@ -1173,6 +1248,19 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 </div>
 </div>
 
+<div class="hospital-overlay" id="hospitalOverlay" onclick="if(event.target===this)closeHospitalList()">
+<div class="hospital-modal">
+  <button class="changelog-close" onclick="closeHospitalList()">&#10005;</button>
+  <h2>รายการยา รพ.</h2>
+  <div class="hospital-toolbar">
+    <button onclick="toggleAllHospital(true)">เลือกทั้งหมด</button>
+    <button onclick="toggleAllHospital(false)">ยกเลิกทั้งหมด</button>
+    <span class="hosp-count" id="hospCount"></span>
+  </div>
+  <div id="hospitalDrugList"></div>
+</div>
+</div>
+
 <div class="input-bar">
   <!-- Desktop inputs -->
   <div class="desktop-inputs">
@@ -1200,20 +1288,20 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
     <!-- RBW Mode fields -->
     <div class="desk-field rbw-mode-field" style="display:none;">
       <label>Real BW (kg)</label>
-      <input type="number" id="deskRBW" value="0" min="0" max="100" step="0.5" oninput="deskInputChanged()" style="border-color:var(--success);background:var(--picker-green-bg);font-size:1.2rem;width:140px;">
+      <select id="deskRBW" onchange="deskInputChanged()" style="border-color:var(--success);background:var(--picker-green-bg);font-size:1rem;width:160px;padding:10px 14px;border-width:2px;border-radius:10px;cursor:pointer;"></select>
     </div>
     <div class="desk-field rbw-mode-field" style="display:none;">
       <label>Age (yr)</label>
-      <input type="number" id="deskRBWAge" value="0" min="0" max="18" step="0.5" oninput="deskInputChanged()">
+      <select id="deskRBWAge" onchange="deskInputChanged()" style="padding:10px 14px;border:2px solid var(--warning);border-radius:10px;font-size:1rem;background:var(--picker-yellow-bg);color:var(--text);cursor:pointer;width:160px;"></select>
     </div>
     <!-- Common fields -->
     <div class="desk-field">
       <label>Age PALS (yr)</label>
-      <input type="number" id="deskPals" value="0" min="0" max="18" step="1" oninput="deskInputChanged()">
+      <select id="deskPals" onchange="deskInputChanged()" style="padding:10px 14px;border:2px solid var(--border);border-radius:10px;font-size:1rem;background:var(--section-bg);color:var(--text);cursor:pointer;width:120px;"></select>
     </div>
     <div class="desk-field desk-red">
       <label>% Dehydration</label>
-      <input type="number" id="deskDehyd" value="0" min="0" max="15" step="1" oninput="deskInputChanged()">
+      <select id="deskDehyd" onchange="deskInputChanged()" style="padding:10px 14px;border:2px solid var(--danger);border-radius:10px;font-size:1rem;background:var(--picker-red-bg);color:var(--text);cursor:pointer;width:120px;"></select>
     </div>
     <div class="desk-field">
       <label>&nbsp;</label>
@@ -1651,13 +1739,6 @@ for (let i = 0; i <= 15; i++) dehydItems.push({ label: String(i), value: i });
 
 let pickerAge, pickerIBW, pickerPals, pickerDehyd;
 
-function getAgeRange(months) {
-  if (months === 0) return 'NB';
-  if (months >= 1 && months <= 12) return '3-12 mo';
-  if (months >= 13 && months <= 72) return '1-6 yr';
-  return '7-12 yr';
-}
-
 function calcAndUpdateIBW() {
   if (!pickerAge) return;
   markStale();
@@ -1961,7 +2042,7 @@ const drugRegistry = [
       {label:'1-5mo', minMo:0, maxMo:5, minD:0.25, maxD:0.25, iv:'qid', note:'0.25mk/dose MAX2.5mg qid'},
       {label:'6mo-5yr', minMo:6, maxMo:71, fixedMg:2.5, maxDay:10, iv:'qid', note:'2.5mg qid'},
       {label:'6-11yr', minMo:72, maxMo:143, fixedMg:5, maxDay:20, iv:'qid', note:'5mg qid'},
-      {label:'12-17yr', minMo:144, maxMo:215, fixedMg:10, maxDay:40, iv:'qid', note:'10mg qid'}
+      {label:'≥12yr', minMo:144, maxMo:999, fixedMg:10, maxDay:40, iv:'qid', note:'10mg qid'}
     ],
     note:'Anaphylaxis/Allergy IM/IV'},
   {id:'hyd-syr', name:'Hydroxyzine syr', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:0.33, maxD:0.67, cat:'Antihistamine'},
@@ -1985,7 +2066,7 @@ const drugRegistry = [
   // Asthma
   {id:'salb-syr', name:'Salbutamol syr', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.2, cat:'Asthma', note:'2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d<br>Adolescent:2-4mg tid-qid MAX32mg/d'},
   {id:'salb-tab', name:'Salbutamol tab', prep:'2 mg/tab', concMg:2, concVol:1, unit:'tab', minD:0.1, maxD:0.2, cat:'Asthma'},
-  {id:'salb-sol', name:'Salbutamol NEB', prep:'Solution 5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.15, maxD:0.15, cat:'Asthma', note:'0.15mk/dose min2.5mg<br>Continuous:0.3-0.5mk/hr'},
+  {id:'salb-sol', name:'Salbutamol NEB', prep:'Solution 5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.15, maxD:0.15, cat:'Asthma', note:'0.15mk/dose min2.5mg<br>Continuous:0.3-0.5mk/hr<br>Exercise px:<5yr 1-2puff |>5yr 2puff<br>Hyperkalemia:NB 0.4mg neb | WB 0.3-0.5mk rapid neb'},
   {id:'terb', name:'Terbutaline', prep:'0.5 mg/mL', concMg:0.5, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Asthma'},
   // Adrenaline
   {id:'adr-neb', name:'Adrenaline NEB', prep:'1:1,000', concMg:1, concVol:1, unit:'mL', minD:0.05, maxD:0.5, cat:'Adrenaline'},
@@ -2012,36 +2093,80 @@ const drugRegistry = [
   // Steroid
   {id:'hydro-iv', name:'Hydrocortisone', prep:'100 mg/vial', concMg:1, concVol:1, unit:'mg', minD:1, maxD:5, cat:'Steroid', alias:'Solu-Cortef',
     indications:[
-      {label:'Anaphylaxis', minD:4, maxD:8, iv:'q 6 hr', note:'Children:4-8mk/dose q6hr MAX100mg/dose<br>Adult:200mg/dose q6hr'},
-      {label:'Adrenal crisis', minD:1, maxD:5, iv:'q 6 hr', note:'เริ่ม 2-3mk/dose MAX100mg<br>จากนั้น 1-5mk/dose(infants) q6hr<br>Adult:100mg bolus→25-75mg q6hr'},
+      {label:'Anaphylaxis', minD:4, maxD:8, iv:'q 6 hr',
+        byAge:[
+          {maxMo:215, minD:4, maxD:8, maxDose:100, note:'Children:4-8mk/dose q6hr MAX100mg/dose'},
+          {minMo:216, fixedMg:200, note:'Adult:200mg/dose q6hr'}
+        ], note:'Children:4-8mk/dose q6hr MAX100mg/dose<br>Adult:200mg/dose q6hr'},
+      {label:'Adrenal crisis', minD:1, maxD:5, iv:'q 6 hr',
+        byAge:[
+          {maxMo:215, minD:1, maxD:5, maxDose:100, note:'เริ่ม 2-3mk/dose MAX100mg→maint 1-5mk q6hr<br>หรือ 50-100mg/m²/dose→50-100mg/m²/d ÷4'},
+          {minMo:216, fixedMg:100, note:'Adult:100mg bolus→25-75mg q6hr<br>หรือ continuous 200mg/24hr'}
+        ], note:'เริ่ม 2-3mk/dose MAX100mg→maint 1-5mk q6hr<br>หรือ 50-100mg/m²/dose→50-100mg/m²/d ÷4<br>Adult:100mg bolus→25-75mg q6hr หรือ continuous 200mg/24hr'},
       {label:'Adrenal maint', minD:0, maxD:0, daily:true, iv:'q 8 hr', note:'NB oral:8-10 mg/m²/d ÷3<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
-      {label:'Anti-inflam', minD:1, maxD:10, daily:true, iv:'q 6-8 hr', note:'Oral:2.5-10mk/d q6-8hr<br>IV:1-5mk/d q12-24hr<br>Adolescent:15-240mg q12hr<br>Adult IV:100-500mg q2-6hr'},
-      {label:'Congenital AH', minD:0, maxD:0, daily:true, iv:'q 8 hr', note:'8-15 mg/m²/d oral ÷3<br>อาจให้ได้ถึง 20 mg/m²/d<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
+      {label:'Anti-inflam', minD:1, maxD:10, daily:true, iv:'q 6-8 hr',
+        byAge:[
+          {maxMo:143, minD:1, maxD:10, daily:true, note:'Oral:2.5-10mk/d หรือ 75-300mg/m²/d q6-8hr<br>IV:1-5mk/d หรือ 30-150mg/m²/d q12-24hr'},
+          {minMo:144, maxMo:215, minD:0, maxD:0, note:'Adolescent:15-240mg q12hr'},
+          {minMo:216, minD:0, maxD:0, note:'Adult IV:100-500mg q2-6hr<br>Oral:20-240mg/d'}
+        ], note:'Oral:2.5-10mk/d หรือ 75-300mg/m²/d q6-8hr<br>IV:1-5mk/d หรือ 30-150mg/m²/d q12-24hr<br>Adolescent:15-240mg q12hr<br>Adult IV:100-500mg q2-6hr'},
+      {label:'Congenital AH', minD:0, maxD:0, daily:true, iv:'q 8 hr', note:'NB:10-15 mg/m²/d ÷3<br>Infants/Children:8-15 mg/m²/d ÷3<br>MAX 20 mg/m²/d<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
       {label:'Hypoglycemia', minD:1, maxD:2, iv:'q 6 hr', note:'NB:5mk/d ÷q8-12hr<br>หรือ 1-2mk/dose q6hr'},
-      {label:'Asthma', minD:5, maxD:5, iv:'q 6 hr', note:'Children:5mk/dose q6hr นาน3-5d<br>MAX250mg/dose<br>Adult:Oral 200mg แบ่งให้ 5-7d'},
-      {label:'Septic Shock', minD:2, maxD:3, daily:true, iv:'q 8 hr', note:'NB:3mk/d q8hr นาน5d<br>Children:50-100mg/m²/d หรือ 2mk single MAX100mg/d<br>Adult:50mg q6hr หรือ 200mg/d continuous 3-7d'},
-      {label:'Stress', minD:0, maxD:0, daily:true, iv:'q 6-8 hr', note:'Mild:20-50 mg/m²/d q6-8hr<br>Major/Surgery:100 mg/m²/d q6hr<br>Planned surgery:50mg/m²/dose pre-op→q6hr x24hr<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
+      {label:'Asthma', minD:5, maxD:5, iv:'q 6 hr',
+        byAge:[
+          {maxMo:215, minD:5, maxD:5, maxDose:250, note:'Children:5mk/dose q6hr นาน3-5d MAX250mg/dose'},
+          {minMo:216, fixedMg:200, note:'Adult:Oral 200mg ÷5-7d'}
+        ], note:'Children:5mk/dose q6hr นาน3-5d MAX250mg/dose<br>Adult:Oral 200mg ÷5-7d'},
+      {label:'Septic Shock', minD:2, maxD:3, daily:true, iv:'q 8 hr',
+        byAge:[
+          {maxMo:0, minD:3, maxD:3, daily:true, iv:'q 8 hr', note:'NB:3mk/d q8hr นาน5d'},
+          {minMo:1, maxMo:215, minD:2, maxD:2, daily:false, maxDose:100, iv:'single', note:'Children:50-100mg/m²/d<br>หรือ 2mk single dose MAX100mg/d'},
+          {minMo:216, fixedMg:50, iv:'q 6 hr', note:'Adult:50mg q6hr หรือ 200mg/d continuous 3-7d'}
+        ], note:'NB:3mk/d q8hr นาน5d<br>Children:50-100mg/m²/d หรือ 2mk single MAX100mg/d<br>Adult:50mg q6hr หรือ 200mg/d continuous 3-7d'},
+      {label:'Physiologic replacement', minD:0, maxD:0, daily:true, iv:'q 8 hr', note:'NB:7-9 mg/m²/d ÷2-3<br>Infants/Children:Oral 8-12 mg/m²/d q8hr<br>Adult IV:เริ่ม100mg→50-100mg q6hr<br>หรือ continuous 200-300mg/24hr<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
+      {label:'Stress', minD:0, maxD:0, daily:true, iv:'q 6-8 hr', note:'Mild:20-50 mg/m²/d q6-8hr<br>Major:100 mg/m²/d q6hr<br>Surgery:50mg/m²/dose pre-op→q6hr x24hr<br>(ใช้ mg/m²/day ไม่ใช่ mg/kg)'},
       {label:'Resistant hypotension', minD:1, maxD:1, iv:'q 8 hr', note:'NB:20-30mg/m²/d ÷2-3<br>หรือ ~1mk/dose q8hr'},
+      {label:'Chorioamnionitis/CLD', minD:0.5, maxD:0.5, iv:'q 12 hr', note:'NB ELBW:0.5mk/dose q12hr x12d<br>จากนั้น 0.25mk/dose q12hr x3d'},
       {label:'Thyroid storm', fixedMg:300, iv:'q 8 hr', note:'Adult:เริ่ม 300mg/dose<br>จากนั้น 100mg/dose q8hr'}
     ]},
-  {id:'dexa-iv', name:'Dexamethasone', prep:'5 mg/vial', concMg:5, concVol:1, unit:'mL', minD:0.15, maxD:0.6, cat:'Steroid'},
+  {id:'dexa-iv', name:'Dexamethasone', prep:'4 mg/mL (inj)', concMg:1, concVol:1, unit:'mg', minD:0.15, maxD:0.6, cat:'Steroid', alias:'Dexa',
+    indications:[
+      {label:'Croup', minD:0.6, maxD:0.6, maxDose:16, iv:'single', note:'0.6mk single dose MAX16mg'},
+      {label:'Asthma exacerbation', minD:0.15, maxD:0.6, iv:'qd', note:'Oral:0.15-0.6mk/dose qd x1-2d<br>IV/IM:0.6mk single dose'},
+      {label:'Airway edema', minD:0.25, maxD:0.5, iv:'q 6-8 hr',
+        byAge:[
+          {maxMo:0, minD:0.25, maxD:0.5, maxDose:1.5, iv:'q 8 hr', note:'NB:0.25-0.5mk q8hr x3 MAX1.5mg/d'},
+          {minMo:1, minD:0.5, maxD:0.5, maxDose:10, note:'Children:0.5mk/dose MAX10mg<br>ก่อนถอด ET q6hr x6 doses'}
+        ], note:'NB:0.25-0.5mk q8hr x3 MAX1.5mg/d<br>Children:0.5mk/dose MAX10mg q6hr x6'},
+      {label:'Anaphylaxis', minD:0.6, maxD:0.6, maxDose:16, iv:'single', note:'Children:0.6mk/dose MAX16mg'},
+      {label:'Anti-inflam', minD:0.02, maxD:0.3, daily:true, iv:'q 6-12 hr', note:'Children:0.02-0.3mk/d q6-12hr<br>หรือ 0.6-9mg/m²/d<br>Adult:0.75-9mg/d'},
+      {label:'Bacterial meningitis', minD:0.15, maxD:0.15, iv:'q 6 hr', note:'H.influenzae B: >6wk<br>0.15mk/dose q6hr x4d แรก<br>พร้อม/ก่อนเริ่ม ATB ครั้งแรก 10-20นาที'},
+      {label:'Cerebral edema', minD:1, maxD:2, iv:'q 4-6 hr', note:'เริ่ม 1-2mk/dose x1<br>จากนั้น 1-2mk/d q4-6hr MAX16mg/d'},
+      {label:'COVID-19', minD:0.15, maxD:0.15, maxDose:6, iv:'qd', note:'0.15mk/dose qd x10d MAX6mg'},
+      {label:'BPD/DART', minD:0, maxD:0, iv:'q 12 hr', note:'NB DART protocol:<br>0.075mk q12hr x3d→0.05mk q12hr x3d<br>→0.025mk q12hr x2d→0.01mk q12hr x2d'},
+      {label:'Antiemetic (chemo)', minD:0, maxD:0, iv:'q 6-12 hr', note:'Severe:6mg/m² q6hr หรือ 8-14mg/m²/dose<br>Moderate:BSA≤0.6m² 2mg q12hr | >0.6m² 4mg q12hr'},
+      {label:'Physiologic replacement', minD:0.03, maxD:0.15, daily:true, iv:'q 6-12 hr', note:'0.03-0.15mk/d q6-12hr<br>หรือ 0.2-0.25mg/m²/d qd'}
+    ]},
+  {id:'dexa-tab', name:'Dexamethasone', prep:'0.5 mg/tab', concMg:0.5, concVol:1, unit:'tab', minD:0.15, maxD:0.6, cat:'Steroid', alias:'Dexa'},
   {id:'pred-tab', name:'Prednisolone', prep:'5 mg/tab', concMg:5, concVol:1, unit:'tab', minD:0.1, maxD:2, daily:true, cat:'Steroid',
     indications:[
       {label:'Anti-inflam', minD:0.1, maxD:2, iv:'qd-qid', note:'0.1-2mk/d ÷1-4'},
-      {label:'Asthma exacerbation', minD:1, maxD:2, iv:'qd', note:'2mk/d x3-5d MAX<2yr20mg|2-5yr30mg|>5yr40mg'},
+      {label:'Asthma exacerbation', minD:1, maxD:2, iv:'qd', note:'2mk/d x3-5d MAX<2yr20mg|2-5yr30mg|>5yr40mg|Adult50mg'},
       {label:'Asthma maint', minD:0.25, maxD:2, iv:'qd', note:'<12yr 0.25-2mk/d qd AM/qod MAX60mg/d'},
       {label:'Anaphylaxis', minD:1, maxD:2, iv:'bid-tid', note:'1-2mk/d ÷2-3 MAX40mg/d'},
       {label:'Kawasaki', minD:2, maxD:2, iv:'tid', note:'2mk/d ÷q8hr MAX60mg/d จนCRPปกติ'},
-      {label:'Nephrotic', minD:2, maxD:2, iv:'qd', note:'2mk/d or 60mg/m²/d qd MAX60mg/d x4-6wk then 1.5mk qod'}
+      {label:'Nephrotic 1st', minD:2, maxD:2, iv:'qd', note:'2mk/d or 60mg/m²/d qd MAX60mg/d x4-6wk<br>then 1.5mk or 40mg/m²/dose qod taper'},
+      {label:'Nephrotic relapse', minD:2, maxD:2, iv:'qd', note:'2mk/d until remission x3d<br>then 1.5mk/dose qod x4wk'}
     ],
-    note:'Asthma:2mk/d x3-5d | Anaphylaxis:1-2mk/d<br>Kawasaki:2mk/d q8hr MAX60mg/d<br>Nephrotic:2mk/d or 60mg/m²/d x4-6wk'},
+    note:'Asthma:2mk/d x3-5d MAX Adult50mg | Anaphylaxis:1-2mk/d<br>Kawasaki:2mk/d q8hr MAX60mg/d<br>Nephrotic 1st:2mk/d x4-6wk→1.5mk qod<br>Nephrotic relapse:2mk until remission→1.5mk qod x4wk'},
   {id:'pred-susp', name:'Prednisolone', prep:'5 mg/mL (susp)', concMg:5, concVol:1, unit:'mL', minD:0.1, maxD:2, daily:true, cat:'Steroid',
     indications:[
       {label:'Anti-inflam', minD:0.1, maxD:2, iv:'qd-qid', note:'0.1-2mk/d ÷1-4'},
-      {label:'Asthma exacerbation', minD:1, maxD:2, iv:'qd', note:'2mk/d x3-5d'},
+      {label:'Asthma exacerbation', minD:1, maxD:2, iv:'qd', note:'2mk/d x3-5d MAX Adult50mg'},
       {label:'Anaphylaxis', minD:1, maxD:2, iv:'bid-tid', note:'1-2mk/d ÷2-3 MAX40mg/d'},
       {label:'Kawasaki', minD:2, maxD:2, iv:'tid', note:'2mk/d ÷q8hr MAX60mg/d'},
-      {label:'Nephrotic', minD:2, maxD:2, iv:'qd', note:'2mk/d or 60mg/m²/d qd MAX60mg/d x4-6wk'}
+      {label:'Nephrotic 1st', minD:2, maxD:2, iv:'qd', note:'2mk/d or 60mg/m²/d x4-6wk→1.5mk qod'},
+      {label:'Nephrotic relapse', minD:2, maxD:2, iv:'qd', note:'2mk until remission x3d→1.5mk qod x4wk'}
     ],
     note:'ยาเตรียมเฉพาะราย<br>dose เดียวกับ Prednisolone tab'},
   // Anti-epileptic
@@ -2078,9 +2203,9 @@ const drugRegistry = [
   {id:'diclox-syr', name:'Dicloxacillin syr', prep:'62.5 mg/5 mL', concMg:62.5, concVol:5, unit:'mL', minD:3.1, maxD:12.5, cat:'Penicillins'},
   {id:'diclox-cap-250', name:'Dicloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:3.1, maxD:12.5, cat:'Penicillins'},
   {id:'diclox-cap-500', name:'Dicloxacillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:3.1, maxD:12.5, cat:'Penicillins'},
-  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
   {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:12.5, maxD:22.5, cat:'Penicillins', alias:'Augmentin,Ranclav,Clavulanic', note:'7:1 General:25-45mk/d q12hr or 20-40mk/d q8hr<br>MAX 4gm Amox/day'},
   {id:'augm-es', name:'Amox/Clav ES syr', prep:'600/42.9 mg/5 mL', concMg:600, concVol:5, unit:'mL', minD:40, maxD:50, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'14:1 AOM/Sinusitis:90mk/d q12hr<br>CAP:80-100mk/d q12hr<br>MAX 4gm Amox/day'},
   {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:12.5, maxD:22.5, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'≥40kg:250-500mg q8hr<br>Sinusitis:2g q12hr x10d<br>Bite/Abscess:875mg q12hr<br>CAP:2g q12hr(extended)'},
@@ -2144,7 +2269,7 @@ const drugRegistry = [
   {id:'ipra-feno', name:'Ipratropium+Fenoterol', prep:'500 mcg/neb (4mL)', concMg:0.5, concVol:4, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
   {id:'ipra-albu', name:'Ipratropium+Albuterol', prep:'500 mcg/2.5mL/vial', concMg:0.5, concVol:2.5, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
   {id:'bude', name:'Budesonide', prep:'1 mg/2mL/respule', concMg:1, concVol:2, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
-  {id:'montel', name:'Montelukast', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma', note:'6mo-<6yr:4mg | 6-<15yr:5mg | ≥15yr:10mg<br>รับประทานตอนเย็น'},
+  {id:'montel', name:'Montelukast', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma', note:'6mo-<6yr:4mg | 6-<15yr:5mg | ≥15yr:10mg<br>รับประทานตอนเย็น<br>Urticaria(NSAID-induced):≥15yr 10mg'},
   {id:'montel-10', name:'Montelukast', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma'},
   // Adrenaline
   {id:'adr-ncpr', name:'Adrenaline NCPR', prep:'1:10,000', concMg:0.1, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Adrenaline'},
@@ -2158,7 +2283,7 @@ const drugRegistry = [
   {id:'oxy-spray', name:'Oxymetazoline', prep:'Spray 0.05%', concMg:0.5, concVol:1, unit:'puff', minD:0, maxD:0, cat:'Decongestant', note:'≥6yr เท่านั้น bid'},
   {id:'phenyl', name:'Phenylephrine', prep:'5mg PE/5mL', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Decongestant'},
   // ATB IV/Vials
-  {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB:25-50k u/kg/dose(Bact) 75-100k(Mening)<br>Mild-mod:100-150k/d Severe:200-400k/d<br>MAX 24MU/day'},
+  {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB:25-50k(Bact) 75-100k(Mening)<br>NB BW<2kg:0-28d q12 29-44d q8<br>NB BW≥2kg:0-7d q12 8-44d q8<br>Mild-mod:100-150k/d Severe:200-400k/d<br>Renal:CrCl>50 ปกติ|10-50 q8-12hr|<10 q12hr<br>MAX 24MU/day'},
   {id:'benz-penG', name:'Benzathine Pen G', prep:'1.2 MU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB Syphilis:50k u/kg IM x1<br>RF:≤27kg 600k q3-4wk | >27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/wk x3wk MAX2.4MU'},
   {id:'clox-iv', name:'Cloxacillin IV', prep:'0.5,1 gm/amp', concMg:1000, concVol:1, unit:'gm', minD:12.5, maxD:25, cat:'Penicillins'},
   {id:'augm-iv-06', name:'Amox/Clav IV', prep:'0.6 gm/vial', concMg:600, concVol:1, unit:'vial', minD:30, maxD:30, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'คำนวณ total Amox+Clav<br><3mo(<4kg):30mk q12hr | >4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg:1.2g q8hr Severe:q4-6hr'},
@@ -2173,12 +2298,14 @@ const drugRegistry = [
   {id:'ceftaz-1000', name:'Ceftazidime (3rd)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'vial', minD:33.3, maxD:50, cat:'Cephalosporins'},
   {id:'ceftaz-2000', name:'Ceftazidime (3rd)', prep:'2000 mg/vial', concMg:2000, concVol:1, unit:'vial', minD:33.3, maxD:50, cat:'Cephalosporins'},
   // Acetylcysteine
-  {id:'acetyl-100', name:'Acetylcysteine', prep:'Sachet 100mg', concMg:100, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic', alias:'NAC,Fluimucil', note:'Mucolytic:<6yr 50-100mg tid-qid | >6yr 200mg bid-tid<br>NAC IV:150mk/60min→50mk/4hr→100mk/16hr<br>NAC PO:140mk load→70mk q4hr x17doses'},
+  {id:'acetyl-100', name:'Acetylcysteine', prep:'Sachet 100mg', concMg:100, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic', alias:'NAC,Fluimucil', note:'Mucolytic:<6yr 50-100mg tid-qid | >6yr 200mg tid-qid<br>NAC IV:150mk/60min→50mk/4hr→100mk/16hr<br>NAC PO:140mk load→70mk q4hr x17doses'},
   {id:'acetyl-200', name:'Acetylcysteine', prep:'Sachet 200mg', concMg:200, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic'},
   {id:'acetyl-600', name:'Acetylcysteine', prep:'Tab 600mg', concMg:600, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Mucolytic'},
   {id:'phenyl2', name:'Phenylephrine', prep:'5mg PE + 2mg BPM/5mL', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Decongestant'},
   {id:'montel2', name:'Montelukast', prep:'Granule 4mg', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma'},
 ];
+// Share indications: dexa-tab uses same indications as dexa-iv
+(function(){ const iv = drugRegistry.find(d=>d.id==='dexa-iv'); const tab = drugRegistry.find(d=>d.id==='dexa-tab'); if(iv&&tab) tab.indications = iv.indications; })();
 
 const selectedDrugs = new Set();
 
@@ -2272,10 +2399,10 @@ function renderDose(w, am) {
   const salbSyrNote = '2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d<br>Adolescent:2-4mg tid-qid MAX32mg/d';
   const salbTabDose = am<72?'':ageYr<14?'2 mg':'2-4 mg';
   html += makeTable(doseHeaders, [
-    drugRow('Montelukast','(Singulair, Montek)','Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg',montelDose,'รับประทานตอนเย็น', null, null, null, null, 'q 24 hr', '6mo-&lt;6yr:4mg | 6-&lt;15yr:5mg | &ge;15yr:10mg<br>Allergic rhinitis / Asthma maint / Acute exacerbation(adjunct)'),
+    drugRow('Montelukast','(Singulair, Montek)','Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg',montelDose,'รับประทานตอนเย็น', null, null, null, null, 'q 24 hr', '6mo-&lt;6yr:4mg | 6-&lt;15yr:5mg | &ge;15yr:10mg<br>Allergic rhinitis / Asthma maint / Acute exacerbation(adjunct)<br>Urticaria(NSAID-induced):&ge;15yr 10mg'),
     drugRow('Salbutamol syr','(Ventolin)','2 mg/5 mL',salbSyrDose,'', salbSyrMin, salbSyrMax, salbSyrMinMl, salbSyrMaxMl, salbSyrInterval, salbSyrNote),
     drugRow('Salbutamol tab','','2 mg/tab',salbTabDose,'', null, null, null, null, salbSyrInterval, ''),
-    drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.15 mk/Dose','min 2.5mg', w*0.15, null, (w*0.15)/5, null, 'neb q 20 min<br>x 2-3 then q1-4hr', 'MAX 10mg/dose<br>Continuous:0.3-0.5mk/hr<br>MDI:&lt;5yr 2-6puff | &gt;6yr 4-10puff'),
+    drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.15 mk/Dose','min 2.5mg', w*0.15, null, (w*0.15)/5, null, 'neb q 20 min<br>x 2-3 then q1-4hr', 'MAX 10mg/dose<br>Continuous:0.3-0.5mk/hr<br>MDI:&lt;5yr 2-6puff | &gt;6yr 4-10puff<br>Exercise px:&lt;5yr 1-2puff | &gt;5yr 2puff ก่อนออกกำลัง 5-20นาที<br>Hyperkalemia:NB 0.4mg+NSS2mL neb q2hr<br>WB:0.3-0.5mk rapid neb or continuous<br>Fixed(&ge;5yr):&lt;25kg 2.5mg | &ge;25kg 5mg neb 10min ซ้ำใน2hr'),
     drugRow('Salbutamol NEB','','Nebule 2.5mg/2.5mL',nebDose,'ผสม NSS up to 4 mL', null, null, null, null, '', '&lt;20kg:½neb | &gt;20kg:1neb'),
     drugRow('Ipratropium+Fenoterol','(Berodual)','500 mcg/neb (4mL)',ipratDose,'', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
     drugRow('Ipratropium+Albuterol','(Combivent)','500 mcg/2.5mL/vial',ipratDose,'ผสม NSS up to 4 mL', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
@@ -2335,9 +2462,11 @@ function renderDose(w, am) {
 
   // Steroid
   html += sectionHead('Steroid', 'Steroid');
+  const dexaNote = 'Croup:0.6mk single MAX16mg<br>Asthma:Oral 0.15-0.6mk qd x1-2d | IV/IM 0.6mk single<br>Airway edema:NB 0.25-0.5mk q8hr | Child 0.5mk q6hr x6<br>Anaphylaxis:0.6mk MAX16mg<br>Anti-inflam:0.02-0.3mk/d q6-12hr<br>Meningitis(HiB):0.15mk q6hr x4d<br>Cerebral edema:เริ่ม1-2mk→1-2mk/d q4-6hr MAX16mg<br>COVID-19:0.15mk qd x10d MAX6mg<br>BPD DART:0.075→0.05→0.025→0.01mk q12hr<br>Physiologic:0.03-0.15mk/d q6-12hr';
   html += makeTable(doseHeaders, [
-    drugRow('Hydrocortisone','(Solu-Cortef)','100 mg/vial','1-5 mk/Dose','', w*1, w*5, null, null, 'q 6-8 hr', 'Anaphylaxis:4-8mk/dose q6hr MAX100mg | Adult200mg q6hr<br>Adrenal crisis:เริ่ม2-3mk MAX100mg→1-5mk q6hr<br>Adrenal maint:8-10mg/m²/d oral ÷3<br>Anti-inflam:Oral2.5-10mk/d q6-8hr | IV1-5mk/d q12-24hr<br>Congenital AH:8-15mg/m²/d ÷3 (MAX20mg/m²/d)<br>Hypoglycemia:NB5mk/d q8-12hr | Child1-2mk/dose q6hr<br>Asthma:5mk/dose q6hr x3-5d MAX250mg | Adult200mg ÷5-7d<br>Septic Shock:NB3mk/d | Child50-100mg/m²/d หรือ2mk single<br>Stress:Mild20-50mg/m²/d | Major100mg/m²/d q6hr<br>Thyroid storm:Adult เริ่ม300mg→100mg q8hr'),
-    drugRow('Dexamethasone','','5 mg/vial','0.15-0.6 mk/Dose','', w*0.15, w*0.6, null, null, '', 'MAX 10 mg/dose'),
+    drugRow('Hydrocortisone','(Solu-Cortef)','100 mg/vial','1-5 mk/Dose','', w*1, w*5, null, null, 'q 6-8 hr', 'Anaphylaxis:4-8mk/dose q6hr MAX100mg | Adult200mg q6hr<br>Adrenal crisis:เริ่ม2-3mk MAX100mg→1-5mk q6hr<br>Adrenal maint:8-10mg/m²/d oral ÷3<br>Anti-inflam:Oral2.5-10mk/d | IV1-5mk/d<br>CAH:NB10-15 | Child8-15 mg/m²/d ÷3 MAX20<br>Hypoglycemia:NB 5mk/d q8-12hr หรือ1-2mk/dose q6hr<br>Asthma:5mk/dose q6hr x3-5d MAX250mg | Adult200mg<br>Septic Shock:NB3mk/d | Child2mk single | Adult50mg q6hr<br>Physiologic:NB7-9 | Child8-12 mg/m²/d<br>Stress:Mild20-50 | Major100 mg/m²/d<br>CLD:NB 0.5mk q12hr x12d→0.25mk x3d<br>Thyroid storm:Adult 300mg→100mg q8hr'),
+    drugRow('Dexamethasone','(Dexa)','4 mg/mL (inj)','0.15-0.6 mk/Dose','', w*0.15, w*0.6, null, null, 'varies', dexaNote),
+    drugRow('Dexamethasone','','0.5 mg/tab','','', null, null, (w*0.15)/0.5, (w*0.6)/0.5, '', ''),
     drugRow('Prednisolone','','5 mg/tab','1-2 mk/Day','mg/kg/day', w*1, w*2, (w*1)/5, (w*2)/5, 'qd-qid', 'Asthma exacerbation:2mk/d qd x3-5d<br>MAX &lt;2yr 20mg/d | 2-5yr 30mg/d | &gt;5yr 40mg/d<br>Asthma maint:&lt;12yr 0.25-2mk/d qd AM/qod MAX60mg/d<br>Anaphylaxis:1-2mk/d ÷2-3 MAX40mg/d<br>Anti-inflam:0.1-2mk/d ÷1-4<br>Kawasaki:2mk/d ÷q8hr MAX60mg/d จนCRPปกติ taper 2-3wk<br>Nephrotic:2mk/d or 60mg/m²/d qd MAX60mg/d x4-6wk<br>then 1.5mk/dose or 40mg/m²/dose qod MAX40mg/dose taper'),
     drugRow('Prednisolone','','5 mg/mL (susp)','1-2 mk/Day','ยาเตรียมเฉพาะราย', w*1, w*2, (w*1)/5, (w*2)/5, 'qd-qid', ''),
   ]);
@@ -2384,7 +2513,7 @@ function renderATB(w, am) {
   // Penicillins
   html += sectionHead('Penicillins', 'Penicillins');
   html += makeTable(doseHeaders, [
-    drugRow('Penicillin G','(PGS)','1,5 mU/vial','100-250k u/kg/d','q6hr', (w*0.1)/4, (w*0.25)/4, null, null, 'q 6 hr (mU)', 'NB Bacteremia:25-50k u/kg/dose<br>NB Meningitis:75-100k u/kg/dose<br>NB interval:PNA0-7d q12hr 8-28d q8hr 29-44d q6hr<br>Mild-mod:100-150k u/kg/d | Severe:200-400k u/kg/d<br>Pneumonia:200-250k u/kg/d q4-6hr<br>MAX 24MU/day (8.4MU/dose)'),
+    drugRow('Penicillin G','(PGS)','1,5 mU/vial','100-250k u/kg/d','q6hr', (w*0.1)/4, (w*0.25)/4, null, null, 'q 6 hr (mU)', 'NB Bacteremia:25-50k u/kg/dose<br>NB Meningitis:75-100k u/kg/dose<br>NB interval BW&lt;2kg:0-28d q12hr 29-44d q8hr<br>NB interval BW≥2kg:0-7d q12hr 8-44d q8hr<br>GBS Meningitis:250-450k u/kg/d q8hr(NB) q4-6hr(Infant)<br>Mild-mod:100-150k/d | Severe:200-400k u/kg/d<br>Pneumonia:200-250k u/kg/d q4-6hr<br>MAX 24MU/day<br>Renal:CrCl&gt;50 ปกติ | 10-50 q8-12hr | &lt;10 full dose q12hr'),
     drugRow('Penicillin G','','','250-450k u/kg/d','q4hr Meningitis', (w*0.25)/6, (w*0.45)/6, null, null, 'q 4 hr (mU)', 'Meningitis:250-450k u/kg/d q4-6hr'),
     drugRow('Penicillin V syr','','125 mg/5 mL','25-75 mk/Day','', (w*25)/3, (w*75)/3, ((w*25)/3*5)/125, ((w*75)/3*5)/125, 'q 8 hr', 'MAX 2 gm/day'),
     drugRow('Penicillin V tab','','250 mg/tab','','', (w*25)/3, (w*75)/3, ((w*25)/3)/250, ((w*75)/3)/250, 'q 8 hr', ''),
@@ -2396,10 +2525,10 @@ function renderATB(w, am) {
     drugRow('Dicloxacillin syr','','62.5 mg/5 mL','12.5-50 mk/Day','', (w*12.5)/4, (w*50)/4, ((w*12.5)/4*5)/62.5, ((w*50)/4*5)/62.5, 'q 6 hr', 'MAX 2 gm/day'),
     drugRow('Dicloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*12.5)/4, (w*50)/4, ((w*12.5)/4)/250, ((w*50)/4)/250, 'q 6 hr', ''),
     drugRow('Dicloxacillin cap','','500 mg/cap','','', null, null, ((w*12.5)/4)/500, ((w*50)/4)/500, '', ''),
-    drugRow('Amoxicillin syr','','125 mg/5 mL','25-100 mk/Day','', (w*25)/3, (w*100)/3, ((w*25)/3*5)/125, ((w*100)/3*5)/125, 'q 8-12 hr', 'Mild(&gt;3mo):25-50mk q8hr MAX500mg/dose<br>Severe:80-100mk q8hr<br>AOM:80-90mk q12hr<br>Pneumonia:90-100mk q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'),
+    drugRow('Amoxicillin syr','','125 mg/5 mL','25-100 mk/Day','', (w*25)/3, (w*100)/3, ((w*25)/3*5)/125, ((w*100)/3*5)/125, 'q 8-12 hr', 'Mild(&gt;3mo):25-50mk q8hr MAX500mg/dose<br>Severe:80-100mk q8hr<br>AOM:80-90mk q12hr<br>Pneumonia:90-100mk q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'),
     drugRow('Amoxicillin syr','','250 mg/5 mL','','10 kg = 1 ช้อนชา', null, null, ((w*25)/3*5)/250, ((w*100)/3*5)/250, '', ''),
     drugRow('Amoxicillin cap','','500 mg/cap','','', (w*25)/3, (w*100)/3, ((w*25)/3)/500, ((w*100)/3)/500, 'q 8-12 hr', ''),
-    drugRow('Amox/Clav IV','(Cavumox)','0.6, 1.2 gm/vial','30 mk/dose (total)','q 6-8 hr', w*30, w*30, null, null, 'q 6-8 hr', 'คำนวณ total Amox+Clav<br>&lt;3mo(&lt;4kg):30mk q12hr | &gt;4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg&amp;Adult:1.2g q8hr<br>Severe:q4-6hr'),
+    drugRow('Amox/Clav IV','(Cavumox)','0.6, 1.2 gm/vial','30 mk/dose (total)','q 6-8 hr', w*30, w*30, null, null, 'q 6-8 hr', 'คำนวณ total Amox+Clav<br>&lt;3mo(&lt;4kg):30mk q12hr | &gt;4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg&amp;Adult:1.2g q8hr<br>Severe:q4-6hr<br>Renal Oral:CrCl&lt;30 ห้าม875mg | 10-30 250-500mg q12hr | &lt;10 q24hr<br>Renal IV:CrCl10-30 30mk bid | &lt;10 30mk q24hr'),
     drugRow('Amox/Clav syr','(Ranclav 7:1)','400/57 mg/5 mL','25-45 mk/Day of Amox','', (w*25)/2, (w*45)/2, ((w*25)/2*5)/400, ((w*45)/2*5)/400, 'q 12 hr', '7:1 General:25-45mk/d q12hr<br>or 20-40mk/d q8hr<br>MAX 4gm Amox/day'),
     drugRow('Amox/Clav ES syr','(Cavumox ES 14:1)','600/42.9 mg/5 mL','80-100 mk/Day of Amox','', (w*80)/2, (w*100)/2, ((w*80)/2*5)/600, ((w*100)/2*5)/600, 'q 12 hr', 'AOM/Sinusitis:90mk/d q12hr<br>CAP:80-100mk/d q12hr<br>MAX 4gm Amox/day'),
     drugRow('Amox/Clav tab','(Cavumox 7:1)','875/125 mg/tab','','', (w*25)/2, (w*45)/2, ((w*25)/2)/875, ((w*45)/2)/875, 'q 12 hr', '≥40kg:250-500mg q8hr<br>Sinusitis:2g q12hr x10d<br>Bite/Abscess:875mg q12hr<br>CAP:2g q12hr(extended)'),
@@ -2929,6 +3058,15 @@ function updateRevBadge() {
   }
 }
 
+// Resolve byAge within an indication: returns age-matched sub-entry or the indication itself
+function resolveByAge(ind, am) {
+  if (!ind || !ind.byAge) return ind;
+  const match = ind.byAge.find(a => am >= (a.minMo||0) && am <= (a.maxMo||9999));
+  if (!match) return ind;
+  // Merge: matched age entry overrides, but keep parent fields as fallback
+  return Object.assign({}, ind, match);
+}
+
 function reverseCalc(drugId, amount, weight) {
   const drug = drugRegistry.find(d => d.id === drugId);
   if (!drug || !amount || !weight) return null;
@@ -2950,19 +3088,27 @@ function reverseCalc(drugId, amount, weight) {
       else if (ind.maxD > 0 && mgPerKg > ind.maxD) status = 'high';
     }
   } else if (drug.indications && !drug.autoByAge) {
-    // Indication-based drug (e.g. Prednisolone): check against selected indication
+    // Indication-based drug (e.g. Prednisolone, Hydrocortisone): check against selected indication
     const indSel = document.getElementById('ind-' + drugId);
     if (indSel) {
       const idx = parseInt(indSel.value) || 0;
-      const ind = drug.indications[idx];
-      if (ind && ind.minD > 0) {
-        // Get frequency from interval dropdown to calculate daily dose
+      const am = getActiveAgeMonths();
+      const rawInd = drug.indications[idx];
+      const ind = resolveByAge(rawInd, am);
+      if (ind && ind.fixedMg) {
+        if (totalMg < ind.fixedMg * 0.8) status = 'low';
+        else if (totalMg >= ind.fixedMg * 1.5) status = 'danger';
+        else if (totalMg > ind.fixedMg * 1.1) status = 'high';
+      } else if (ind && ind.minD > 0) {
         const freqSel = document.getElementById('disp-freq-' + drugId);
         const freq = freqSel ? (parseInt(freqSel.value) || 1) : 1;
-        const dailyMgPerKg = mgPerKg * freq;
-        if (dailyMgPerKg < ind.minD) status = 'low';
-        else if (ind.maxD > 0 && dailyMgPerKg > ind.maxD * 1.5) status = 'danger';
-        else if (ind.maxD > 0 && dailyMgPerKg > ind.maxD) status = 'high';
+        const perDay = ind.daily || drug.daily;
+        const checkMk = perDay ? mgPerKg * freq : mgPerKg;
+        const checkTotalMg = perDay ? totalMg * freq : totalMg;
+        if (checkMk < ind.minD) status = 'low';
+        else if (ind.maxDose && checkTotalMg > ind.maxDose) status = 'danger';
+        else if (!ind.maxDose && ind.maxD > 0 && checkMk > ind.maxD * 1.5) status = 'danger';
+        else if (ind.maxD > 0 && checkMk > ind.maxD) status = 'high';
       }
     }
   } else if (drug.daily) {
@@ -3012,25 +3158,13 @@ function renderReverseDose() {
   const am = getActiveAgeMonths();
   const container = document.getElementById('tab-reverse');
 
-  // Build dropdown options grouped by category
-  const cats = [...new Set(drugRegistry.map(d => d.cat))];
-  let opts = '<option value="">-- เลือกยา --</option>';
-  cats.forEach(cat => {
-    opts += `<optgroup label="${cat}">`;
-    drugRegistry.filter(d => d.cat === cat).forEach(d => {
-      opts += `<option value="${d.id}">${d.name} — ${d.prep}</option>`;
-    });
-    opts += '</optgroup>';
-  });
-
   const today = localToday();
   const gStart = document.getElementById('disp-start-global')?.value || today;
   const gDays = document.getElementById('disp-days-global')?.value || '';
   const gEnd = document.getElementById('disp-end-global')?.value || '';
 
   let html = `<div class="rev-add-bar">
-    <select id="revDrugSelect">${opts}</select>
-    <button class="rev-add-btn" onclick="addDrugFromDropdown()">+ เพิ่มยา</button>
+    <button class="rev-add-btn" onclick="showAllDrugsPanel()" style="flex:1;padding:10px;font-size:0.85rem;">+ เพิ่มยา จากรายการ</button>
   </div>
   <div class="rev-card" style="background:var(--section-bg);border-color:#ffa726;">
     <div style="font-weight:600;font-size:0.9rem;margin-bottom:8px;color:#ffa726;">วันที่จ่ายยา</div>
@@ -3084,7 +3218,7 @@ function renderReverseDose() {
       html += `<div class="rev-card" style="border-left:4px solid ${catColor};">
         <div class="rev-card-header">
           <div>
-            <div class="rev-card-name">${drug.name} <span style="font-size:0.6rem;font-weight:400;color:${catColor};opacity:0.8;">${drug.cat}</span></div>
+            <div class="rev-card-name">${drug.name} <span style="font-size:0.6rem;font-weight:400;color:${catColor};opacity:0.8;">${drug.cat}</span>${!isInHospital(id) ? ' <span class="rev-not-in-hospital">ไม่มีใน รพ.</span>' : ''}</div>
             <div class="rev-card-prep">${drug.prep}</div>
           </div>
           <button class="rev-card-remove" onclick="removeDrugFromReverse('${id}')" title="ลบ">✕</button>
@@ -3108,7 +3242,7 @@ function renderReverseDose() {
           if (drug.indications && drug.autoByAge) {
             d = drug.indications.find(ind => am >= (ind.minMo||0) && am <= (ind.maxMo||999)) || drug.indications[0];
           } else {
-            d = drug.indications ? drug.indications[0] : drug;
+            d = drug.indications ? resolveByAge(drug.indications[0], am) : drug;
           }
           if (d.fixedMg) {
             const fmg = d.fixedMg;
@@ -3120,16 +3254,18 @@ function renderReverseDose() {
           }
           const mn = d.minD, mx = d.maxD;
           if (mn <= 0) return '';
-          const minMg = mn * w, maxMg = mx * w;
+          let minMg = mn * w, maxMg = mx * w;
           const perDay = d.daily || drug.daily;
+          if (d.maxDose) { minMg = Math.min(minMg, d.maxDose); maxMg = Math.min(maxMg, d.maxDose); }
           let minShow, maxShow, u = drug.unit;
           if (u === 'mL') { minShow = ((minMg * drug.concVol) / drug.concMg).toFixed(1); maxShow = ((maxMg * drug.concVol) / drug.concMg).toFixed(1); }
           else if (u === 'tab' || u === 'cap') { minShow = (minMg / drug.concMg).toFixed(1); maxShow = (maxMg / drug.concMg).toFixed(1); }
           else { minShow = minMg.toFixed(1); maxShow = maxMg.toFixed(1); u = 'mg'; }
           const rangeLabel = perDay ? 'mg/kg/day' : 'mg/kg/dose';
           const amtLabel = perDay ? '/day' : '';
+          const maxDoseText = d.maxDose ? ' MAX ' + d.maxDose + ' mg/dose' : '';
           const indNote = d.note || '';
-          return `<div class="rev-range">Min: <strong>${minShow}</strong> ${u}${amtLabel} — Max: <strong>${maxShow}</strong> ${u}${amtLabel}<br>Safe range: ${mn}–${mx} ${rangeLabel}${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
+          return `<div class="rev-range">Min: <strong>${minShow}</strong> ${u}${amtLabel} — Max: <strong>${maxShow}</strong> ${u}${amtLabel}<br>Safe range: ${mn}–${mx} ${rangeLabel}${maxDoseText}${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
         })()}</div>
         ${(function(){
           let noteContent = '';
@@ -3140,9 +3276,24 @@ function renderReverseDose() {
               let doseText;
               if (ind.fixedMg) {
                 doseText = ind.fixedMg + 'mg/dose' + (ind.maxDay ? ' MAX' + ind.maxDay + 'mg/d' : '');
-              } else {
+              } else if (ind.minD > 0 || ind.maxD > 0) {
                 const rl = (ind.daily||drug.daily) ? 'mk/d' : 'mk/dose';
                 doseText = ind.minD + '–' + ind.maxD + ' ' + rl;
+              } else {
+                doseText = 'ดู note';
+              }
+              if (!drug.autoByAge && ind.byAge) {
+                // Show each byAge entry; only highlight age-match in the ACTIVE indication
+                const isActive = i === activeIdx;
+                const ageLines = ind.byAge.map(a => {
+                  const isMatch = isActive && am >= (a.minMo||0) && am <= (a.maxMo||9999);
+                  const noMatch = isActive && !isMatch;
+                  return '<div style="padding:1px 0;' + (isMatch ? 'color:#66bb6a;font-weight:600;' : (noMatch ? 'opacity:0.6;' : '')) + '">' + (a.note||'') + '</div>';
+                }).join('');
+                return '<div class="ind-line' + (isActive?' ind-active':'') + '" data-ind="' + i + '"><b>' + ind.label + ':</b>' + ageLines + '</div>';
+              }
+              if (!drug.autoByAge && ind.note) {
+                return '<div class="ind-line' + (i===activeIdx?' ind-active':'') + '" data-ind="' + i + '"><b>' + ind.label + ':</b><br>' + ind.note + '</div>';
               }
               return '<div class="ind-line' + (i===activeIdx?' ind-active':'') + '" data-ind="' + i + '"><b>' + ind.label + '</b>: ' + doseText + (ind.iv ? ' (' + ind.iv + ')' : '') + (ind.note ? ' — ' + ind.note : '') + '</div>';
             }).join('');
@@ -3181,7 +3332,8 @@ function updateIndication(drugId, w) {
   if (!drug || !drug.indications) return;
   const sel = document.getElementById('ind-' + drugId);
   const idx = parseInt(sel.value) || 0;
-  const ind = drug.indications[idx];
+  const am = getActiveAgeMonths();
+  const ind = resolveByAge(drug.indications[idx], am);
   const el = document.getElementById('rev-safe-' + drugId);
   if (!el) return;
   const mn = ind.minD, mx = ind.maxD;
@@ -3194,15 +3346,17 @@ function updateIndication(drugId, w) {
     else { fShow = fmg; u = 'mg'; }
     el.innerHTML = `<div class="rev-range">ครั้งละ: <strong>${fShow}</strong> ${u} (${fmg} mg/dose)${ind.maxDay ? '<br>MAX ' + ind.maxDay + ' mg/day' : ''}${ind.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+ind.note+'</span>' : ''}</div>`;
   } else if (mn > 0) {
-    const minMg = mn * w, maxMg = mx * w;
+    let minMg = mn * w, maxMg = mx * w;
     const perDay = ind.daily || drug.daily;
+    if (ind.maxDose) { minMg = Math.min(minMg, ind.maxDose); maxMg = Math.min(maxMg, ind.maxDose); }
     let minShow, maxShow, u = drug.unit;
     if (u === 'mL') { minShow = ((minMg * drug.concVol) / drug.concMg).toFixed(1); maxShow = ((maxMg * drug.concVol) / drug.concMg).toFixed(1); }
     else if (u === 'tab' || u === 'cap') { minShow = (minMg / drug.concMg).toFixed(1); maxShow = (maxMg / drug.concMg).toFixed(1); }
     else { minShow = minMg.toFixed(1); maxShow = maxMg.toFixed(1); u = 'mg'; }
     const rangeLabel = perDay ? 'mg/kg/day' : 'mg/kg/dose';
     const amtLabel = perDay ? '/day' : '';
-    el.innerHTML = `<div class="rev-range">Min: <strong>${minShow}</strong> ${u}${amtLabel} — Max: <strong>${maxShow}</strong> ${u}${amtLabel}<br>Safe range: ${mn}–${mx} ${rangeLabel}${ind.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+ind.note+'</span>' : ''}</div>`;
+    const maxDoseText = ind.maxDose ? ' MAX ' + ind.maxDose + ' mg/dose' : '';
+    el.innerHTML = `<div class="rev-range">Min: <strong>${minShow}</strong> ${u}${amtLabel} — Max: <strong>${maxShow}</strong> ${u}${amtLabel}<br>Safe range: ${mn}–${mx} ${rangeLabel}${maxDoseText}${ind.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+ind.note+'</span>' : ''}</div>`;
   } else {
     el.innerHTML = ind.note ? `<div class="rev-range"><span style="font-size:0.72rem">${ind.note}</span></div>` : '';
   }
@@ -3222,6 +3376,9 @@ function updateIndication(drugId, w) {
       line.classList.toggle('ind-active', line.dataset.ind === String(idx));
     });
   }
+  // Re-check dose status with new indication
+  const input = document.getElementById('rev-input-' + drugId);
+  if (input && input.value) updateRevResult(drugId, input.value, w);
 }
 
 function updateRevResult(drugId, val, weight) {
@@ -3238,15 +3395,10 @@ function updateRevResult(drugId, val, weight) {
   </div>`;
 }
 
-function addDrugFromDropdown() {
-  const sel = document.getElementById('revDrugSelect');
-  if (!sel.value) return;
-  selectedDrugs.add(sel.value);
-  updateRevBadge();
-  // Also check checkbox in tables if visible
-  document.querySelectorAll(`.drug-chk[data-drug-id="${sel.value}"]`).forEach(cb => cb.checked = true);
-  sel.value = '';
-  renderReverseDose();
+function showAllDrugsPanel() {
+  const panel = document.getElementById('revSearchPanel');
+  if (panel) { panel.remove(); return; }
+  showRevSearchResults(drugRegistry);
 }
 
 function removeDrugFromReverse(id) {
@@ -3267,14 +3419,14 @@ const drugIntervals = {
   'hyd-syr':'q 8 hr','hyd-tab-10':'q 8 hr','hyd-tab-25':'q 8 hr',
   // Mucolytic
   'brom-syr':'tid','brom-tab':'tid',
-  'carbo-syr-250':'tid','carbo-syr-100':'tid','carbo-lys':'bid',
+  'carbo-syr-250':'tid','carbo-syr-100':'tid','carbo-tab':'tid','carbo-lys':'bid',
   'acetyl-100':'bid-qid','acetyl-200':'bid-qid','acetyl-600':'bid-qid',
   // Antitussive
   'gg-syr':'q 4 hr','levo-syr':'q 12 hr',
   // Decongestant
   'pseudo-syr':'q 8 hr','pseudo-tab':'q 8 hr',
   // Asthma
-  'salb-syr':'tid','salb-sol':'prn','terb':'prn','montel':'q 24 hr',
+  'salb-syr':'tid','salb-sol':'prn','terb':'prn','montel':'q 24 hr','montel-10':'q 24 hr',
   // Antiemetic
   'dom-syr':'q 8 hr','dom-tab':'q 8 hr','onda-iv':'single','onda-tab':'q 8 hr',
   'metocl-iv':'single','metocl-syr':'q 8 hr','metocl-tab':'q 8 hr',
@@ -3283,7 +3435,7 @@ const drugIntervals = {
   'omep-iv':'q 24 hr','omep-tab':'q 24 hr','rani-iv':'q 12 hr','rani-tab':'q 12 hr','famo-tab':'q 12-24 hr',
   'lactu-syr':'q 24 hr',
   // Steroid
-  'hydro-iv':'q 6-8 hr','dexa-iv':'single','pred-tab':'qd-qid','pred-susp':'qd-qid',
+  'hydro-iv':'q 6-8 hr','dexa-iv':'single','dexa-tab':'qd','pred-tab':'qd-qid','pred-susp':'qd-qid',
   // Anti-epileptic
   'pheno-maint-30':'q 12 hr','pheno-maint-60':'q 12 hr',
   'phenyt-maint':'q 8 hr','valp-maint':'q 8 hr',
@@ -3656,7 +3808,7 @@ const allDrugs = [
   // Laxatives
   'Lactulose','Hepalac','Duphalac','Milk of Magnesia',
   // Steroid
-  'Hydrocortisone','Solu-Cortef','Dexamethasone','Prednisolone',
+  'Hydrocortisone','Solu-Cortef','Dexamethasone','Dexa','Prednisolone',
   // Anti-epileptic
   'Diazepam','Midazolam','Phenobarbital','Phenytoin',
   'Valproate','Sodium valproate','Levetiracetam',
@@ -3872,10 +4024,13 @@ function showRevSearchResults(matches) {
       const prepMg = parseInt(d.prep);
       bestTag = prepMg === oselBestPrep ? ' ✅' : '';
     }
-    html += `<label class="rev-search-item" style="border-left:3px solid ${cc};">
+    const notInHosp = !isInHospital(d.id);
+    const hospTag = notInHosp ? '<span class="rev-not-in-hospital">ไม่มีใน รพ.</span>' : '';
+    const dimStyle = notInHosp ? 'opacity:0.5;' : '';
+    html += `<label class="rev-search-item" style="border-left:3px solid ${cc};${dimStyle}">
       <input type="checkbox" value="${d.id}"${checked}>
       <span class="rev-search-name">${d.name}</span>
-      <span class="rev-search-prep">${d.prep}${bestTag}</span>
+      <span class="rev-search-prep">${d.prep}${bestTag}${hospTag}</span>
       <span style="font-size:0.6rem;color:${cc};margin-left:auto;white-space:nowrap;">${d.cat}</span>
     </label>`;
   });
@@ -3912,6 +4067,17 @@ populateDD('ddAge', simpleAgeItems);
 (function(){
   const sel = document.getElementById('deskAgeSingle');
   if (sel) sel.innerHTML = simpleAgeItems.map(it => `<option value="${it.value}">${it.label}</option>`).join('');
+})();
+// Desktop RBW dropdowns
+(function(){
+  const rbwSel = document.getElementById('deskRBW');
+  if (rbwSel) rbwSel.innerHTML = '<option value="0">0</option>' + ibwItems.map(it => `<option value="${it.value}">${it.label}</option>`).join('');
+  const rbwAgeSel = document.getElementById('deskRBWAge');
+  if (rbwAgeSel) rbwAgeSel.innerHTML = simpleAgeItems.map(it => `<option value="${it.value}">${it.label}</option>`).join('');
+  const palsSel = document.getElementById('deskPals');
+  if (palsSel) palsSel.innerHTML = palsItems.map(it => `<option value="${it.value}">${it.label}</option>`).join('');
+  const dehydSel = document.getElementById('deskDehyd');
+  if (dehydSel) dehydSel.innerHTML = dehydItems.map(it => `<option value="${it.value}">${it.label}%</option>`).join('');
 })();
 populateDD('ddRBW', ibwItems);
 populateDD('ddRBWAge', simpleAgeItems);
@@ -4054,9 +4220,7 @@ toggleDrugSelect = function(el) {
   origToggle(el);
   updateCartBtn();
 };
-// Patch addDrugFromDropdown and removeDrugFromReverse
-const origAddDrop = addDrugFromDropdown;
-addDrugFromDropdown = function() { origAddDrop(); updateCartBtn(); };
+// Patch removeDrugFromReverse
 const origRemove = removeDrugFromReverse;
 removeDrugFromReverse = function(id) { origRemove(id); updateCartBtn(); };
 
@@ -4174,6 +4338,81 @@ window.addEventListener('scroll', () => {
     });
   }
 })();
+
+// ===== Hospital Drug List =====
+const HOSP_KEY = 'pedcal_hospital_drugs';
+let hospitalExcluded = new Set();
+
+function loadHospitalList() {
+  try {
+    const saved = localStorage.getItem(HOSP_KEY);
+    if (saved) hospitalExcluded = new Set(JSON.parse(saved));
+  } catch(e) {}
+}
+
+function saveHospitalList() {
+  localStorage.setItem(HOSP_KEY, JSON.stringify([...hospitalExcluded]));
+}
+
+function isInHospital(drugId) {
+  return !hospitalExcluded.has(drugId);
+}
+
+function updateHospCount() {
+  const total = drugRegistry.length;
+  const available = total - hospitalExcluded.size;
+  const el = document.getElementById('hospCount');
+  if (el) el.textContent = available + '/' + total + ' รายการ';
+}
+
+function openHospitalList() {
+  const container = document.getElementById('hospitalDrugList');
+  if (!container) return;
+  const cats = [...new Set(drugRegistry.map(d => d.cat))];
+  const catColors = {
+    'Antipyretic':'#66bb6a','Antihistamine':'#42a5f5','Mucolytic':'#78909c','Antitussive':'#78909c',
+    'Decongestant':'#ab47bc','Asthma':'#26c6da','Adrenaline':'#ef5350','Antiemetic':'#ffa726',
+    'Antacid':'#8d6e63','Laxatives':'#a1887f','Steroid':'#ec407a','Anti-epileptic':'#7e57c2',
+    'Sedation':'#5c6bc0','Penicillins':'#29b6f6','Cephalosporins':'#26a69a','Macrolides':'#9ccc65',
+    'Lincosamides':'#d4e157','Sulfonamides':'#ffca28','Quinolones':'#ff7043','Others':'#bdbdbd',
+    'Antivirals':'#ce93d8'
+  };
+  let html = '';
+  cats.forEach(cat => {
+    const drugs = drugRegistry.filter(d => d.cat === cat);
+    const cc = catColors[cat] || '#607d8b';
+    html += `<div class="hospital-cat" style="border-left:3px solid ${cc};color:${cc};">${cat} (${drugs.length})</div>`;
+    drugs.forEach(d => {
+      const checked = !hospitalExcluded.has(d.id) ? ' checked' : '';
+      html += `<label class="hospital-item"><input type="checkbox" value="${d.id}"${checked} onchange="toggleHospitalDrug('${d.id}',this.checked)"><span>${d.name}</span><span class="hosp-prep">${d.prep}</span></label>`;
+    });
+  });
+  container.innerHTML = html;
+  updateHospCount();
+  document.getElementById('hospitalOverlay').classList.add('open');
+}
+
+function closeHospitalList() {
+  document.getElementById('hospitalOverlay').classList.remove('open');
+}
+
+function toggleHospitalDrug(id, checked) {
+  if (checked) hospitalExcluded.delete(id);
+  else hospitalExcluded.add(id);
+  saveHospitalList();
+  updateHospCount();
+}
+
+function toggleAllHospital(checked) {
+  if (checked) hospitalExcluded.clear();
+  else drugRegistry.forEach(d => hospitalExcluded.add(d.id));
+  saveHospitalList();
+  // Update all checkboxes
+  document.querySelectorAll('#hospitalDrugList input[type=checkbox]').forEach(cb => cb.checked = checked);
+  updateHospCount();
+}
+
+loadHospitalList();
 </script>
 </body>
 </html>
