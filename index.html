@@ -520,7 +520,8 @@ body {
 .rev-search-prep { color:var(--text-muted); font-size:0.65rem; }
 .rev-search-confirm { width:100%; padding:7px; border:none; border-radius:6px; background:var(--primary); color:white; font-weight:700; font-size:0.75rem; cursor:pointer; }
 .rev-search-confirm:active { background:#3b82f6; }
-.rev-input-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.rev-input-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; flex-wrap:wrap; }
+.rev-input-row .rev-iv-label { font-size:0.75rem; color:#ffa726; font-weight:600; margin-left:4px; }
 .rev-input { width:100px; padding:8px; border:2px solid var(--border); border-radius:8px; background:var(--section-bg); color:var(--text); font-size:1rem; text-align:center; }
 .rev-input:focus { border-color:#ffa726; outline:none; }
 .rev-unit { font-size:0.85rem; color:var(--text-muted); }
@@ -1156,6 +1157,14 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <h3>V.5</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
   <ul>
+    <li><span style="color:#ffa726;">[2026/05/03]</span> Paracetamol/Ibuprofen (PRN per-dose): เพิ่ม field maxDayMk (90/40 mk/d) → Safe-range แสดง MAX ceiling ตาม freq เช่น "MAX 90 mk/d → ≤ 6.3 mL/dose @ q4hr", calc warn 'high'/'danger' เมื่อ dose × freq เกิน MAX</li>
+    <li><span style="color:#ffa726;">[2026/05/03]</span> Reverse calc interval-aware: เปลี่ยน interval แล้ว Safe-range + status (OK/low/high) อัปเดตตาม freq แบบ real-time. Display ใหม่: "ครั้งละ X-Y mL/dose @ qXhr | รวม/วัน Z mL"</li>
+    <li><span style="color:#ffa726;">[2026/05/03]</span> แปลงยา ATB เป็น daily-dose semantics (minD/maxD = mg/kg/day): Amox 25-100, Augmentin 25-45/ES 80-100/IV 90-120, Cephalexin 25-100, Cefaclor 20-40, Cefdinir 14, Cefixime 8, Erythromycin 30-50, Clindamycin IV 25-40/PO 10-25, Cotrimoxazole 8-12, Doxycycline 2-5, Oseltamivir 4-8, Acyclovir 40-80 — รองรับการเปลี่ยน interval</li>
+    <li><span style="color:#ffa726;">[2026/05/03]</span> Fix bug: reverseCalc daily-branch เดิมคืน 'ok' ตลอด — แก้ให้คำนวณ daily mgPerKg = mgPerKg × freq เทียบกับ minD/maxD จริง</li>
+    <li><span style="color:#ffa726;">[2026/05/03]</span> Acyclovir interval default = qid (HSV/VZV tx) แทน bid; เรียง qid → 5x/d → tid → bid</li>
+    <li><span style="color:#ffa726;">[2026/05/03]</span> Audit interval ทุกยา: Augmentin IV q6-8hr, Cephalexin syr q6-8hr, Cefaclor syr q8-12hr, Cefdinir/Cefixime q12-24hr, Erythromycin syr q6-8hr, Clindamycin IV q6-8hr, Cotrimoxazole/Doxycycline/Oseltamivir q12-24hr, Acyclovir tab/susp bid-5x (covers HSV px→Zoster), Salbutamol syr bid-qid, Bromhexine/Carbocysteine bid-tid, Levodropropizine q6-8hr, Lactulose q12-24hr</li>
+    <li><span style="color:#ffa726;">[2026/05/03]</span> Amoxicillin (syr 125/250 + cap): interval เป็น q 8-24 hr → เลือก q8/q12/q24 ครอบคลุม Mild/AOM/GAS/UTI px (เดิม syr=q12 อย่างเดียว, cap=q6-8 ผิด)</li>
+    <li><span style="color:#ffa726;">[2026/05/03]</span> Reverse tab: ย้าย Interval ขึ้นไปแถวเดียวกับ ml/mg (มีผลต่อ safe-range สำหรับ daily-dose drugs) + interval onchange เรียก reverseCalc ใหม่ด้วย (เดิมเรียกแค่ updateDispense)</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH: Dexamethasone 11 indications (Croup/Asthma/Airway edema/Anaphylaxis/Anti-inflam/Meningitis/Cerebral edema/COVID-19/BPD DART/Antiemetic/Physiologic) + byAge + maxDose + tab 0.5mg</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> รายการยา รพ. — checkbox modal + localStorage persist + Reverse tab indicator "ไม่มีใน รพ."</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH audit ทุกยา: Salbutamol +Exercise px/Hyperkalemia, PGS +BW interval/Renal/GBS, Prednisolone +Nephrotic relapse/Adult MAX, Amox/Clav +Renal, Acetylcysteine fix tid-qid, Montelukast +Urticaria, Amoxicillin +Tonsillopharyngitis</li>
@@ -2012,14 +2021,14 @@ function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, in
 const drugRegistry = [
   // === DOSE TAB ===
   // Antipyretic
-  {id:'para-syr-120', name:'Paracetamol syrup', prep:'120 mg/5 mL', concMg:120, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Antipyretic', note:'MAX 90 mk/Day'},
-  {id:'para-syr-250', name:'Paracetamol syrup', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Antipyretic', note:'MAX 90 mk/Day'},
-  {id:'para-kit', name:'Paracetamol kit syr', prep:'60 mg/0.6 mL', concMg:60, concVol:0.6, unit:'mL', minD:10, maxD:15, cat:'Antipyretic'},
-  {id:'para-tab-325', name:'Paracetamol tab', prep:'325 mg/tab', concMg:325, concVol:1, unit:'tab', minD:10, maxD:15, cat:'Antipyretic'},
-  {id:'para-tab-500', name:'Paracetamol tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:15, cat:'Antipyretic'},
-  {id:'ibu-syr', name:'Ibuprofen syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:5, maxD:10, cat:'Antipyretic', note:'MAX 40 mk/Day'},
-  {id:'ibu-tab-200', name:'Ibuprofen tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:5, maxD:10, cat:'Antipyretic'},
-  {id:'ibu-tab-400', name:'Ibuprofen tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:5, maxD:10, cat:'Antipyretic'},
+  {id:'para-syr-120', name:'Paracetamol syrup', prep:'120 mg/5 mL', concMg:120, concVol:5, unit:'mL', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
+  {id:'para-syr-250', name:'Paracetamol syrup', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
+  {id:'para-kit', name:'Paracetamol kit syr', prep:'60 mg/0.6 mL', concMg:60, concVol:0.6, unit:'mL', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d'},
+  {id:'para-tab-325', name:'Paracetamol tab', prep:'325 mg/tab', concMg:325, concVol:1, unit:'tab', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
+  {id:'para-tab-500', name:'Paracetamol tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
+  {id:'ibu-syr', name:'Ibuprofen syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:5, maxD:10, maxDayMk:40, cat:'Antipyretic', note:'PRN q6-8hr MAX 40 mk/d หรือ 1.2-2.4 g/d (adult)'},
+  {id:'ibu-tab-200', name:'Ibuprofen tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:5, maxD:10, maxDayMk:40, cat:'Antipyretic', note:'PRN q6-8hr MAX 40 mk/d หรือ 1.2-2.4 g/d (adult)'},
+  {id:'ibu-tab-400', name:'Ibuprofen tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:5, maxD:10, maxDayMk:40, cat:'Antipyretic', note:'PRN q6-8hr MAX 40 mk/d หรือ 1.2-2.4 g/d (adult)'},
   // Antihistamine
   {id:'cet-syr', name:'Cetirizine syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.5, cat:'Antihistamine'},
   {id:'cet-tab', name:'Cetirizine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.5, cat:'Antihistamine'},
@@ -2203,38 +2212,38 @@ const drugRegistry = [
   {id:'diclox-syr', name:'Dicloxacillin syr', prep:'62.5 mg/5 mL', concMg:62.5, concVol:5, unit:'mL', minD:3.1, maxD:12.5, cat:'Penicillins'},
   {id:'diclox-cap-250', name:'Dicloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:3.1, maxD:12.5, cat:'Penicillins'},
   {id:'diclox-cap-500', name:'Dicloxacillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:3.1, maxD:12.5, cat:'Penicillins'},
-  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:8.3, maxD:33.3, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:12.5, maxD:22.5, cat:'Penicillins', alias:'Augmentin,Ranclav,Clavulanic', note:'7:1 General:25-45mk/d q12hr or 20-40mk/d q8hr<br>MAX 4gm Amox/day'},
-  {id:'augm-es', name:'Amox/Clav ES syr', prep:'600/42.9 mg/5 mL', concMg:600, concVol:5, unit:'mL', minD:40, maxD:50, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'14:1 AOM/Sinusitis:90mk/d q12hr<br>CAP:80-100mk/d q12hr<br>MAX 4gm Amox/day'},
-  {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:12.5, maxD:22.5, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'≥40kg:250-500mg q8hr<br>Sinusitis:2g q12hr x10d<br>Bite/Abscess:875mg q12hr<br>CAP:2g q12hr(extended)'},
+  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:25, maxD:100, daily:true, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:100, daily:true, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:25, maxD:100, daily:true, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
+  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:25, maxD:45, daily:true, cat:'Penicillins', alias:'Augmentin,Ranclav,Clavulanic', note:'7:1 General:25-45mk/d q12hr or 20-40mk/d q8hr<br>MAX 4gm Amox/day'},
+  {id:'augm-es', name:'Amox/Clav ES syr', prep:'600/42.9 mg/5 mL', concMg:600, concVol:5, unit:'mL', minD:80, maxD:100, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'14:1 AOM/Sinusitis:90mk/d q12hr<br>CAP:80-100mk/d q12hr<br>MAX 4gm Amox/day'},
+  {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:25, maxD:45, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'≥40kg:250-500mg q8hr<br>Sinusitis:2g q12hr x10d<br>Bite/Abscess:875mg q12hr<br>CAP:2g q12hr(extended)'},
   // Cephalosporins
-  {id:'cephal-syr', name:'Cephalexin syr (1st)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:6.25, maxD:25, cat:'Cephalosporins'},
-  {id:'cephal-cap-250', name:'Cephalexin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:6.25, maxD:25, cat:'Cephalosporins'},
-  {id:'cephal-cap-500', name:'Cephalexin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:6.25, maxD:25, cat:'Cephalosporins'},
-  {id:'cefacl-syr-125', name:'Cefaclor syr (2nd)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:10, maxD:20, cat:'Cephalosporins'},
-  {id:'cefacl-syr-250', name:'Cefaclor syr (2nd)', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:20, cat:'Cephalosporins'},
-  {id:'cefacl-tab', name:'Cefaclor tab', prep:'375 mg/tab', concMg:375, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Cephalosporins'},
-  {id:'cefdin-syr', name:'Cefdinir syr (3rd)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:7, maxD:7, cat:'Cephalosporins'},
-  {id:'cefdin-cap', name:'Cefdinir cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'cap', minD:7, maxD:7, cat:'Cephalosporins'},
-  {id:'cefix-syr', name:'Cefixime syr (3rd)', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:4, maxD:4, cat:'Cephalosporins'},
-  {id:'cefix-cap', name:'Cefixime cap', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:4, maxD:4, cat:'Cephalosporins'},
+  {id:'cephal-syr', name:'Cephalexin syr (1st)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:25, maxD:100, daily:true, cat:'Cephalosporins'},
+  {id:'cephal-cap-250', name:'Cephalexin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:25, maxD:100, daily:true, cat:'Cephalosporins'},
+  {id:'cephal-cap-500', name:'Cephalexin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:25, maxD:100, daily:true, cat:'Cephalosporins'},
+  {id:'cefacl-syr-125', name:'Cefaclor syr (2nd)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:20, maxD:40, daily:true, cat:'Cephalosporins'},
+  {id:'cefacl-syr-250', name:'Cefaclor syr (2nd)', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:20, maxD:40, daily:true, cat:'Cephalosporins'},
+  {id:'cefacl-tab', name:'Cefaclor tab', prep:'375 mg/tab', concMg:375, concVol:1, unit:'tab', minD:20, maxD:40, daily:true, cat:'Cephalosporins'},
+  {id:'cefdin-syr', name:'Cefdinir syr (3rd)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:14, maxD:14, daily:true, cat:'Cephalosporins'},
+  {id:'cefdin-cap', name:'Cefdinir cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'cap', minD:14, maxD:14, daily:true, cat:'Cephalosporins'},
+  {id:'cefix-syr', name:'Cefixime syr (3rd)', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:8, maxD:8, daily:true, cat:'Cephalosporins'},
+  {id:'cefix-cap', name:'Cefixime cap', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:8, maxD:8, daily:true, cat:'Cephalosporins'},
   // Macrolides
-  {id:'eryth-syr', name:'Erythromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:7.5, maxD:12.5, cat:'Macrolides'},
-  {id:'eryth-cap', name:'Erythromycin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:7.5, maxD:12.5, cat:'Macrolides'},
+  {id:'eryth-syr', name:'Erythromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:30, maxD:50, daily:true, cat:'Macrolides'},
+  {id:'eryth-cap', name:'Erythromycin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:30, maxD:50, daily:true, cat:'Macrolides'},
   {id:'azith-syr', name:'Azithromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:10, maxD:15, cat:'Macrolides', note:'MAX 1gm/day<br>Day1:10mk then 5mk x4d<br>or 10mk x3d'},
   {id:'azith-cap', name:'Azithromycin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:10, maxD:15, cat:'Macrolides'},
   {id:'clari-syr', name:'Clarithromycin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:7.5, maxD:7.5, cat:'Macrolides'},
   {id:'clari-tab-250', name:'Clarithromycin tab', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:7.5, maxD:7.5, cat:'Macrolides'},
   {id:'clari-tab-500', name:'Clarithromycin tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:7.5, maxD:7.5, cat:'Macrolides'},
   // Lincosamides
-  {id:'clinda-iv', name:'Clindamycin IV', prep:'600 mg/vial', concMg:600, concVol:1, unit:'mL', minD:6.7, maxD:13.3, cat:'Lincosamides'},
-  {id:'clinda-cap-150', name:'Clindamycin cap', prep:'150 mg/cap', concMg:150, concVol:1, unit:'cap', minD:6.7, maxD:13.3, cat:'Lincosamides'},
-  {id:'clinda-cap-300', name:'Clindamycin cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'cap', minD:6.7, maxD:13.3, cat:'Lincosamides'},
+  {id:'clinda-iv', name:'Clindamycin IV', prep:'600 mg/vial', concMg:600, concVol:1, unit:'mL', minD:25, maxD:40, daily:true, cat:'Lincosamides'},
+  {id:'clinda-cap-150', name:'Clindamycin cap', prep:'150 mg/cap', concMg:150, concVol:1, unit:'cap', minD:10, maxD:25, daily:true, cat:'Lincosamides'},
+  {id:'clinda-cap-300', name:'Clindamycin cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'cap', minD:10, maxD:25, daily:true, cat:'Lincosamides'},
   // Sulfonamides
-  {id:'cotri-syr', name:'Co-trimoxazole syr', prep:'40/200 mg/5 mL', concMg:40, concVol:5, unit:'mL', minD:4, maxD:6, cat:'Sulfonamides'},
-  {id:'cotri-tab', name:'Co-trimoxazole tab', prep:'80/400 mg/tab', concMg:80, concVol:1, unit:'tab', minD:4, maxD:6, cat:'Sulfonamides'},
+  {id:'cotri-syr', name:'Co-trimoxazole syr', prep:'40/200 mg/5 mL', concMg:40, concVol:5, unit:'mL', minD:8, maxD:12, daily:true, cat:'Sulfonamides'},
+  {id:'cotri-tab', name:'Co-trimoxazole tab', prep:'80/400 mg/tab', concMg:80, concVol:1, unit:'tab', minD:8, maxD:12, daily:true, cat:'Sulfonamides'},
   // Quinolones
   {id:'cipro-tab-250', name:'Ciprofloxacin', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Quinolones'},
   {id:'cipro-tab-500', name:'Ciprofloxacin', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Quinolones'},
@@ -2246,16 +2255,16 @@ const drugRegistry = [
   {id:'metro-syr', name:'Metronidazole syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:10, maxD:16.7, cat:'Others'},
   {id:'metro-tab-200', name:'Metronidazole tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
   {id:'metro-tab-500', name:'Metronidazole tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
-  {id:'doxy-cap', name:'Doxycycline', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:1, maxD:2.5, cat:'Others'},
+  {id:'doxy-cap', name:'Doxycycline', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:2, maxD:5, daily:true, cat:'Others'},
   // Antivirals
-  {id:'osel-30', name:'Oseltamivir', prep:'30 mg/tab', concMg:30, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
-  {id:'osel-45', name:'Oseltamivir', prep:'45 mg/tab', concMg:45, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
-  {id:'osel-75', name:'Oseltamivir', prep:'75 mg/tab', concMg:75, concVol:1, unit:'tab', minD:2, maxD:4, cat:'Antivirals'},
+  {id:'osel-30', name:'Oseltamivir', prep:'30 mg/tab', concMg:30, concVol:1, unit:'tab', minD:4, maxD:8, daily:true, cat:'Antivirals'},
+  {id:'osel-45', name:'Oseltamivir', prep:'45 mg/tab', concMg:45, concVol:1, unit:'tab', minD:4, maxD:8, daily:true, cat:'Antivirals'},
+  {id:'osel-75', name:'Oseltamivir', prep:'75 mg/tab', concMg:75, concVol:1, unit:'tab', minD:4, maxD:8, daily:true, cat:'Antivirals'},
   {id:'acy-iv', name:'Acyclovir IV', prep:'250 mg/vial', concMg:250, concVol:1, unit:'vial', minD:5, maxD:20, cat:'Antivirals', note:'NB HSV:20mk | HSV encepha:10-15mk q8hr x21d<br>VZV:10-15mk q8hr | Zoster:10mk q8hr<br>Renal:CrCl25-50 q12hr | 10-25 q24hr | <10 50%dose'},
-  {id:'acy-tab-200', name:'Acyclovir', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Antivirals', note:'Genital HSV:40-80mk/d÷3-4 x7-10d<br>VZV:20mk qid x5d MAX3200mg/d<br>Zoster:≥12yr 800mg 5x/d'},
-  {id:'acy-tab-400', name:'Acyclovir', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Antivirals'},
-  {id:'acy-tab-800', name:'Acyclovir', prep:'800 mg/tab', concMg:800, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Antivirals'},
-  {id:'acy-susp', name:'Acyclovir susp', prep:'200 mg/5 mL (susp)', concMg:40, concVol:1, unit:'mL', minD:10, maxD:20, cat:'Antivirals', note:'ยาเตรียมเฉพาะราย'},
+  {id:'acy-tab-200', name:'Acyclovir', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:40, maxD:80, daily:true, cat:'Antivirals', note:'Genital HSV:40-80mk/d÷3-4 x7-10d<br>VZV:20mk qid x5d MAX3200mg/d<br>Zoster:≥12yr 800mg 5x/d'},
+  {id:'acy-tab-400', name:'Acyclovir', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:40, maxD:80, daily:true, cat:'Antivirals'},
+  {id:'acy-tab-800', name:'Acyclovir', prep:'800 mg/tab', concMg:800, concVol:1, unit:'tab', minD:40, maxD:80, daily:true, cat:'Antivirals'},
+  {id:'acy-susp', name:'Acyclovir susp', prep:'200 mg/5 mL (susp)', concMg:40, concVol:1, unit:'mL', minD:40, maxD:80, daily:true, cat:'Antivirals', note:'ยาเตรียมเฉพาะราย'},
   // === Remaining drugs ===
   // Mucolytic
   // Carbocysteine: 2-4yr:62.5-125mg bid-qid, 5-11yr:250mg tid, 12-17yr:1500-2250mg/d tid-qid
@@ -2286,8 +2295,8 @@ const drugRegistry = [
   {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB:25-50k(Bact) 75-100k(Mening)<br>NB BW<2kg:0-28d q12 29-44d q8<br>NB BW≥2kg:0-7d q12 8-44d q8<br>Mild-mod:100-150k/d Severe:200-400k/d<br>Renal:CrCl>50 ปกติ|10-50 q8-12hr|<10 q12hr<br>MAX 24MU/day'},
   {id:'benz-penG', name:'Benzathine Pen G', prep:'1.2 MU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB Syphilis:50k u/kg IM x1<br>RF:≤27kg 600k q3-4wk | >27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/wk x3wk MAX2.4MU'},
   {id:'clox-iv', name:'Cloxacillin IV', prep:'0.5,1 gm/amp', concMg:1000, concVol:1, unit:'gm', minD:12.5, maxD:25, cat:'Penicillins'},
-  {id:'augm-iv-06', name:'Amox/Clav IV', prep:'0.6 gm/vial', concMg:600, concVol:1, unit:'vial', minD:30, maxD:30, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'คำนวณ total Amox+Clav<br><3mo(<4kg):30mk q12hr | >4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg:1.2g q8hr Severe:q4-6hr'},
-  {id:'augm-iv-12', name:'Amox/Clav IV', prep:'1.2 gm/vial', concMg:1200, concVol:1, unit:'vial', minD:30, maxD:30, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic'},
+  {id:'augm-iv-06', name:'Amox/Clav IV', prep:'0.6 gm/vial', concMg:600, concVol:1, unit:'vial', minD:90, maxD:120, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'คำนวณ total Amox+Clav<br><3mo(<4kg):30mk q12hr | >4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg:1.2g q8hr Severe:q4-6hr'},
+  {id:'augm-iv-12', name:'Amox/Clav IV', prep:'1.2 gm/vial', concMg:1200, concVol:1, unit:'vial', minD:90, maxD:120, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic'},
   {id:'ampi', name:'Ampicillin', prep:'500,1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:25, maxD:50, cat:'Penicillins'},
   {id:'cefaz', name:'Cefazolin (1st)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:16.7, maxD:33.3, cat:'Cephalosporins'},
   {id:'ceftri-500', name:'Ceftriaxone (3rd)', prep:'500 mg/vial', concMg:500, concVol:1, unit:'vial', minD:50, maxD:75, cat:'Cephalosporins'},
@@ -3112,12 +3121,25 @@ function reverseCalc(drugId, amount, weight) {
       }
     }
   } else if (drug.daily) {
-    status = 'ok';
+    // Daily-dose drug: minD/maxD = mg/kg/day; user input is per-dose, multiply by freq
+    const freq = getCurrentFreq(drugId) || 1;
+    const dailyMk = mgPerKg * freq;
+    const eps = 0.001;
+    if (drug.minD > 0 && dailyMk < drug.minD - eps) status = 'low';
+    else if (drug.maxD > 0 && dailyMk > drug.maxD * 1.5 + eps) status = 'danger';
+    else if (drug.maxD > 0 && dailyMk > drug.maxD + eps) status = 'high';
   } else {
     const eps = 0.001;
     if (drug.minD > 0 && mgPerKg < drug.minD - eps) status = 'low';
     else if (drug.maxD > 0 && mgPerKg > drug.maxD * 1.2 + eps) status = 'danger';
     else if (drug.maxD > 0 && mgPerKg > drug.maxD + eps) status = 'high';
+    // Daily MAX (mg/kg/day) check for PRN/per-dose drugs e.g. Para, Ibu
+    if (drug.maxDayMk) {
+      const freq = getCurrentFreq(drugId) || 1;
+      const dailyMk = mgPerKg * freq;
+      if (dailyMk > drug.maxDayMk * 1.2 + eps) status = 'danger';
+      else if (dailyMk > drug.maxDayMk + eps && status !== 'danger') status = 'high';
+    }
   }
   return { totalMg, mgPerKg, status, minD: drug.minD, maxD: drug.maxD };
 }
@@ -3151,6 +3173,77 @@ function getActiveAgeMonths() {
   // Fallback to mob-select
   const dd = document.getElementById('ddAge');
   return dd ? (parseInt(dd.value) || 0) : 0;
+}
+
+// ===== Reverse Safe-range helpers =====
+function getCurrentFreq(drugId) {
+  const sel = document.getElementById('disp-freq-' + drugId);
+  return sel ? (parseInt(sel.value) || 1) : 1;
+}
+function freqToLabel(freq) {
+  return ({6:'q4hr',5:'5x/d',4:'q6hr',3:'q8hr',2:'q12hr',1:'qd'})[freq] || freq+'x/d';
+}
+// Render Safe-range HTML for a drug. d = resolved indication or drug entry. freq = user-selected dosing frequency.
+function renderSafeRangeHTML(drug, d, w, freq) {
+  if (d.fixedMg) {
+    const fmg = d.fixedMg;
+    let fShow, u = drug.unit;
+    if (u === 'mL') fShow = ((fmg * drug.concVol) / drug.concMg).toFixed(2);
+    else if (u === 'tab' || u === 'cap') fShow = (fmg / drug.concMg).toFixed(2);
+    else { fShow = fmg; u = 'mg'; }
+    return `<div class="rev-range">ครั้งละ: <strong>${fShow}</strong> ${u} (${fmg} mg/dose)${d.maxDay ? '<br>MAX ' + d.maxDay + ' mg/day' : ''}${d.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+d.note+'</span>' : ''}</div>`;
+  }
+  const mn = d.minD, mx = d.maxD;
+  if (mn <= 0) return d.note ? `<div class="rev-range"><span style="font-size:0.72rem">${d.note}</span></div>` : '';
+  const perDay = d.daily || drug.daily;
+  let minMg = mn * w, maxMg = mx * w; // total per day if perDay, else per dose
+  if (d.maxDose && !perDay) { minMg = Math.min(minMg, d.maxDose); maxMg = Math.min(maxMg, d.maxDose); }
+  const conv = (mg) => {
+    if (drug.unit === 'mL') return ((mg * drug.concVol) / drug.concMg).toFixed(1);
+    if (drug.unit === 'tab' || drug.unit === 'cap') return (mg / drug.concMg).toFixed(1);
+    return mg.toFixed(1);
+  };
+  let u = drug.unit;
+  if (u !== 'mL' && u !== 'tab' && u !== 'cap') u = 'mg';
+  const rangeLabel = perDay ? 'mg/kg/day' : 'mg/kg/dose';
+  const maxDoseText = d.maxDose ? ' MAX ' + d.maxDose + ' mg/dose' : '';
+  const indNote = d.note || '';
+  if (perDay && freq > 0) {
+    let minPer = minMg / freq, maxPer = maxMg / freq;
+    if (d.maxDose) { minPer = Math.min(minPer, d.maxDose); maxPer = Math.min(maxPer, d.maxDose); }
+    return `<div class="rev-range">ครั้งละ <strong>${conv(minPer)}–${conv(maxPer)}</strong> ${u}/dose @ ${freqToLabel(freq)}<br>รวม/วัน: ${conv(minMg)}–${conv(maxMg)} ${u} (Safe: ${mn}–${mx} ${rangeLabel}${maxDoseText})${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
+  }
+  const amtLabel = perDay ? '/day' : '';
+  // Per-dose drug with daily MAX (mg/kg/day): show effective per-dose ceiling at current freq
+  let maxDayText = '';
+  if (d.maxDayMk && !perDay) {
+    if (freq > 0) {
+      const ceilingMg = (d.maxDayMk * w) / freq;
+      const ceilingShow = conv(Math.min(ceilingMg, mx * w));
+      maxDayText = `<br><span style="color:#ffa726">MAX ${d.maxDayMk} mk/d → ≤ ${ceilingShow} ${u}/dose @ ${freqToLabel(freq)}</span>`;
+    } else {
+      maxDayText = `<br><span style="color:#ffa726">MAX ${d.maxDayMk} mk/d</span>`;
+    }
+  }
+  return `<div class="rev-range">Min: <strong>${conv(minMg)}</strong> ${u}${amtLabel} — Max: <strong>${conv(maxMg)}</strong> ${u}${amtLabel}<br>Safe range: ${mn}–${mx} ${rangeLabel}${maxDoseText}${maxDayText}${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
+}
+function updateSafeRange(drugId, w) {
+  const drug = drugRegistry.find(d => d.id === drugId);
+  if (!drug) return;
+  const am = getActiveAgeMonths();
+  const freq = getCurrentFreq(drugId);
+  let d;
+  if (drug.indications && drug.autoByAge) {
+    d = drug.indications.find(ind => am >= (ind.minMo||0) && am <= (ind.maxMo||999)) || drug.indications[0];
+  } else if (drug.indications) {
+    const indSel = document.getElementById('ind-' + drugId);
+    const idx = indSel ? (parseInt(indSel.value) || 0) : 0;
+    d = resolveByAge(drug.indications[idx], am);
+  } else {
+    d = drug;
+  }
+  const el = document.getElementById('rev-safe-' + drugId);
+  if (el) el.innerHTML = renderSafeRangeHTML(drug, d, w, freq);
 }
 
 function renderReverseDose() {
@@ -3232,7 +3325,11 @@ function renderReverseDose() {
             <button class="spin-btn" onclick="spinInput('${inputId}',0.5,'${id}',${w})">+</button>
           </div>
           <span class="rev-unit">${drug.unit}</span>
-          ${drug.indications && !drug.autoByAge ? `<select class="rev-disp-select" id="ind-${id}" onchange="updateIndication('${id}',${w})" style="min-width:100px;margin-left:6px;font-size:0.75rem;">
+          <span class="rev-iv-label">×</span>
+          <select class="rev-disp-select" id="disp-freq-${id}" onchange="updateSafeRange('${id}', ${w}); updateRevResult('${id}', document.getElementById('rev-input-${id}').value, ${w}); updateDispense('${id}')" style="min-width:110px;font-size:0.78rem;">
+            ${ivOptions.map(o => `<option value="${o.value}"${existingFreq===String(o.value)?' selected':''}>${o.label}</option>`).join('')}
+          </select>
+          ${drug.indications && !drug.autoByAge ? `<select class="rev-disp-select" id="ind-${id}" onchange="updateIndication('${id}',${w})" style="min-width:100px;font-size:0.75rem;">
             ${drug.indications.map((ind,i) => `<option value="${i}">${ind.label}</option>`).join('')}
           </select>` : ''}
         </div>
@@ -3244,28 +3341,7 @@ function renderReverseDose() {
           } else {
             d = drug.indications ? resolveByAge(drug.indications[0], am) : drug;
           }
-          if (d.fixedMg) {
-            const fmg = d.fixedMg;
-            let fShow, u = drug.unit;
-            if (u === 'mL') fShow = ((fmg * drug.concVol) / drug.concMg).toFixed(2);
-            else if (u === 'tab' || u === 'cap') fShow = (fmg / drug.concMg).toFixed(2);
-            else { fShow = fmg; u = 'mg'; }
-            return `<div class="rev-range">ครั้งละ: <strong>${fShow}</strong> ${u} (${fmg} mg/dose)${d.maxDay ? '<br>MAX ' + d.maxDay + ' mg/day' : ''}${d.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+d.note+'</span>' : ''}</div>`;
-          }
-          const mn = d.minD, mx = d.maxD;
-          if (mn <= 0) return '';
-          let minMg = mn * w, maxMg = mx * w;
-          const perDay = d.daily || drug.daily;
-          if (d.maxDose) { minMg = Math.min(minMg, d.maxDose); maxMg = Math.min(maxMg, d.maxDose); }
-          let minShow, maxShow, u = drug.unit;
-          if (u === 'mL') { minShow = ((minMg * drug.concVol) / drug.concMg).toFixed(1); maxShow = ((maxMg * drug.concVol) / drug.concMg).toFixed(1); }
-          else if (u === 'tab' || u === 'cap') { minShow = (minMg / drug.concMg).toFixed(1); maxShow = (maxMg / drug.concMg).toFixed(1); }
-          else { minShow = minMg.toFixed(1); maxShow = maxMg.toFixed(1); u = 'mg'; }
-          const rangeLabel = perDay ? 'mg/kg/day' : 'mg/kg/dose';
-          const amtLabel = perDay ? '/day' : '';
-          const maxDoseText = d.maxDose ? ' MAX ' + d.maxDose + ' mg/dose' : '';
-          const indNote = d.note || '';
-          return `<div class="rev-range">Min: <strong>${minShow}</strong> ${u}${amtLabel} — Max: <strong>${maxShow}</strong> ${u}${amtLabel}<br>Safe range: ${mn}–${mx} ${rangeLabel}${maxDoseText}${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
+          return renderSafeRangeHTML(drug, d, w, parseInt(existingFreq) || (ivOptions[0] && ivOptions[0].value) || 1);
         })()}</div>
         ${(function(){
           let noteContent = '';
@@ -3302,13 +3378,7 @@ function renderReverseDose() {
           }
           return noteContent ? `<span class="rev-note-toggle" onclick="this.nextElementSibling.classList.toggle('open')">Note</span><div class="rev-note-body" id="note-body-${id}">${noteContent}</div>` : '';
         })()}
-        <div class="rev-dispense" id="${dispId}">
-          <div class="rev-disp-row">
-            <label>Interval:</label>
-            <select class="rev-disp-select" id="disp-freq-${id}" onchange="updateDispense('${id}')" style="min-width:120px">
-              ${ivOptions.map(o => `<option value="${o.value}"${existingFreq===String(o.value)?' selected':''}>${o.label}</option>`).join('')}
-            </select>
-          </div>
+        <div id="${dispId}">
           <div id="disp-result-${id}"></div>
         </div>
       </div>`;
@@ -3336,39 +3406,17 @@ function updateIndication(drugId, w) {
   const ind = resolveByAge(drug.indications[idx], am);
   const el = document.getElementById('rev-safe-' + drugId);
   if (!el) return;
-  const mn = ind.minD, mx = ind.maxD;
-  if (ind.fixedMg) {
-    // Fixed dose (not mg/kg) — show fixed amount + MAX
-    const fmg = ind.fixedMg;
-    let fShow, u = drug.unit;
-    if (u === 'mL') fShow = ((fmg * drug.concVol) / drug.concMg).toFixed(2);
-    else if (u === 'tab' || u === 'cap') fShow = (fmg / drug.concMg).toFixed(2);
-    else { fShow = fmg; u = 'mg'; }
-    el.innerHTML = `<div class="rev-range">ครั้งละ: <strong>${fShow}</strong> ${u} (${fmg} mg/dose)${ind.maxDay ? '<br>MAX ' + ind.maxDay + ' mg/day' : ''}${ind.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+ind.note+'</span>' : ''}</div>`;
-  } else if (mn > 0) {
-    let minMg = mn * w, maxMg = mx * w;
-    const perDay = ind.daily || drug.daily;
-    if (ind.maxDose) { minMg = Math.min(minMg, ind.maxDose); maxMg = Math.min(maxMg, ind.maxDose); }
-    let minShow, maxShow, u = drug.unit;
-    if (u === 'mL') { minShow = ((minMg * drug.concVol) / drug.concMg).toFixed(1); maxShow = ((maxMg * drug.concVol) / drug.concMg).toFixed(1); }
-    else if (u === 'tab' || u === 'cap') { minShow = (minMg / drug.concMg).toFixed(1); maxShow = (maxMg / drug.concMg).toFixed(1); }
-    else { minShow = minMg.toFixed(1); maxShow = maxMg.toFixed(1); u = 'mg'; }
-    const rangeLabel = perDay ? 'mg/kg/day' : 'mg/kg/dose';
-    const amtLabel = perDay ? '/day' : '';
-    const maxDoseText = ind.maxDose ? ' MAX ' + ind.maxDose + ' mg/dose' : '';
-    el.innerHTML = `<div class="rev-range">Min: <strong>${minShow}</strong> ${u}${amtLabel} — Max: <strong>${maxShow}</strong> ${u}${amtLabel}<br>Safe range: ${mn}–${mx} ${rangeLabel}${maxDoseText}${ind.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+ind.note+'</span>' : ''}</div>`;
-  } else {
-    el.innerHTML = ind.note ? `<div class="rev-range"><span style="font-size:0.72rem">${ind.note}</span></div>` : '';
-  }
-  // Update interval dropdown if indication has its own interval
+  // Update interval dropdown FIRST if indication has its own interval (so freq is current for safe-range)
   if (ind.iv) {
     const freqSel = document.getElementById('disp-freq-' + drugId);
     if (freqSel) {
       const opts = intervalToOptions(ind.iv);
       freqSel.innerHTML = opts.map(o => `<option value="${o.value}">${o.label}</option>`).join('');
-      updateDispense(drugId);
     }
   }
+  el.innerHTML = renderSafeRangeHTML(drug, ind, w, getCurrentFreq(drugId));
+  updateRevResult(drugId, document.getElementById('rev-input-' + drugId)?.value, w);
+  updateDispense(drugId);
   // Highlight active indication in Note
   const noteBody = document.getElementById('note-body-' + drugId);
   if (noteBody) {
@@ -3390,8 +3438,31 @@ function updateRevResult(drugId, val, weight) {
   if (!r) { el.innerHTML = ''; return; }
 
   const statusLabel = {ok:'✅ OK', low:'⚪ ต่ำกว่า therapeutic', high:'⚠️ สูงกว่า max', danger:'🔴 เกิน max!'}[r.status];
+  const drug = drugRegistry.find(d => d.id === drugId);
+  const freq = getCurrentFreq(drugId) || 1;
+  // Check if active context is daily-based (drug or selected indication) OR has daily MAX (PRN drugs)
+  let isDaily = drug?.daily || drug?.maxDayMk;
+  if (drug?.indications) {
+    const am = getActiveAgeMonths();
+    let activeInd;
+    if (drug.autoByAge) {
+      activeInd = drug.indications.find(i => am >= (i.minMo||0) && am <= (i.maxMo||999)) || drug.indications[0];
+    } else {
+      const sel = document.getElementById('ind-' + drugId);
+      const idx = sel ? (parseInt(sel.value) || 0) : 0;
+      activeInd = resolveByAge(drug.indications[idx], am);
+    }
+    isDaily = (activeInd?.daily) || isDaily;
+  }
+  let extra = '';
+  if (isDaily && freq > 1) {
+    const dailyMk = r.mgPerKg * freq;
+    const overMax = drug?.maxDayMk && dailyMk > drug.maxDayMk;
+    const color = overMax ? '#ef4444' : '';
+    extra = ` <span style="font-size:0.72rem;opacity:0.85;${color?'color:'+color+';font-weight:600;':''}">(× ${freq} = ${(r.totalMg*freq).toFixed(0)} mg/d, ${dailyMk.toFixed(1)} mk/d${drug?.maxDayMk ? ' / MAX '+drug.maxDayMk : ''})</span>`;
+  }
   el.innerHTML = `<div class="rev-result ${r.status}">
-    → <strong>${r.totalMg.toFixed(1)} mg</strong> = <strong>${r.mgPerKg.toFixed(2)} mg/kg</strong> &nbsp; ${statusLabel}
+    → <strong>${r.totalMg.toFixed(1)} mg</strong> = <strong>${r.mgPerKg.toFixed(2)} mg/kg</strong>${extra} &nbsp; ${statusLabel}
   </div>`;
 }
 
@@ -3418,22 +3489,22 @@ const drugIntervals = {
   'cpm-syr':'q 4-6 hr','cpm-tab':'q 4-6 hr','cpm-iv':'qid',
   'hyd-syr':'q 8 hr','hyd-tab-10':'q 8 hr','hyd-tab-25':'q 8 hr',
   // Mucolytic
-  'brom-syr':'tid','brom-tab':'tid',
-  'carbo-syr-250':'tid','carbo-syr-100':'tid','carbo-tab':'tid','carbo-lys':'bid',
+  'brom-syr':'bid-tid','brom-tab':'bid-tid',
+  'carbo-syr-250':'bid-tid','carbo-syr-100':'bid-tid','carbo-tab':'bid-tid','carbo-lys':'bid',
   'acetyl-100':'bid-qid','acetyl-200':'bid-qid','acetyl-600':'bid-qid',
   // Antitussive
-  'gg-syr':'q 4 hr','levo-syr':'q 12 hr',
+  'gg-syr':'q 4 hr','levo-syr':'q 6-8 hr',
   // Decongestant
   'pseudo-syr':'q 8 hr','pseudo-tab':'q 8 hr',
   // Asthma
-  'salb-syr':'tid','salb-sol':'prn','terb':'prn','montel':'q 24 hr','montel-10':'q 24 hr',
+  'salb-syr':'bid-qid','salb-sol':'prn','terb':'prn','montel':'q 24 hr','montel-10':'q 24 hr',
   // Antiemetic
   'dom-syr':'q 8 hr','dom-tab':'q 8 hr','onda-iv':'single','onda-tab':'q 8 hr',
   'metocl-iv':'single','metocl-syr':'q 8 hr','metocl-tab':'q 8 hr',
   'dimen-iv':'single','dimen-tab':'q 8 hr',
   // Antacid
   'omep-iv':'q 24 hr','omep-tab':'q 24 hr','rani-iv':'q 12 hr','rani-tab':'q 12 hr','famo-tab':'q 12-24 hr',
-  'lactu-syr':'q 24 hr',
+  'lactu-syr':'q 12-24 hr',
   // Steroid
   'hydro-iv':'q 6-8 hr','dexa-iv':'single','dexa-tab':'qd','pred-tab':'qd-qid','pred-susp':'qd-qid',
   // Anti-epileptic
@@ -3444,31 +3515,31 @@ const drugIntervals = {
   'penV-syr':'q 8 hr','penV-tab':'q 8 hr',
   'clox-syr':'q 6 hr','clox-cap-250':'q 6 hr','clox-cap-500':'q 6 hr',
   'diclox-syr':'q 6 hr','diclox-cap-250':'q 6 hr','diclox-cap-500':'q 6 hr',
-  'amox-syr-125':'q 12 hr','amox-syr-250':'q 12 hr','amox-cap':'q 6-8 hr',
-  'augm-syr':'q 12 hr','augm-es':'q 12 hr','augm-tab':'q 12 hr','augm-iv-06':'q 8 hr','augm-iv-12':'q 8 hr',
+  'amox-syr-125':'q 8-24 hr','amox-syr-250':'q 8-24 hr','amox-cap':'q 8-24 hr',
+  'augm-syr':'q 12 hr','augm-es':'q 12 hr','augm-tab':'q 12 hr','augm-iv-06':'q 6-8 hr','augm-iv-12':'q 6-8 hr',
   // Cephalosporins
-  'cephal-syr':'q 6 hr','cephal-cap-250':'q 6-8 hr','cephal-cap-500':'q 6-8 hr',
-  'cefacl-syr-125':'q 12 hr','cefacl-syr-250':'q 12 hr','cefacl-tab':'q 8-12 hr',
-  'cefdin-syr':'q 12 hr','cefdin-cap':'q 12-24 hr',
-  'cefix-syr':'q 12 hr','cefix-cap':'q 12 hr',
+  'cephal-syr':'q 6-8 hr','cephal-cap-250':'q 6-8 hr','cephal-cap-500':'q 6-8 hr',
+  'cefacl-syr-125':'q 8-12 hr','cefacl-syr-250':'q 8-12 hr','cefacl-tab':'q 8-12 hr',
+  'cefdin-syr':'q 12-24 hr','cefdin-cap':'q 12-24 hr',
+  'cefix-syr':'q 12-24 hr','cefix-cap':'q 12-24 hr',
   // Macrolides
-  'eryth-syr':'q 6 hr','eryth-cap':'q 6-8 hr',
+  'eryth-syr':'q 6-8 hr','eryth-cap':'q 6-8 hr',
   'azith-syr':'q 24 hr','azith-cap':'q 24 hr',
   'clari-syr':'q 12 hr','clari-tab-250':'q 12 hr','clari-tab-500':'q 12 hr',
   // Lincosamides
-  'clinda-iv':'q 8 hr','clinda-cap-150':'q 6-8 hr','clinda-cap-300':'q 6-8 hr',
+  'clinda-iv':'q 6-8 hr','clinda-cap-150':'q 6-8 hr','clinda-cap-300':'q 6-8 hr',
   'salb-tab':'q 4-6 hr',
   // Sulfonamides
-  'cotri-syr':'q 12 hr','cotri-tab':'q 12 hr',
+  'cotri-syr':'q 12-24 hr','cotri-tab':'q 12-24 hr',
   // Quinolones
   'cipro-tab-250':'q 12 hr','cipro-tab-500':'q 12 hr',
   'norflox-tab-100':'q 12 hr','norflox-tab-200':'q 12 hr','norflox-tab-400':'q 12 hr',
   // Others
   'metro-iv':'q 8 hr','metro-syr':'q 8 hr','metro-tab-200':'q 8 hr','metro-tab-500':'q 8 hr',
-  'doxy-cap':'q 12 hr',
+  'doxy-cap':'q 12-24 hr',
   // Antivirals
-  'osel-30':'q 12 hr','osel-45':'q 12 hr','osel-75':'q 12 hr',
-  'acy-iv':'q 8 hr','acy-tab-200':'qid','acy-tab-400':'qid','acy-tab-800':'qid','acy-susp':'qid',
+  'osel-30':'q 12-24 hr','osel-45':'q 12-24 hr','osel-75':'q 12-24 hr',
+  'acy-iv':'q 8 hr','acy-tab-200':'bid-5x','acy-tab-400':'bid-5x','acy-tab-800':'bid-5x','acy-susp':'bid-5x',
 };
 
 function intervalToOptions(iv) {
@@ -3478,6 +3549,7 @@ function intervalToOptions(iv) {
   if (s === 'q 4-6 hr') return [{label:'q4hr (6x)', value:6},{label:'q6hr (4x)', value:4}];
   if (s === 'q 6-8 hr') return [{label:'q6hr (4x)', value:4},{label:'q8hr (3x)', value:3}];
   if (s === 'q 8-12 hr' || s === 'q 8-12hr') return [{label:'q8hr (3x)', value:3},{label:'q12hr (2x)', value:2}];
+  if (s === 'q 8-24 hr') return [{label:'q8hr (3x)', value:3},{label:'q12hr (2x)', value:2},{label:'q24hr (1x)', value:1}];
   if (s === 'q 12-24 hr') return [{label:'q12hr (2x)', value:2},{label:'q24hr (1x)', value:1}];
   if (s === 'bid-qid') return [{label:'bid (2x)', value:2},{label:'tid (3x)', value:3},{label:'qid (4x)', value:4}];
   if (s === 'qd-qid') return [{label:'qd (1x)', value:1},{label:'bid (2x)', value:2},{label:'tid (3x)', value:3},{label:'qid (4x)', value:4}];
@@ -3491,6 +3563,7 @@ function intervalToOptions(iv) {
   if (s === 'bid-tid') return [{label:'bid (2x)', value:2},{label:'tid (3x)', value:3}];
   if (s === 'single' || s === 'prn') return [{label:'prn (1x)', value:1}];
   if (s.includes('tid-5x')) return [{label:'tid (3x)', value:3},{label:'qid (4x)', value:4},{label:'5x/d', value:5}];
+  if (s === 'bid-5x') return [{label:'qid (4x)', value:4},{label:'5x/d', value:5},{label:'tid (3x)', value:3},{label:'bid (2x)', value:2}];
   return [{label:'3 ครั้ง', value:3}];
 }
 
