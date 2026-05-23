@@ -1157,14 +1157,24 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <h3>V.5</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
   <ul>
-    <li><span style="color:#ffa726;">[2026/05/03]</span> Paracetamol/Ibuprofen (PRN per-dose): เพิ่ม field maxDayMk (90/40 mk/d) → Safe-range แสดง MAX ceiling ตาม freq เช่น "MAX 90 mk/d → ≤ 6.3 mL/dose @ q4hr", calc warn 'high'/'danger' เมื่อ dose × freq เกิน MAX</li>
-    <li><span style="color:#ffa726;">[2026/05/03]</span> Reverse calc interval-aware: เปลี่ยน interval แล้ว Safe-range + status (OK/low/high) อัปเดตตาม freq แบบ real-time. Display ใหม่: "ครั้งละ X-Y mL/dose @ qXhr | รวม/วัน Z mL"</li>
-    <li><span style="color:#ffa726;">[2026/05/03]</span> แปลงยา ATB เป็น daily-dose semantics (minD/maxD = mg/kg/day): Amox 25-100, Augmentin 25-45/ES 80-100/IV 90-120, Cephalexin 25-100, Cefaclor 20-40, Cefdinir 14, Cefixime 8, Erythromycin 30-50, Clindamycin IV 25-40/PO 10-25, Cotrimoxazole 8-12, Doxycycline 2-5, Oseltamivir 4-8, Acyclovir 40-80 — รองรับการเปลี่ยน interval</li>
-    <li><span style="color:#ffa726;">[2026/05/03]</span> Fix bug: reverseCalc daily-branch เดิมคืน 'ok' ตลอด — แก้ให้คำนวณ daily mgPerKg = mgPerKg × freq เทียบกับ minD/maxD จริง</li>
-    <li><span style="color:#ffa726;">[2026/05/03]</span> Acyclovir interval default = qid (HSV/VZV tx) แทน bid; เรียง qid → 5x/d → tid → bid</li>
-    <li><span style="color:#ffa726;">[2026/05/03]</span> Audit interval ทุกยา: Augmentin IV q6-8hr, Cephalexin syr q6-8hr, Cefaclor syr q8-12hr, Cefdinir/Cefixime q12-24hr, Erythromycin syr q6-8hr, Clindamycin IV q6-8hr, Cotrimoxazole/Doxycycline/Oseltamivir q12-24hr, Acyclovir tab/susp bid-5x (covers HSV px→Zoster), Salbutamol syr bid-qid, Bromhexine/Carbocysteine bid-tid, Levodropropizine q6-8hr, Lactulose q12-24hr</li>
-    <li><span style="color:#ffa726;">[2026/05/03]</span> Amoxicillin (syr 125/250 + cap): interval เป็น q 8-24 hr → เลือก q8/q12/q24 ครอบคลุม Mild/AOM/GAS/UTI px (เดิม syr=q12 อย่างเดียว, cap=q6-8 ผิด)</li>
-    <li><span style="color:#ffa726;">[2026/05/03]</span> Reverse tab: ย้าย Interval ขึ้นไปแถวเดียวกับ ml/mg (มีผลต่อ safe-range สำหรับ daily-dose drugs) + interval onchange เรียก reverseCalc ใหม่ด้วย (เดิมเรียกแค่ updateDispense)</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Fix: Search highlight ใน Dose tab ครอบแถวไม่ครบสำหรับยา multi-prep (GG/Acyclovir/Paracetamol) — เพิ่ม group-by-name: ถ้าแถวใดของยาเดียวกัน match (เช่นค้น "Guaifenesin" เจอแถว 1) → highlight ทุกแถวในกลุ่มเดียวกัน (50/100 mg/5 mL)</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> GG syrup (Guaifenesin): +prep 100 mg/5 mL — ใช้ autoByAge + fixedMg ชุดเดียวกับ 50mg/5mL (dose mg เท่ากัน แต่ mL ครึ่งหนึ่ง) ทั้ง Dose tab + Reverse</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Fix: Buscopan/Morphine หาไม่เจอใน search — เพิ่ม Hyoscine butylbromide เข้า Dose tab (section Antispasmodic ใหม่ 3 prep), เพิ่ม Morphine 4 prep (inj/syr/SR tab/SR cap) เข้า Dose tab section Procedural Sedation + เพิ่ม Buscopan/Hyoscine/Morphine/Kapanol เข้า autocomplete allDrugs</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: +Hyoscine butylbromide (Buscopan) — antispasmodic 3 prep (syr 5mg/5mL, tab 10mg, inj 20mg/mL) × 2 indications (GI/GU spasm+IBS / Bowel colic palliative) + byAge fixed-dose ตามอายุ (6-11ปี/12-17ปี) + ทารก palliative weight-based 0.3-0.5mk + maxDay/maxDose + anticholinergic contraindications</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: +Morphine 4 prep (inj 10mg/mL, syr 10mg/5mL GPO, SR tab 10mg, SR cap 20mg Kapanol) — Acute pain IV/IM/SC byAge NB/Children/Adult, Acute pain Oral, Chronic pain SR, Cont IV infusion, +safety warning + renal adjustment</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: Midazolam IV ขยาย indications — Sedation Conscious (byAge NB/Inf/Adult), Status epilepticus refractory (loading + cont), Pre-op IM (MAX 10mg), Pre-op IV (byAge 6mo/6yr/12yr ตาม MAX total), Acute seizure Buccal (0.2-0.5mk MAX 10mg) + alias Dormicum</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: Fentanyl ขยาย indications — Acute pain Opioid-naïve (byAge NB/Inf/Children/Adolescents/Adult), ET intubation (1-5 mcg/kg), Cont analgesia/sedation (mcg/kg/hr) + renal adjustment ครบทุก dialysis modality</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: Chloral hydrate note ครอบคลุม Sedation/Pre-EEG/Pre-procedure/Hypnotic + Adult + Renal warning</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Reverse Note: ยาที่มี indications + drug.note (เช่น Morphine ⚠️ Opioid) จะแสดง safety warning เป็น box สีแดงด้านบน</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Interval pattern ใหม่: q 2-4 hr (q2/q3/q4), q 3-4 hr — รองรับยา narcotic titration</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Paracetamol/Ibuprofen (PRN per-dose): เพิ่ม field maxDayMk (90/40 mk/d) → Safe-range แสดง MAX ceiling ตาม freq เช่น "MAX 90 mk/d → ≤ 6.3 mL/dose @ q4hr", calc warn 'high'/'danger' เมื่อ dose × freq เกิน MAX</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Reverse calc interval-aware: เปลี่ยน interval แล้ว Safe-range + status (OK/low/high) อัปเดตตาม freq แบบ real-time. Display ใหม่: "ครั้งละ X-Y mL/dose @ qXhr | รวม/วัน Z mL"</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> แปลงยา ATB เป็น daily-dose semantics (minD/maxD = mg/kg/day): Amox 25-100, Augmentin 25-45/ES 80-100/IV 90-120, Cephalexin 25-100, Cefaclor 20-40, Cefdinir 14, Cefixime 8, Erythromycin 30-50, Clindamycin IV 25-40/PO 10-25, Cotrimoxazole 8-12, Doxycycline 2-5, Oseltamivir 4-8, Acyclovir 40-80 — รองรับการเปลี่ยน interval</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Fix bug: reverseCalc daily-branch เดิมคืน 'ok' ตลอด — แก้ให้คำนวณ daily mgPerKg = mgPerKg × freq เทียบกับ minD/maxD จริง</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Acyclovir interval default = qid (HSV/VZV tx) แทน bid; เรียง qid → 5x/d → tid → bid</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Audit interval ทุกยา: Augmentin IV q6-8hr, Cephalexin syr q6-8hr, Cefaclor syr q8-12hr, Cefdinir/Cefixime q12-24hr, Erythromycin syr q6-8hr, Clindamycin IV q6-8hr, Cotrimoxazole/Doxycycline/Oseltamivir q12-24hr, Acyclovir tab/susp bid-5x (covers HSV px→Zoster), Salbutamol syr bid-qid, Bromhexine/Carbocysteine bid-tid, Levodropropizine q6-8hr, Lactulose q12-24hr</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Amoxicillin (syr 125/250 + cap): interval เป็น q 8-24 hr → เลือก q8/q12/q24 ครอบคลุม Mild/AOM/GAS/UTI px (เดิม syr=q12 อย่างเดียว, cap=q6-8 ผิด)</li>
+    <li><span style="color:#ffa726;">[2026/05/14]</span> Reverse tab: ย้าย Interval ขึ้นไปแถวเดียวกับ ml/mg (มีผลต่อ safe-range สำหรับ daily-dose drugs) + interval onchange เรียก reverseCalc ใหม่ด้วย (เดิมเรียกแค่ updateDispense)</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH: Dexamethasone 11 indications (Croup/Asthma/Airway edema/Anaphylaxis/Anti-inflam/Meningitis/Cerebral edema/COVID-19/BPD DART/Antiemetic/Physiologic) + byAge + maxDose + tab 0.5mg</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> รายการยา รพ. — checkbox modal + localStorage persist + Reverse tab indicator "ไม่มีใน รพ."</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH audit ทุกยา: Salbutamol +Exercise px/Hyperkalemia, PGS +BW interval/Renal/GBS, Prednisolone +Nephrotic relapse/Adult MAX, Amox/Clav +Renal, Acetylcysteine fix tid-qid, Montelukast +Urticaria, Amoxicillin +Tonsillopharyngitis</li>
@@ -2068,6 +2078,13 @@ const drugRegistry = [
       {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:150, maxDay:1200, iv:'q 4 hr (max 6x/d)', note:'100-200mg q4hr MAX1.2g/d'},
       {label:'≥12yr', minMo:144, maxMo:999, fixedMg:300, maxDay:2400, iv:'q 4 hr (max 6x/d)', note:'200-400mg q4hr MAX2.4g/d'}
     ]},
+  {id:'gg-syr-100', name:'GG syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin',
+    autoByAge:true, indications:[
+      {label:'<2yr', minMo:0, maxMo:23, minD:2, maxD:2, iv:'q 4 hr (max 6x/d)', note:'12mk/d÷6 MAX600mg/d'},
+      {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:75, maxDay:600, iv:'q 4 hr (max 6x/d)', note:'50-100mg q4hr MAX600mg/d'},
+      {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:150, maxDay:1200, iv:'q 4 hr (max 6x/d)', note:'100-200mg q4hr MAX1.2g/d'},
+      {label:'≥12yr', minMo:144, maxMo:999, fixedMg:300, maxDay:2400, iv:'q 4 hr (max 6x/d)', note:'200-400mg q4hr MAX2.4g/d'}
+    ]},
   {id:'levo-syr', name:'Levodropropizine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Antitussive'},
   // Decongestant
   {id:'pseudo-syr', name:'Pseudoephedrine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Decongestant'},
@@ -2097,6 +2114,52 @@ const drugRegistry = [
   {id:'rani-iv', name:'Ranitidine IV', prep:'50 mg/amp', concMg:50, concVol:1, unit:'mL', minD:1, maxD:2, cat:'Antacid'},
   {id:'rani-tab', name:'Ranitidine tab', prep:'150 mg/tab', concMg:150, concVol:1, unit:'tab', minD:1, maxD:2, cat:'Antacid'},
   {id:'famo-tab', name:'Famotidine tab', prep:'20 mg/tab', concMg:20, concVol:1, unit:'tab', minD:0.5, maxD:0.5, cat:'Antacid'},
+  // Antispasmodic — Hyoscine butylbromide (Buscopan), QSNICH/BNF-c
+  {id:'buscopan-syr', name:'Hyoscine butylbromide syr', prep:'5 mg/5 mL (30 mL)', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Others', alias:'Buscopan,Hyoscine,Scopolamine butylbromide',
+    indications:[
+      {label:'GI/GU spasm, IBS (Oral)', minD:0, maxD:0, iv:'tid', note:'ใช้ใน ≥6 ปี', byAge:[
+        {minMo:72, maxMo:143, fixedMg:10, iv:'tid', note:'6-11 ปี: 10 mg วันละ 3 ครั้ง'},
+        {minMo:144, maxMo:9999, fixedMg:20, iv:'qid', note:'12-17 ปี: 20 mg วันละ 4 ครั้ง'}
+      ]},
+      {label:'Bowel colic palliative (Oral)', minD:0, maxD:0, iv:'tid-qid', note:'ดู note ตามอายุ', byAge:[
+        {minMo:1, maxMo:12, minD:0.3, maxD:0.5, maxDose:5, iv:'tid-qid', note:'1-12 เดือน: 0.3-0.5 mk/dose วันละ 3-4 ครั้ง (Max 5 mg/dose)'},
+        {minMo:24, maxMo:59, fixedMg:5, iv:'tid-qid', note:'2-4 ปี: 5 mg วันละ 3-4 ครั้ง'},
+        {minMo:60, maxMo:143, fixedMg:10, iv:'tid-qid', note:'5-11 ปี: 10 mg วันละ 3-4 ครั้ง'},
+        {minMo:144, maxMo:9999, minD:0, maxD:0, iv:'tid-qid', note:'12-17 ปี: 10-20 mg วันละ 3-4 ครั้ง'}
+      ]}
+    ],
+    note:'⚠️ Anticholinergic — ห้ามใน narrow-angle glaucoma, myasthenia gravis, GI/urinary obstruction, megacolon, tachycardia'
+  },
+  {id:'buscopan-tab', name:'Hyoscine butylbromide tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Others', alias:'Buscopan,Hyoscine,Scopolamine butylbromide',
+    indications:[
+      {label:'GI/GU spasm, IBS (Oral)', minD:0, maxD:0, iv:'tid', note:'ใช้ใน ≥6 ปี', byAge:[
+        {minMo:72, maxMo:143, fixedMg:10, iv:'tid', note:'6-11 ปี: 10 mg วันละ 3 ครั้ง'},
+        {minMo:144, maxMo:9999, fixedMg:20, iv:'qid', note:'12-17 ปี: 20 mg วันละ 4 ครั้ง'}
+      ]},
+      {label:'Bowel colic palliative (Oral)', minD:0, maxD:0, iv:'tid-qid', note:'ดู note ตามอายุ', byAge:[
+        {minMo:1, maxMo:12, minD:0.3, maxD:0.5, maxDose:5, iv:'tid-qid', note:'1-12 เดือน: 0.3-0.5 mk/dose วันละ 3-4 ครั้ง (Max 5 mg/dose)'},
+        {minMo:24, maxMo:59, fixedMg:5, iv:'tid-qid', note:'2-4 ปี: 5 mg วันละ 3-4 ครั้ง'},
+        {minMo:60, maxMo:143, fixedMg:10, iv:'tid-qid', note:'5-11 ปี: 10 mg วันละ 3-4 ครั้ง'},
+        {minMo:144, maxMo:9999, minD:0, maxD:0, iv:'tid-qid', note:'12-17 ปี: 10-20 mg วันละ 3-4 ครั้ง'}
+      ]}
+    ],
+    note:'⚠️ Anticholinergic — ห้ามใน narrow-angle glaucoma, myasthenia gravis, GI/urinary obstruction, megacolon, tachycardia'
+  },
+  {id:'buscopan-inj', name:'Hyoscine butylbromide inj', prep:'20 mg/mL (1 mL amp)', concMg:20, concVol:1, unit:'mL', minD:0, maxD:0, cat:'Others', alias:'Buscopan,Hyoscine,Scopolamine butylbromide',
+    indications:[
+      {label:'GI/GU spasm, IBS (IV/IM)', minD:0, maxD:0, iv:'prn', note:'ใช้ใน ≥2 ปี', byAge:[
+        {minMo:24, maxMo:71, fixedMg:5, maxDay:15, iv:'prn', note:'2-5 ปี: 5 mg — หากไม่ดีขึ้น/ทำส่องกล้อง อาจซ้ำ 5 mg ห่างจากครั้งแรก 30 นาที (Max 15 mg/day)'},
+        {minMo:72, maxMo:143, minD:0, maxD:0, iv:'prn', note:'6-11 ปี: 5-10 mg — อาจซ้ำ 5-10 mg ห่าง 30 นาที (Max 30 mg/day)'},
+        {minMo:144, maxMo:9999, fixedMg:20, maxDay:80, iv:'prn', note:'12-17 ปี: 20 mg — อาจซ้ำ 20 mg ห่าง 30 นาที (Max 80 mg/day)'}
+      ]},
+      {label:'Bowel colic palliative (IV/IM)', minD:0, maxD:0, iv:'tid-qid', note:'ดู note ตามอายุ', byAge:[
+        {minMo:1, maxMo:59, minD:0.3, maxD:0.5, maxDose:5, iv:'tid-qid', note:'1 เดือน-4 ปี: 0.3-0.5 mk/dose วันละ 3-4 ครั้ง (Max 5 mg/dose)'},
+        {minMo:60, maxMo:143, minD:0, maxD:0, iv:'tid-qid', note:'5-11 ปี: 5-10 mg วันละ 3-4 ครั้ง'},
+        {minMo:144, maxMo:9999, minD:0, maxD:0, iv:'tid-qid', note:'12-17 ปี: 5-10 mg วันละ 3-4 ครั้ง'}
+      ]}
+    ],
+    note:'⚠️ Anticholinergic — ห้ามใน narrow-angle glaucoma, myasthenia gravis, GI/urinary obstruction, megacolon, tachycardia<br>IV ต้องฉีดช้าๆ (เสี่ยง tachycardia/hypotension)'
+  },
   // Laxatives
   {id:'lactu-syr', name:'Lactulose', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:1, maxD:3, cat:'Laxatives'},
   // Steroid
@@ -2194,11 +2257,87 @@ const drugRegistry = [
   {id:'leve-maint-250', name:'Levetiracetam maint', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:10, maxD:30, cat:'Anti-epileptic'},
   {id:'leve-maint-500', name:'Levetiracetam maint', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:30, cat:'Anti-epileptic'},
   // Procedural sedation
-  {id:'chloral-250', name:'Chloral hydrate', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation'},
-  {id:'chloral-500', name:'Chloral hydrate', prep:'500 mg/5 mL', concMg:500, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation'},
-  {id:'midaz-iv', name:'Midazolam IV', prep:'5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.05, maxD:0.1, cat:'Sedation'},
-  {id:'midaz-im', name:'Midazolam IM', prep:'5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.1, maxD:0.1, cat:'Sedation'},
-  {id:'fentanyl', name:'Fentanyl', prep:'50 mcg/mL', concMg:0.05, concVol:1, unit:'mL', minD:0.0005, maxD:0.0015, cat:'Sedation'},
+  {id:'chloral-250', name:'Chloral hydrate', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation', note:'QSNICH: 25-50 mk q6-8hr MAX 500 mg/dose<br>Pre-EEG/procedure: 25-50 mk (อาจซ้ำใน 30 นาที, total MAX 100-120 mk)<br>Hypnotic: 50 mk MAX 1 g (Infants) / 2 g (Children)<br>NB: 25-75 mk/dose ระวังพิษสะสม<br>Adult Sedation: 250 mg tid | Hypnotic: 500-1000 mg hs (MAX 2 g/24hr)<br>Renal CrCl<50: หลีกเลี่ยง'},
+  {id:'chloral-500', name:'Chloral hydrate', prep:'500 mg/5 mL', concMg:500, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation', note:'QSNICH: 25-50 mk q6-8hr MAX 500 mg/dose<br>Pre-EEG/procedure: 25-50 mk (อาจซ้ำใน 30 นาที, total MAX 100-120 mk)<br>Hypnotic: 50 mk MAX 1 g (Infants) / 2 g (Children)<br>NB: 25-75 mk/dose ระวังพิษสะสม<br>Adult Sedation: 250 mg tid | Hypnotic: 500-1000 mg hs (MAX 2 g/24hr)<br>Renal CrCl<50: หลีกเลี่ยง'},
+  {id:'midaz-iv', name:'Midazolam IV', prep:'5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.05, maxD:0.2, cat:'Sedation', alias:'Dormicum',
+    indications:[
+      {label:'Sedation (Conscious) IV', minD:0.05, maxD:0.1, iv:'titrate',
+        byAge:[
+          {maxMo:0, minD:0.05, maxD:0.15, iv:'q 2-4 hr', note:'NB: IV/IM 0.05-0.15 mk q2-4hr<br>Cont: 0.01-0.06 mk/hr<br>Intranasal: 0.2-0.3 mk<br>Sublingual: 0.2 mk'},
+          {minMo:1, maxMo:9999, minD:0.05, maxD:0.1, iv:'titrate', note:'IV titrate ช้าๆ รอ 2 นาที ก่อนปรับ<br>ห้ามเกิน 2.5 mg ใน 2 นาที (total 2.5-5 mg)<br>Adult Conscious sedation IV titrate; Cont 0.02-0.1 mk/hr (1-7 mg/hr)'}
+        ]
+      },
+      {label:'Status epilepticus refractory', minD:0.2, maxD:0.2, iv:'loading + cont', note:'Loading 0.2 mk IV → Cont 0.05-2 mk/hr (0.83-33.2 mcg/kg/min)<br>ปรับครั้งละ 1 mcg/kg/min ทุก 15 นาที<br>Breakthrough seizure: IV bolus 0.1-0.2 mk + เพิ่ม rate'},
+      {label:'Pre-op / Procedure IM', minD:0.1, maxD:0.15, iv:'single 30-60 min pre', maxDose:10, note:'IM Infants-Children-Adolescents: 0.1-0.15 mk ก่อนหัตถการ 30-60 นาที (อาจถึง 0.5 mk)<br>MAX 10 mg/dose<br>Adult IM Pre-op: 0.07-0.08 mk (~5 mg) ก่อน 30-60 นาที'},
+      {label:'Pre-op / Procedure IV', minD:0.025, maxD:0.15, iv:'single', daily:false,
+        byAge:[
+          {maxMo:5, minD:0, maxD:0, note:'<6 เดือน: ขนาดยังไม่แน่ชัด เสี่ยง airway obstruction/hypoventilation สูง — เพิ่มทีละน้อยอย่างระวัง'},
+          {minMo:6, maxMo:59, minD:0.05, maxD:0.15, maxDose:6, note:'6 เดือน - 5 ปี: 0.05-0.15 mk ค่อยๆ เพิ่ม อาจถึง 0.6 mk (MAX total 6 mg)'},
+          {minMo:60, maxMo:143, minD:0.025, maxD:0.05, maxDose:10, note:'6-12 ปี: 0.025-0.05 mk ค่อยๆ เพิ่ม อาจถึง 0.4 mk (MAX total 10 mg)'},
+          {minMo:144, maxMo:9999, minD:0.025, maxD:0.05, maxDose:10, note:'12-16 ปี: ใช้เหมือน Adult (MAX total 10 mg)<br>Adult: titrate 0.5-4 mg, total 2.5-5 mg ใน 2 นาที'}
+        ]
+      },
+      {label:'Acute seizure Buccal', minD:0.2, maxD:0.5, iv:'single', maxDose:10, note:'Buccal route (Infants ≥3 mo, Children, Adolescents): 0.2-0.5 mk MAX 10 mg/dose'}
+    ],
+    note:'⚠️ Benzodiazepine — Resp depression, สำรอง Flumazenil<br>รูปแบบ: 5 mg/1 mL หรือ 15 mg/3 mL (Dormicum)'
+  },
+  {id:'midaz-im', name:'Midazolam IM', prep:'5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.1, maxD:0.15, cat:'Sedation', alias:'Dormicum', note:'Pre-op IM 0.1-0.15 mk (อาจถึง 0.5 mk) MAX 10 mg/dose<br>Adult Pre-op: 0.07-0.08 mk ก่อน 30-60 นาที'},
+  {id:'morphine-inj', name:'Morphine inj', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:0.05, maxD:0.2, cat:'Sedation', alias:'MO,Morphine',
+    indications:[
+      {label:'Acute pain IV/IM/SC', minD:0.05, maxD:0.2, iv:'q 2-4 hr',
+        byAge:[
+          {maxMo:0, minD:0.05, maxD:0.1, iv:'q 4-6 hr', maxDose:0.3, note:'NB: 0.05 mk q4-6hr (MAX 0.1 mk/dose)<br>Cont IV: 0.01 mk/hr (MAX 0.015-0.02 mk/hr)'},
+          {minMo:1, maxMo:9999, minD:0.05, maxD:0.2, iv:'q 2-4 hr', note:'<50 kg: เริ่ม 0.05 mk q3-4hr → titrate 0.1-0.2 mk q2-4hr (initial max 0.3 mk)<br>Usual MAX/dose: Infants 2mg | 1-6yr 4mg | 7-12yr 8mg | Adolescents 10mg<br>≥50 kg: 5-8 mg q2-4hr<br>Adult IM/IV/SC: 2.5-20 mg q2-6hr<br>Cont IV Adult: 0.8-10 mg/hr (MAX 80 mg/hr)'}
+        ]
+      },
+      {label:'Acute pain (severe) Cont IV', minD:0.01, maxD:0.04, iv:'cont/hr', note:'Cont IV/SC infusion: เริ่ม 0.01 mk/hr → ปรับ 0.01-0.04 mk/hr (max 0.07 mk/hr)<br>≥50 kg: 1.5 mg/hr<br>Adult: 0.8-10 mg/hr (MAX 80 mg/hr)'}
+    ],
+    note:'⚠️ Opioid — เฝ้าระวัง resp depression, สำรอง Naloxone<br>Renal: CrCl 10-50 → 75%, <10 → 50% ของขนาดปกติ<br>IV→Oral switch: ขนาด × 3'
+  },
+  {id:'morphine-syr', name:'Morphine syr', prep:'10 mg/5 mL (GPO)', concMg:10, concVol:5, unit:'mL', minD:0.2, maxD:0.5, cat:'Sedation', alias:'MO,Morphine',
+    indications:[
+      {label:'Acute pain Oral', minD:0.2, maxD:0.5, iv:'q 3-4 hr', maxDose:0.3, note:'<50 kg: 0.2-0.5 mk q3-4hr (initial max 0.3 mk/dose)<br>≥50 kg: 15-20 mg q3-4hr (initial max 0.3 mk/dose)<br>IV→Oral switch: ขนาด × 3 เพื่อคุม pain'}
+    ],
+    note:'⚠️ Opioid (solution/immediate release) — เฝ้าระวัง resp depression<br>Renal: CrCl 10-50 → 75%, <10 → 50%'
+  },
+  {id:'morphine-tab-sr', name:'Morphine SR tab', prep:'10 mg SR/tab', concMg:10, concVol:1, unit:'tab', minD:0.3, maxD:0.6, cat:'Sedation', alias:'MO,MST,Morphine',
+    indications:[
+      {label:'Chronic pain Oral SR', minD:0.3, maxD:0.6, iv:'q 12 hr', note:'Children: 0.3-0.6 mk q12hr<br>Adult: 15-30 mg q8-12hr<br>⚠️ ห้ามบดเคี้ยว (SR formulation)'}
+    ],
+    note:'⚠️ Opioid SR (sustained release) — ห้ามบดเคี้ยว<br>Resp depression risk<br>Renal: CrCl 10-50 → 75%, <10 → 50%'
+  },
+  {id:'morphine-cap-sr', name:'Morphine SR cap', prep:'20 mg SR/cap (Kapanol)', concMg:20, concVol:1, unit:'cap', minD:0.3, maxD:0.6, cat:'Sedation', alias:'MO,Kapanol,Morphine',
+    indications:[
+      {label:'Chronic pain Oral SR', minD:0.3, maxD:0.6, iv:'q 12 hr', note:'Children: 0.3-0.6 mk q12hr<br>Adult: 15-30 mg q8-12hr<br>⚠️ ห้ามบดเคี้ยว (SR formulation)'}
+    ],
+    note:'⚠️ Opioid SR Kapanol — ห้ามบดเคี้ยว<br>Resp depression risk<br>Renal: CrCl 10-50 → 75%, <10 → 50%'
+  },
+  {id:'fentanyl', name:'Fentanyl', prep:'50 mcg/mL', concMg:0.05, concVol:1, unit:'mL', minD:0.001, maxD:0.002, cat:'Sedation',
+    indications:[
+      {label:'Acute pain (Opioid-naïve) IV', minD:0.001, maxD:0.002, iv:'q 2-4 hr',
+        byAge:[
+          {maxMo:0, minD:0.001, maxD:0.002, iv:'q 2-4 hr', note:'NB: 1-2 mcg/kg/dose slow IV push (ซ้ำ q2-4hr)'},
+          {minMo:1, maxMo:23, minD:0.001, maxD:0.004, iv:'q 2-4 hr', note:'Infants: 1-2 mcg/kg q2-4hr (อาจถึง 4 mcg/kg/dose)'},
+          {minMo:24, maxMo:215, minD:0.001, maxD:0.002, iv:'q 30-60 min', note:'Children <2yr: 1-2 mcg/kg ซ้ำได้ q30-60 นาที<br>Adolescents <18ปี <50kg: 0.5-1 mcg/kg q1-2hr<br>≥50kg: 25-50 mcg q1-2hr'},
+          {minMo:216, maxMo:9999, minD:0.0005, maxD:0.001, iv:'q 1-2 hr', note:'Adult <50kg: 0.5-1 mcg/kg q1-2hr<br>≥50kg: 25-50 mcg q1-2hr'}
+        ]
+      },
+      {label:'ET intubation', minD:0.001, maxD:0.005, iv:'single',
+        byAge:[
+          {maxMo:0, minD:0.001, maxD:0.004, note:'NB: 1-4 mcg/kg/dose slow IV push'},
+          {minMo:1, maxMo:9999, minD:0.001, maxD:0.005, note:'Infants & Children: 1-5 mcg/kg/dose slow IV'}
+        ]
+      },
+      {label:'Cont analgesia / sedation', minD:0.0005, maxD:0.005, iv:'cont mcg/kg/hr',
+        byAge:[
+          {maxMo:0, minD:0.0005, maxD:0.003, note:'NB: bolus 1-2 mcg/kg slow IV → cont 0.5-1 mcg/kg/hr (ปรับ 1-3 mcg/kg/hr)'},
+          {minMo:1, maxMo:215, minD:0.001, maxD:0.005, note:'Infants & Children: bolus 1-2 mcg/kg → cont 1 mcg/kg/hr (ปรับ 1-5 mcg/kg/hr)'},
+          {minMo:216, maxMo:9999, minD:0.0005, maxD:0.002, note:'Adolescents <18ปี ≤50kg: bolus 0.5-2 mcg/kg → cont 0.5-2 mcg/kg/hr<br>>50kg: bolus 25-100 mcg → cont 25-200 mcg/hr'}
+        ]
+      }
+    ],
+    note:'⚠️ Opioid — Resp depression, สำรอง Naloxone<br>Renal: CrCl 10-50→75%, <10→50%, HD→50%, PD→50%, CRRT→75%<br>รูปแบบ: inj 50 mcg/mL in 2 mL, transdermal patch 12/25 mcg/hr'
+  },
   {id:'propofol', name:'Propofol', prep:'10 mg/mL', concMg:10, concVol:1, unit:'mL', minD:1, maxD:1, cat:'Sedation'},
   {id:'keta-iv', name:'Ketamine IV', prep:'50 mg/mL', concMg:50, concVol:1, unit:'mL', minD:1, maxD:1.5, cat:'Sedation'},
   {id:'keta-im', name:'Ketamine IM', prep:'50 mg/mL', concMg:50, concVol:1, unit:'mL', minD:2, maxD:5, cat:'Sedation'},
@@ -2376,10 +2515,12 @@ function renderDose(w, am) {
   const ggDose = ageYr<2?'2 mk/Dose':ageYr<6?'50-100 mg':ageYr<12?'100-200 mg':'200-400 mg';
   const ggMin = ageYr<2?(w*2):null;
   const ggMax = ageYr<2?null:null;
-  const ggMinMl = ageYr<2?((w*2)*5/50):null;
+  const ggMinMl50 = ageYr<2?((w*2)*5/50):null;
+  const ggMinMl100 = ageYr<2?((w*2)*5/100):null;
   const ggMaxMl = null;
   html += makeTable(doseHeaders, [
-    drugRow('GG syrup','(Guaifenesin)','50 mg/5 mL',ggDose,'', ggMin, ggMax, ggMinMl, ggMaxMl, 'q 4 hr (max 6x/d)', '&lt;2yr:12mk/d÷6 MAX600mg/d | 2-&lt;6yr:50-100mg MAX600mg/d | 6-&lt;12yr:100-200mg MAX1.2g/d | &ge;12yr:200-400mg MAX2.4g/d'),
+    drugRow('GG syrup','(Guaifenesin)','50 mg/5 mL',ggDose,'', ggMin, ggMax, ggMinMl50, ggMaxMl, 'q 4 hr (max 6x/d)', '&lt;2yr:12mk/d÷6 MAX600mg/d | 2-&lt;6yr:50-100mg MAX600mg/d | 6-&lt;12yr:100-200mg MAX1.2g/d | &ge;12yr:200-400mg MAX2.4g/d'),
+    drugRow('GG syrup','','100 mg/5 mL','','', null, null, ggMinMl100, ggMaxMl, '', ''),
     drugRow('Levodropropizine','(Levopront)','30 mg/5 mL','1 mk/Dose','10 kg = ½ ช้อนชา bid', w*1, null, (w*1*5)/30, null, 'q 12 hr', 'MAX 60 mg/dose'),
   ]);
 
@@ -2460,6 +2601,17 @@ function renderDose(w, am) {
   antacidRows += '</tbody></table>';
   html += antacidRows;
 
+  // Antispasmodic
+  html += sectionHead('Antispasmodic', 'ยาคลายเกร็ง');
+  const buscoDose = ageYr<6?'≥6 ปี (ดู note)':ageYr<12?'10 mg tid':'20 mg qid';
+  const buscoNote = 'GI/GU spasm, IBS — Oral: 6-11yr 10mg tid | 12-17yr 20mg qid<br>IV/IM: 2-5yr 5mg (MAX15mg/d) | 6-11yr 5-10mg (MAX30mg/d) | 12-17yr 20mg (MAX80mg/d)<br>Bowel colic palliative — Oral 1-12mo / IV 1mo-4yr: 0.3-0.5mk (MAX5mg/dose) | 2-4yr 5mg | 5-11yr 10mg | 12-17yr 10-20mg<br>⚠️ Anticholinergic — ห้ามใน narrow-angle glaucoma, myasthenia gravis, GI/urinary obstruction, megacolon, tachycardia';
+  let buscoRows = `<table style="table-layout:fixed">${doseColgroup}${makeManualTableHead()}<tbody>`;
+  buscoRows += makeRowHtml(drugRow('Hyoscine butylbromide','(Buscopan)','syr 5 mg/5 mL','ตามอายุ',buscoDose, null, null, null, null, 'tid-qid', buscoNote));
+  buscoRows += makeRowHtml(drugRow('Hyoscine butylbromide','(Buscopan)','tab 10 mg','','', null, null, null, null, '', ''));
+  buscoRows += makeRowHtml(drugRow('Hyoscine butylbromide','(Buscopan)','inj 20 mg/mL','','', null, null, null, null, '', ''));
+  buscoRows += '</tbody></table>';
+  html += buscoRows;
+
   // Laxatives
   html += sectionHead('Laxatives', 'ยาระบาย');
   let laxRows = `<table style="table-layout:fixed">${doseColgroup}${makeManualTableHead()}<tbody>`;
@@ -2510,6 +2662,10 @@ function renderDose(w, am) {
     drugRow('Propofol','','10 mg/mL','1 mg/kg','repeat 0.5 q3-5min', w*1, null, (w*1)/10, null, 'IV', ''),
     drugRow('Ketamine IV','','50 mg/mL','1-1.5 mg/kg','', w*1, w*1.5, (w*1)/50, (w*1.5)/50, 'IV', ''),
     drugRow('Ketamine IM','','50 mg/mL','2-5 mg/kg','', w*2, w*5, (w*2)/50, (w*5)/50, 'IM', ''),
+    drugRow('Morphine inj','','10 mg/mL','0.05-0.2 mk/Dose','IV/IM/SC titrate', w*0.05, w*0.2, (w*0.05)/10, (w*0.2)/10, 'q 2-4 hr', '⚠️ Opioid — NB:0.05mk q4-6hr (MAX0.1mk) | &lt;50kg:titrate 0.1-0.2mk q2-4hr | &ge;50kg:5-8mg q2-4hr<br>สำรอง Naloxone | IV&rarr;PO &times;3 | Renal CrCl10-50&rarr;75%,&lt;10&rarr;50%'),
+    drugRow('Morphine syr','(GPO)','10 mg/5 mL','0.2-0.5 mk/Dose','Oral acute pain', w*0.2, w*0.5, (w*0.2*5)/10, (w*0.5*5)/10, 'q 3-4 hr', '&lt;50kg:0.2-0.5mk | &ge;50kg:15-20mg q3-4hr (initial max 0.3mk/dose)'),
+    drugRow('Morphine SR','','tab 10 mg/tab','0.3-0.6 mk/Dose','Chronic pain — ห้ามบดเคี้ยว', w*0.3, w*0.6, (w*0.3)/10, (w*0.6)/10, 'q 12 hr', 'Chronic pain SR | Adult 15-30mg q8-12hr | ⚠️ Opioid — สำรอง Naloxone'),
+    drugRow('Morphine SR','(Kapanol)','cap 20 mg/cap','','', null, null, (w*0.3)/20, (w*0.6)/20, '', ''),
   ]);
 
   document.getElementById('tab-dose').innerHTML = '<div class="table-scroll-wrap">' + html + '</div>';
@@ -3181,7 +3337,7 @@ function getCurrentFreq(drugId) {
   return sel ? (parseInt(sel.value) || 1) : 1;
 }
 function freqToLabel(freq) {
-  return ({6:'q4hr',5:'5x/d',4:'q6hr',3:'q8hr',2:'q12hr',1:'qd'})[freq] || freq+'x/d';
+  return ({12:'q2hr',8:'q3hr',6:'q4hr',5:'5x/d',4:'q6hr',3:'q8hr',2:'q12hr',1:'qd'})[freq] || freq+'x/d';
 }
 // Render Safe-range HTML for a drug. d = resolved indication or drug entry. freq = user-selected dosing frequency.
 function renderSafeRangeHTML(drug, d, w, freq) {
@@ -3373,6 +3529,10 @@ function renderReverseDose() {
               }
               return '<div class="ind-line' + (i===activeIdx?' ind-active':'') + '" data-ind="' + i + '"><b>' + ind.label + '</b>: ' + doseText + (ind.iv ? ' (' + ind.iv + ')' : '') + (ind.note ? ' — ' + ind.note : '') + '</div>';
             }).join('');
+            // Prepend general drug note (safety warning etc.) as highlighted box if present
+            if (drug.note) {
+              noteContent = '<div style="padding:5px 8px;background:rgba(239,68,68,0.08);border-left:3px solid #ef4444;margin-bottom:6px;border-radius:4px;font-size:0.7rem;">'+drug.note+'</div>' + noteContent;
+            }
           } else if (drug.note) {
             noteContent = drug.note;
           }
@@ -3493,7 +3653,7 @@ const drugIntervals = {
   'carbo-syr-250':'bid-tid','carbo-syr-100':'bid-tid','carbo-tab':'bid-tid','carbo-lys':'bid',
   'acetyl-100':'bid-qid','acetyl-200':'bid-qid','acetyl-600':'bid-qid',
   // Antitussive
-  'gg-syr':'q 4 hr','levo-syr':'q 6-8 hr',
+  'gg-syr':'q 4 hr','gg-syr-100':'q 4 hr','levo-syr':'q 6-8 hr',
   // Decongestant
   'pseudo-syr':'q 8 hr','pseudo-tab':'q 8 hr',
   // Asthma
@@ -3505,6 +3665,7 @@ const drugIntervals = {
   // Antacid
   'omep-iv':'q 24 hr','omep-tab':'q 24 hr','rani-iv':'q 12 hr','rani-tab':'q 12 hr','famo-tab':'q 12-24 hr',
   'lactu-syr':'q 12-24 hr',
+  'buscopan-syr':'tid','buscopan-tab':'tid','buscopan-inj':'tid-qid',
   // Steroid
   'hydro-iv':'q 6-8 hr','dexa-iv':'single','dexa-tab':'qd','pred-tab':'qd-qid','pred-susp':'qd-qid',
   // Anti-epileptic
@@ -3540,12 +3701,19 @@ const drugIntervals = {
   // Antivirals
   'osel-30':'q 12-24 hr','osel-45':'q 12-24 hr','osel-75':'q 12-24 hr',
   'acy-iv':'q 8 hr','acy-tab-200':'bid-5x','acy-tab-400':'bid-5x','acy-tab-800':'bid-5x','acy-susp':'bid-5x',
+  // Sedation / Analgesia
+  'chloral-250':'q 6-8 hr','chloral-500':'q 6-8 hr',
+  'midaz-iv':'q 2-4 hr','midaz-im':'single',
+  'morphine-inj':'q 2-4 hr','morphine-syr':'q 3-4 hr','morphine-tab-sr':'q 12 hr','morphine-cap-sr':'q 12 hr',
+  'fentanyl':'q 2-4 hr',
 };
 
 function intervalToOptions(iv) {
   if (!iv) return [{label:'3 ครั้ง', value:3}];
   const s = iv.toLowerCase();
   // Range intervals — give choices
+  if (s === 'q 2-4 hr') return [{label:'q2hr (12x)', value:12},{label:'q3hr (8x)', value:8},{label:'q4hr (6x)', value:6}];
+  if (s === 'q 3-4 hr') return [{label:'q3hr (8x)', value:8},{label:'q4hr (6x)', value:6}];
   if (s === 'q 4-6 hr') return [{label:'q4hr (6x)', value:6},{label:'q6hr (4x)', value:4}];
   if (s === 'q 6-8 hr') return [{label:'q6hr (4x)', value:4},{label:'q8hr (3x)', value:3}];
   if (s === 'q 8-12 hr' || s === 'q 8-12hr') return [{label:'q8hr (3x)', value:3},{label:'q12hr (2x)', value:2}];
@@ -3561,6 +3729,7 @@ function intervalToOptions(iv) {
   if (s === 'q 24 hr' || s === 'od' || s === 'qd') return [{label:'qd (1x)', value:1}];
   if (s === 'qid') return [{label:'qid (4x)', value:4}];
   if (s === 'bid-tid') return [{label:'bid (2x)', value:2},{label:'tid (3x)', value:3}];
+  if (s === 'tid-qid') return [{label:'tid (3x)', value:3},{label:'qid (4x)', value:4}];
   if (s === 'single' || s === 'prn') return [{label:'prn (1x)', value:1}];
   if (s.includes('tid-5x')) return [{label:'tid (3x)', value:3},{label:'qid (4x)', value:4},{label:'5x/d', value:5}];
   if (s === 'bid-5x') return [{label:'qid (4x)', value:4},{label:'5x/d', value:5},{label:'tid (3x)', value:3},{label:'bid (2x)', value:2}];
@@ -3878,6 +4047,8 @@ const allDrugs = [
   'Omeprazole','Ranitidine','Famotidine','Fomotidine','Alum milk',
   'Aluminium','Magnesium Hydroxide',
   'Simethicone','Air-X',
+  // Antispasmodic
+  'Hyoscine butylbromide','Hyoscine','Buscopan','Scopolamine butylbromide',
   // Laxatives
   'Lactulose','Hepalac','Duphalac','Milk of Magnesia',
   // Steroid
@@ -3886,7 +4057,7 @@ const allDrugs = [
   'Diazepam','Midazolam','Phenobarbital','Phenytoin',
   'Valproate','Sodium valproate','Levetiracetam',
   // Procedural sedation
-  'Chloral hydrate','Fentanyl','Propofol','Ketamine',
+  'Chloral hydrate','Fentanyl','Propofol','Ketamine','Morphine','Morphine sulfate','Kapanol',
   // Penicillins
   'Penicillin','Penicillin G','Penicillin V','Benzathine','Benzathine Pen G',
   'Cloxacillin','Dicloxacillin',
@@ -4009,11 +4180,36 @@ function doSearch() {
   });
 
   // Find matching rows in active tab only
+  // Group consecutive rows by drug-name in each tbody (for multi-prep rows like GG/Acyclovir).
+  // If ANY row in a group matches, highlight ALL rows in that group — so search by brand/alias
+  // on the first row also lights up subsequent prep rows that have empty brand.
+  const matchedSet = new Set();
+  activeTab.querySelectorAll('table tbody').forEach(tbody => {
+    const rows = Array.from(tbody.querySelectorAll(':scope > tr'));
+    const groups = [];
+    let cur = [];
+    let lastName = null;
+    rows.forEach(tr => {
+      const nameEl = tr.querySelector('.drug-name');
+      const name = nameEl ? nameEl.textContent.trim() : '';
+      if (cur.length && name && name === lastName) {
+        cur.push(tr);
+      } else {
+        if (cur.length) groups.push(cur);
+        cur = [tr];
+        lastName = name;
+      }
+    });
+    if (cur.length) groups.push(cur);
+    groups.forEach(group => {
+      const groupText = group.map(tr => tr.textContent.toLowerCase()).join(' ');
+      if (groupText.includes(val)) group.forEach(tr => matchedSet.add(tr));
+    });
+  });
   let firstMatch = null;
   const matchedRows = [];
   activeTab.querySelectorAll('table tbody tr').forEach(tr => {
-    const text = tr.textContent.toLowerCase();
-    if (text.includes(val)) {
+    if (matchedSet.has(tr)) {
       tr.classList.add('drug-highlight');
       matchedRows.push(tr);
       if (!firstMatch) firstMatch = tr;
