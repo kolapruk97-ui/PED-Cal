@@ -494,6 +494,20 @@ body {
 .tab.tab-pals:hover { color: var(--purple); background: rgba(206,147,216,0.08); }
 .tab.tab-reverse.active { color: #ffa726; border-color: #ffa726; }
 .tab.tab-reverse:hover { color: #ffa726; background: rgba(255,167,38,0.08); }
+.tab.tab-duration.active { color: #26c6da; border-color: #26c6da; }
+.tab.tab-duration:hover { color: #26c6da; background: rgba(38,198,218,0.08); }
+#tab-duration { max-width:600px; margin-left:auto; margin-right:auto; }
+.dur-quick-btn { padding:5px 10px; border:1px solid var(--border); border-radius:6px; background:var(--section-bg); color:var(--text-muted); font-size:0.75rem; cursor:pointer; font-weight:600; }
+.dur-quick-btn.active { border-color:#26c6da; color:#26c6da; background:rgba(38,198,218,0.1); }
+.dur-quick-btn:active { background:#26c6da; color:white; }
+.dur-result-grid { display:grid; grid-template-columns:auto 1fr; gap:8px 12px; font-size:0.85rem; align-items:center; }
+.dur-result-grid .label { color:var(--text-muted); font-size:0.78rem; }
+.dur-result-grid .val-hi { color:#26c6da; font-weight:700; }
+.dur-result-grid .val-end { color:#ffa726; font-weight:700; }
+.dur-sched-table { width:100%; border-collapse:collapse; font-size:0.72rem; }
+.dur-sched-table th, .dur-sched-table td { padding:3px 6px; border-bottom:1px solid var(--border); text-align:left; }
+.dur-sched-table th { background:var(--section-bg); color:var(--text-muted); font-weight:600; position:sticky; top:0; }
+.dur-sched-table tr.day-boundary td { border-top:2px solid rgba(38,198,218,0.3); }
 .rev-badge { display:inline-block; background:#ffa726; color:#000; font-size:0.65rem; font-weight:700; padding:1px 6px; border-radius:10px; margin-left:4px; vertical-align:middle; }
 
 /* Reverse Dose Tab */
@@ -1157,24 +1171,28 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <h3>V.5</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
   <ul>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Fix: Search highlight ใน Dose tab ครอบแถวไม่ครบสำหรับยา multi-prep (GG/Acyclovir/Paracetamol) — เพิ่ม group-by-name: ถ้าแถวใดของยาเดียวกัน match (เช่นค้น "Guaifenesin" เจอแถว 1) → highlight ทุกแถวในกลุ่มเดียวกัน (50/100 mg/5 mL)</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> GG syrup (Guaifenesin): +prep 100 mg/5 mL — ใช้ autoByAge + fixedMg ชุดเดียวกับ 50mg/5mL (dose mg เท่ากัน แต่ mL ครึ่งหนึ่ง) ทั้ง Dose tab + Reverse</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Fix: Buscopan/Morphine หาไม่เจอใน search — เพิ่ม Hyoscine butylbromide เข้า Dose tab (section Antispasmodic ใหม่ 3 prep), เพิ่ม Morphine 4 prep (inj/syr/SR tab/SR cap) เข้า Dose tab section Procedural Sedation + เพิ่ม Buscopan/Hyoscine/Morphine/Kapanol เข้า autocomplete allDrugs</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: +Hyoscine butylbromide (Buscopan) — antispasmodic 3 prep (syr 5mg/5mL, tab 10mg, inj 20mg/mL) × 2 indications (GI/GU spasm+IBS / Bowel colic palliative) + byAge fixed-dose ตามอายุ (6-11ปี/12-17ปี) + ทารก palliative weight-based 0.3-0.5mk + maxDay/maxDose + anticholinergic contraindications</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: +Morphine 4 prep (inj 10mg/mL, syr 10mg/5mL GPO, SR tab 10mg, SR cap 20mg Kapanol) — Acute pain IV/IM/SC byAge NB/Children/Adult, Acute pain Oral, Chronic pain SR, Cont IV infusion, +safety warning + renal adjustment</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: Midazolam IV ขยาย indications — Sedation Conscious (byAge NB/Inf/Adult), Status epilepticus refractory (loading + cont), Pre-op IM (MAX 10mg), Pre-op IV (byAge 6mo/6yr/12yr ตาม MAX total), Acute seizure Buccal (0.2-0.5mk MAX 10mg) + alias Dormicum</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: Fentanyl ขยาย indications — Acute pain Opioid-naïve (byAge NB/Inf/Children/Adolescents/Adult), ET intubation (1-5 mcg/kg), Cont analgesia/sedation (mcg/kg/hr) + renal adjustment ครบทุก dialysis modality</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> QSNICH: Chloral hydrate note ครอบคลุม Sedation/Pre-EEG/Pre-procedure/Hypnotic + Adult + Renal warning</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Reverse Note: ยาที่มี indications + drug.note (เช่น Morphine ⚠️ Opioid) จะแสดง safety warning เป็น box สีแดงด้านบน</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Interval pattern ใหม่: q 2-4 hr (q2/q3/q4), q 3-4 hr — รองรับยา narcotic titration</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Paracetamol/Ibuprofen (PRN per-dose): เพิ่ม field maxDayMk (90/40 mk/d) → Safe-range แสดง MAX ceiling ตาม freq เช่น "MAX 90 mk/d → ≤ 6.3 mL/dose @ q4hr", calc warn 'high'/'danger' เมื่อ dose × freq เกิน MAX</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Reverse calc interval-aware: เปลี่ยน interval แล้ว Safe-range + status (OK/low/high) อัปเดตตาม freq แบบ real-time. Display ใหม่: "ครั้งละ X-Y mL/dose @ qXhr | รวม/วัน Z mL"</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> แปลงยา ATB เป็น daily-dose semantics (minD/maxD = mg/kg/day): Amox 25-100, Augmentin 25-45/ES 80-100/IV 90-120, Cephalexin 25-100, Cefaclor 20-40, Cefdinir 14, Cefixime 8, Erythromycin 30-50, Clindamycin IV 25-40/PO 10-25, Cotrimoxazole 8-12, Doxycycline 2-5, Oseltamivir 4-8, Acyclovir 40-80 — รองรับการเปลี่ยน interval</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Fix bug: reverseCalc daily-branch เดิมคืน 'ok' ตลอด — แก้ให้คำนวณ daily mgPerKg = mgPerKg × freq เทียบกับ minD/maxD จริง</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Acyclovir interval default = qid (HSV/VZV tx) แทน bid; เรียง qid → 5x/d → tid → bid</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Audit interval ทุกยา: Augmentin IV q6-8hr, Cephalexin syr q6-8hr, Cefaclor syr q8-12hr, Cefdinir/Cefixime q12-24hr, Erythromycin syr q6-8hr, Clindamycin IV q6-8hr, Cotrimoxazole/Doxycycline/Oseltamivir q12-24hr, Acyclovir tab/susp bid-5x (covers HSV px→Zoster), Salbutamol syr bid-qid, Bromhexine/Carbocysteine bid-tid, Levodropropizine q6-8hr, Lactulose q12-24hr</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Amoxicillin (syr 125/250 + cap): interval เป็น q 8-24 hr → เลือก q8/q12/q24 ครอบคลุม Mild/AOM/GAS/UTI px (เดิม syr=q12 อย่างเดียว, cap=q6-8 ผิด)</li>
-    <li><span style="color:#ffa726;">[2026/05/14]</span> Reverse tab: ย้าย Interval ขึ้นไปแถวเดียวกับ ml/mg (มีผลต่อ safe-range สำหรับ daily-dose drugs) + interval onchange เรียก reverseCalc ใหม่ด้วย (เดิมเรียกแค่ updateDispense)</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: Search highlight ใน Dose tab ครอบแถวไม่ครบสำหรับยา multi-prep (GG/Acyclovir/Paracetamol) — เพิ่ม group-by-name: ถ้าแถวใดของยาเดียวกัน match (เช่นค้น "Guaifenesin" เจอแถว 1) → highlight ทุกแถวในกลุ่มเดียวกัน (50/100 mg/5 mL)</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> +Tab "Duration" (สีฟ้า cyan) — คำนวณวันครบยา: input เริ่มยา date/time + Interval (q4/6/8/12/24 hr) + จำนวนวัน (quick 3/5/7/10/14/21 + custom) → แสดง total doses, dose แรก/สุดท้าย, วันครบยา + ตารางทุก dose แบบขยายได้. ไม่ต้องรอ Calculate (ใช้ได้ทันทีตอนเปิด tab)</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: PALS tab ค้างตอน pinch-zoom — repositionBtns เดิม fire ทุก visualViewport event (หลายร้อยครั้ง/วินาที) ทำให้ layout thrash บน DOM ใหญ่. แก้: rAF-throttle + skip ถ้า scale/offset ไม่เปลี่ยน → fire สูงสุด 1 ครั้ง/frame</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: GG (และยาที่ indication.iv มี annotation วงเล็บ เช่น 'q 4 hr (max 6x/d)') Interval dropdown แสดง fallback "3 ครั้ง" — intervalToOptions ตอนนี้ strip trailing `(...)` ก่อน match แล้ว → q4hr (6x) แสดงถูกต้อง</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: Salbutamol Nebule 2.5mg/2.5mL ไม่มี dose ref ใน Reverse — เพิ่ม minD/maxD 0.15 mk/dose (เทียบเท่า salb-sol) + note ครบ (½/1 nebule ตาม BW, severe/continuous, Hyperkalemia) + drugIntervals 'prn'</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> GG syrup (Guaifenesin): +prep 100 mg/5 mL — ใช้ autoByAge + fixedMg ชุดเดียวกับ 50mg/5mL (dose mg เท่ากัน แต่ mL ครึ่งหนึ่ง) ทั้ง Dose tab + Reverse</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: Buscopan/Morphine หาไม่เจอใน search — เพิ่ม Hyoscine butylbromide เข้า Dose tab (section Antispasmodic ใหม่ 3 prep), เพิ่ม Morphine 4 prep (inj/syr/SR tab/SR cap) เข้า Dose tab section Procedural Sedation + เพิ่ม Buscopan/Hyoscine/Morphine/Kapanol เข้า autocomplete allDrugs</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> QSNICH: +Hyoscine butylbromide (Buscopan) — antispasmodic 3 prep (syr 5mg/5mL, tab 10mg, inj 20mg/mL) × 2 indications (GI/GU spasm+IBS / Bowel colic palliative) + byAge fixed-dose ตามอายุ (6-11ปี/12-17ปี) + ทารก palliative weight-based 0.3-0.5mk + maxDay/maxDose + anticholinergic contraindications</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> QSNICH: +Morphine 4 prep (inj 10mg/mL, syr 10mg/5mL GPO, SR tab 10mg, SR cap 20mg Kapanol) — Acute pain IV/IM/SC byAge NB/Children/Adult, Acute pain Oral, Chronic pain SR, Cont IV infusion, +safety warning + renal adjustment</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> QSNICH: Midazolam IV ขยาย indications — Sedation Conscious (byAge NB/Inf/Adult), Status epilepticus refractory (loading + cont), Pre-op IM (MAX 10mg), Pre-op IV (byAge 6mo/6yr/12yr ตาม MAX total), Acute seizure Buccal (0.2-0.5mk MAX 10mg) + alias Dormicum</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> QSNICH: Fentanyl ขยาย indications — Acute pain Opioid-naïve (byAge NB/Inf/Children/Adolescents/Adult), ET intubation (1-5 mcg/kg), Cont analgesia/sedation (mcg/kg/hr) + renal adjustment ครบทุก dialysis modality</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> QSNICH: Chloral hydrate note ครอบคลุม Sedation/Pre-EEG/Pre-procedure/Hypnotic + Adult + Renal warning</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Reverse Note: ยาที่มี indications + drug.note (เช่น Morphine ⚠️ Opioid) จะแสดง safety warning เป็น box สีแดงด้านบน</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Interval pattern ใหม่: q 2-4 hr (q2/q3/q4), q 3-4 hr — รองรับยา narcotic titration</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Paracetamol/Ibuprofen (PRN per-dose): เพิ่ม field maxDayMk (90/40 mk/d) → Safe-range แสดง MAX ceiling ตาม freq เช่น "MAX 90 mk/d → ≤ 6.3 mL/dose @ q4hr", calc warn 'high'/'danger' เมื่อ dose × freq เกิน MAX</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Reverse calc interval-aware: เปลี่ยน interval แล้ว Safe-range + status (OK/low/high) อัปเดตตาม freq แบบ real-time. Display ใหม่: "ครั้งละ X-Y mL/dose @ qXhr | รวม/วัน Z mL"</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> แปลงยา ATB เป็น daily-dose semantics (minD/maxD = mg/kg/day): Amox 25-100, Augmentin 25-45/ES 80-100/IV 90-120, Cephalexin 25-100, Cefaclor 20-40, Cefdinir 14, Cefixime 8, Erythromycin 30-50, Clindamycin IV 25-40/PO 10-25, Cotrimoxazole 8-12, Doxycycline 2-5, Oseltamivir 4-8, Acyclovir 40-80 — รองรับการเปลี่ยน interval</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Fix bug: reverseCalc daily-branch เดิมคืน 'ok' ตลอด — แก้ให้คำนวณ daily mgPerKg = mgPerKg × freq เทียบกับ minD/maxD จริง</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Acyclovir interval default = qid (HSV/VZV tx) แทน bid; เรียง qid → 5x/d → tid → bid</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Audit interval ทุกยา: Augmentin IV q6-8hr, Cephalexin syr q6-8hr, Cefaclor syr q8-12hr, Cefdinir/Cefixime q12-24hr, Erythromycin syr q6-8hr, Clindamycin IV q6-8hr, Cotrimoxazole/Doxycycline/Oseltamivir q12-24hr, Acyclovir tab/susp bid-5x (covers HSV px→Zoster), Salbutamol syr bid-qid, Bromhexine/Carbocysteine bid-tid, Levodropropizine q6-8hr, Lactulose q12-24hr</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Amoxicillin (syr 125/250 + cap): interval เป็น q 8-24 hr → เลือก q8/q12/q24 ครอบคลุม Mild/AOM/GAS/UTI px (เดิม syr=q12 อย่างเดียว, cap=q6-8 ผิด)</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> Reverse tab: ย้าย Interval ขึ้นไปแถวเดียวกับ ml/mg (มีผลต่อ safe-range สำหรับ daily-dose drugs) + interval onchange เรียก reverseCalc ใหม่ด้วย (เดิมเรียกแค่ updateDispense)</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH: Dexamethasone 11 indications (Croup/Asthma/Airway edema/Anaphylaxis/Anti-inflam/Meningitis/Cerebral edema/COVID-19/BPD DART/Antiemetic/Physiologic) + byAge + maxDose + tab 0.5mg</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> รายการยา รพ. — checkbox modal + localStorage persist + Reverse tab indicator "ไม่มีใน รพ."</li>
     <li><span style="color:#ffa726;">[2026/04/12]</span> QSNICH audit ทุกยา: Salbutamol +Exercise px/Hyperkalemia, PGS +BW interval/Renal/GBS, Prednisolone +Nephrotic relapse/Adult MAX, Amox/Clav +Renal, Acetylcysteine fix tid-qid, Montelukast +Urticaria, Amoxicillin +Tonsillopharyngitis</li>
@@ -1405,6 +1423,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <div class="tab" onclick="switchTab('atb')">Pediatric ATB</div>
   <div class="tab tab-fluid" onclick="switchTab('fluid')">IV Fluid</div>
   <div class="tab tab-pals" onclick="switchTab('pals')">PALS</div>
+  <div class="tab tab-duration" onclick="switchTab('duration')">Duration</div>
   <div class="tab tab-reverse" onclick="switchTab('reverse')">Reverse <span class="rev-badge" id="revBadge" style="display:none">0</span></div>
 </div>
 </div>
@@ -1417,6 +1436,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 <div id="tab-atb" class="tab-content"><div class="calc-placeholder">กรอกอายุ / น้ำหนัก แล้วกด <strong>CALCULATE</strong></div></div>
 <div id="tab-fluid" class="tab-content"><div class="calc-placeholder">กรอกอายุ / น้ำหนัก แล้วกด <strong>CALCULATE</strong></div></div>
 <div id="tab-pals" class="tab-content"><div class="calc-placeholder">กรอกอายุ / น้ำหนัก แล้วกด <strong>CALCULATE</strong></div></div>
+<div id="tab-duration" class="tab-content"></div>
 <div id="tab-reverse" class="tab-content"></div>
 </div><!-- /resultsArea -->
 
@@ -2413,7 +2433,7 @@ const drugRegistry = [
   // Carbocysteine lysine: 2-5yr:2.5mL bid, 5-12yr:5mL bid, >12yr:20mL od
   {id:'carbo-lys', name:'Carbocysteine lysine', prep:'90 mg/mL', concMg:90, concVol:1, unit:'mL', minD:0, maxD:0, cat:'Mucolytic'},
   // Asthma
-  {id:'salb-neb', name:'Salbutamol NEB', prep:'Nebule 2.5mg/2.5mL', concMg:2.5, concVol:2.5, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
+  {id:'salb-neb', name:'Salbutamol NEB', prep:'Nebule 2.5mg/2.5mL', concMg:2.5, concVol:2.5, unit:'mL', minD:0.15, maxD:0.15, cat:'Asthma', note:'0.15 mk/dose min 2.5mg (=1 nebule)<br>&lt;20kg: ½ nebule (1.25mg) | &ge;20kg: 1 nebule (2.5mg)<br>Severe: q20min × 3 then prn<br>Continuous: 0.3-0.5 mk/hr<br>Hyperkalemia: NB 0.4mg neb | WB 0.3-0.5mk rapid neb'},
   {id:'ipra-feno', name:'Ipratropium+Fenoterol', prep:'500 mcg/neb (4mL)', concMg:0.5, concVol:4, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
   {id:'ipra-albu', name:'Ipratropium+Albuterol', prep:'500 mcg/2.5mL/vial', concMg:0.5, concVol:2.5, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
   {id:'bude', name:'Budesonide', prep:'1 mg/2mL/respule', concMg:1, concVol:2, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
@@ -3194,7 +3214,7 @@ function setupFixedHeader() {
 
 // ===== Tab switching =====
 function switchTab(name) {
-  const tabNames = ['dose','atb','fluid','pals','reverse'];
+  const tabNames = ['dose','atb','fluid','pals','duration','reverse'];
   document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', tabNames[i] === name));
   document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
@@ -3203,6 +3223,18 @@ function switchTab(name) {
   if (panel) panel.remove();
   clearHighlights();
   if (name === 'reverse') renderReverseDose();
+  if (name === 'duration') {
+    // Duration doesn't need age/weight — force show resultsArea if hidden
+    if (!resultsVisible) {
+      resultsVisible = true;
+      document.getElementById('resultsArea').classList.remove('results-hidden');
+      document.getElementById('searchBar').classList.add('visible');
+      document.querySelector('.tabs').classList.remove('tabs-hidden');
+      const btn = document.getElementById('calcBtn');
+      if (btn) { btn.classList.remove('stale'); btn.textContent = 'CALCULATED'; }
+    }
+    renderDuration();
+  }
 }
 
 // ===== Reverse Dose Logic =====
@@ -3400,6 +3432,119 @@ function updateSafeRange(drugId, w) {
   }
   const el = document.getElementById('rev-safe-' + drugId);
   if (el) el.innerHTML = renderSafeRangeHTML(drug, d, w, freq);
+}
+
+// ===== Duration Cal =====
+function toLocalDateTimeStr(d) {
+  const p = n => String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function fmtTime(d) {
+  const p = n => String(n).padStart(2,'0');
+  return `${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+function fmtDateTimeThai(d) {
+  const days = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+  return `${days[d.getDay()]} ${formatDateThai(d)} ${fmtTime(d)}`;
+}
+let _durState = null;
+function renderDuration() {
+  const container = document.getElementById('tab-duration');
+  if (!_durState) _durState = { start: toLocalDateTimeStr(new Date()), ivHr: 8, days: 7 };
+  const s = _durState;
+  const ivOpts = [
+    {v:4, l:'q 4 hr (6x/d)'},
+    {v:6, l:'q 6 hr (qid)'},
+    {v:8, l:'q 8 hr (tid)'},
+    {v:12, l:'q 12 hr (bid)'},
+    {v:24, l:'q 24 hr (qd)'}
+  ];
+  const daysBtns = [3,5,7,10,14,21];
+  container.innerHTML = `
+    <div class="rev-card" style="background:var(--section-bg);border-color:#26c6da;">
+      <div style="font-weight:600;font-size:0.9rem;margin-bottom:10px;color:#26c6da;">Duration Calculator — คำนวณวันครบยา</div>
+      <div class="rev-disp-row">
+        <label>เริ่มยา:</label>
+        <input type="datetime-local" class="rev-disp-date" id="dur-start" value="${s.start}" onchange="calcDuration()" style="border-color:#26c6da;">
+        <button class="reset-btn" onclick="durSetNow()" style="padding:6px 10px;font-size:0.7rem;height:auto">NOW</button>
+      </div>
+      <div class="rev-disp-row">
+        <label>Interval:</label>
+        <select class="rev-disp-select" id="dur-iv" onchange="calcDuration()" style="min-width:130px">
+          ${ivOpts.map(o => `<option value="${o.v}"${s.ivHr==o.v?' selected':''}>${o.l}</option>`).join('')}
+        </select>
+      </div>
+      <div class="rev-disp-row">
+        <label>จำนวน:</label>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center;">
+          ${daysBtns.map(d => `<button class="dur-quick-btn${s.days==d?' active':''}" onclick="durSetDays(${d})">${d}d</button>`).join('')}
+          <input type="number" class="rev-disp-input" id="dur-days" min="1" max="365" value="${s.days}" oninput="calcDuration()" style="width:70px">
+          <span class="rev-disp-or">วัน</span>
+        </div>
+      </div>
+    </div>
+    <div id="dur-result"></div>
+  `;
+  calcDuration();
+}
+function durSetNow() {
+  document.getElementById('dur-start').value = toLocalDateTimeStr(new Date());
+  calcDuration();
+}
+function durSetDays(d) {
+  document.getElementById('dur-days').value = d;
+  calcDuration();
+}
+function calcDuration() {
+  const startStr = document.getElementById('dur-start')?.value;
+  const ivHr = parseInt(document.getElementById('dur-iv')?.value) || 8;
+  const days = parseInt(document.getElementById('dur-days')?.value) || 0;
+  const el = document.getElementById('dur-result');
+  if (!el) return;
+  _durState = { start: startStr, ivHr, days };
+  document.querySelectorAll('.dur-quick-btn').forEach(b => {
+    b.classList.toggle('active', parseInt(b.textContent) === days);
+  });
+  if (!startStr || days <= 0) { el.innerHTML = ''; return; }
+  const start = new Date(startStr);
+  if (isNaN(start.getTime())) { el.innerHTML = ''; return; }
+  const dosesPerDay = 24 / ivHr;
+  const totalDoses = dosesPerDay * days;
+  const lastDose = new Date(start.getTime() + (totalDoses - 1) * ivHr * 3600 * 1000);
+  const courseEnd = new Date(start.getTime() + days * 24 * 3600 * 1000);
+  el.innerHTML = `
+    <div class="rev-card">
+      <div style="font-size:0.9rem;font-weight:600;margin-bottom:10px;color:#26c6da;">ผลการคำนวณ</div>
+      <div class="dur-result-grid">
+        <div class="label">Total doses:</div>
+        <div><strong>${totalDoses}</strong> doses <span style="color:var(--text-muted);font-size:0.75rem">(${dosesPerDay}×/วัน × ${days} วัน)</span></div>
+        <div class="label">Dose แรก:</div>
+        <div>${fmtDateTimeThai(start)}</div>
+        <div class="label">Dose สุดท้าย:</div>
+        <div class="val-hi">${fmtDateTimeThai(lastDose)}</div>
+        <div class="label">ครบยา (ถ้าจ่ายต่อ):</div>
+        <div class="val-end">${fmtDateTimeThai(courseEnd)}</div>
+      </div>
+      <details style="margin-top:14px">
+        <summary style="cursor:pointer;color:#26c6da;font-size:0.8rem;font-weight:600;padding:6px 0;">📋 ดูตารางทุก dose (${totalDoses} doses)</summary>
+        <div style="max-height:320px;overflow-y:auto;margin-top:6px;border:1px solid var(--border);border-radius:6px;">
+          ${genDoseSched(start, ivHr, totalDoses)}
+        </div>
+      </details>
+    </div>
+  `;
+}
+function genDoseSched(start, ivHr, total) {
+  const dosesPerDay = 24 / ivHr;
+  let html = '<table class="dur-sched-table"><thead><tr><th>#</th><th>วัน</th><th>วันที่</th><th>เวลา</th></tr></thead><tbody>';
+  for (let i = 0; i < total; i++) {
+    const t = new Date(start.getTime() + i * ivHr * 3600 * 1000);
+    const dayOfCourse = Math.floor(i / dosesPerDay) + 1;
+    const isFirstOfDay = i > 0 && (i % dosesPerDay === 0);
+    html += `<tr${isFirstOfDay ? ' class="day-boundary"' : ''}><td>${i+1}</td><td>D${dayOfCourse}</td><td>${fmtDateTimeThai(t).split(' ').slice(0,3).join(' ')}</td><td><strong>${fmtTime(t)}</strong></td></tr>`;
+  }
+  html += '</tbody></table>';
+  return html;
 }
 
 function renderReverseDose() {
@@ -3657,7 +3802,7 @@ const drugIntervals = {
   // Decongestant
   'pseudo-syr':'q 8 hr','pseudo-tab':'q 8 hr',
   // Asthma
-  'salb-syr':'bid-qid','salb-sol':'prn','terb':'prn','montel':'q 24 hr','montel-10':'q 24 hr',
+  'salb-syr':'bid-qid','salb-sol':'prn','salb-neb':'prn','terb':'prn','montel':'q 24 hr','montel-10':'q 24 hr',
   // Antiemetic
   'dom-syr':'q 8 hr','dom-tab':'q 8 hr','onda-iv':'single','onda-tab':'q 8 hr',
   'metocl-iv':'single','metocl-syr':'q 8 hr','metocl-tab':'q 8 hr',
@@ -3710,7 +3855,8 @@ const drugIntervals = {
 
 function intervalToOptions(iv) {
   if (!iv) return [{label:'3 ครั้ง', value:3}];
-  const s = iv.toLowerCase();
+  // Strip trailing parenthetical annotations like '(max 6x/d)' so 'q 4 hr (max 6x/d)' matches 'q 4 hr'
+  const s = iv.toLowerCase().replace(/\s*\([^)]*\)\s*$/, '').trim();
   // Range intervals — give choices
   if (s === 'q 2-4 hr') return [{label:'q2hr (12x)', value:12},{label:'q3hr (8x)', value:8},{label:'q4hr (6x)', value:6}];
   if (s === 'q 3-4 hr') return [{label:'q3hr (8x)', value:8},{label:'q4hr (6x)', value:6}];
@@ -4473,8 +4619,24 @@ if (window.visualViewport) {
     cartBtn.style.transform = `scale(${1 / scale})`;
     cartBtn.style.transformOrigin = 'top left';
   };
-  window.visualViewport.addEventListener('resize', repositionBtns);
-  window.visualViewport.addEventListener('scroll', repositionBtns);
+  // rAF-throttle: visualViewport fires hundreds of events/sec during pinch-zoom.
+  // Without throttle, layout thrashing freezes heavy tabs (PALS has many tables/cards).
+  let rafPending = false;
+  let lastScale = -1, lastOffX = -1, lastOffY = -1;
+  const scheduleReposition = () => {
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(() => {
+      rafPending = false;
+      const vv = window.visualViewport;
+      // Skip if nothing changed (avoid redundant DOM writes)
+      if (vv.scale === lastScale && vv.offsetLeft === lastOffX && vv.offsetTop === lastOffY) return;
+      lastScale = vv.scale; lastOffX = vv.offsetLeft; lastOffY = vv.offsetTop;
+      repositionBtns();
+    });
+  };
+  window.visualViewport.addEventListener('resize', scheduleReposition);
+  window.visualViewport.addEventListener('scroll', scheduleReposition);
 }
 
 function updateCartBtn() {
