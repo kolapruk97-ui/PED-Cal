@@ -204,6 +204,15 @@ body {
   position: relative;
 }
 .hospital-modal h2 { font-size: 1rem; color: var(--primary); margin-bottom: 8px; }
+.hosp-subtabs { display: flex; gap: 6px; margin-bottom: 10px; }
+.hosp-subtab {
+  flex: 1; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 8px;
+  background: var(--section-bg); color: var(--text-muted); cursor: pointer;
+  font-size: 0.82rem; font-weight: 700; text-align: center; transition: all 0.15s;
+}
+.hosp-subtab.active { border-color: var(--primary); color: var(--primary); background: rgba(0,191,165,0.1); }
+.hosp-subtab .hosp-badge { font-size: 0.62rem; opacity: 0.85; margin-left: 4px; font-weight: 400; }
+.hosp-subtab.active .hosp-badge::after { content: ' ●'; color: var(--success); }
 .hospital-toolbar {
   display: flex; gap: 8px; margin-bottom: 10px; align-items: center;
 }
@@ -935,7 +944,8 @@ tr.drug-highlight-first td { border-top: 3px solid #00bfa5 !important; }
 tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 
 .results-hidden .tab-content { display: none !important; }
-.tabs-hidden { opacity: 0.3; pointer-events: none; }
+/* Before Calculate: dim + disable all tabs EXCEPT Duration (Duration works without patient data) */
+.tabs-hidden .tab:not(.tab-duration) { opacity: 0.5; pointer-events: none; }
 
 /* Desktop inputs vs Mobile pickers */
 .desktop-inputs { display: none; }
@@ -1156,7 +1166,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 <div class="header">
   <div class="header-btns">
     <button class="changelog-btn" onclick="document.getElementById('changelogOverlay').classList.add('open')">Change Log</button>
-    <button class="hospital-btn" onclick="openHospitalList()">รายการยา รพ.</button>
+    <button class="hospital-btn" id="hospitalBtn" onclick="openHospitalList()">รายการยา รพ.</button>
   </div>
   <h1>Pediatric Calculator</h1>
   <div class="warning"><span class="warn-label">BETA V.5</span>กรุณา re-check dose ซ้ำ<br>หากพบข้อผิดพลาด แจ้งแพทย์ธนกฤต</div>
@@ -1172,6 +1182,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
   <ul>
     <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: Search highlight ใน Dose tab ครอบแถวไม่ครบสำหรับยา multi-prep (GG/Acyclovir/Paracetamol) — เพิ่ม group-by-name: ถ้าแถวใดของยาเดียวกัน match (เช่นค้น "Guaifenesin" เจอแถว 1) → highlight ทุกแถวในกลุ่มเดียวกัน (50/100 mg/5 mL)</li>
+    <li><span style="color:#ffa726;">[2026/05/23]</span> รายการยา รพ. — แยกเป็น 2 sub-tabs: รพ.ทุ่งสง / รพ.ขนอม (list ยาแต่ละ รพ. อิสระ). Click sub-tab = view + set as active (filter Reverse tab ตาม รพ. ที่เลือก). Header button แสดง "รพ.ทุ่งสง (135/150)" ตาม active hospital. Auto-migrate ข้อมูลเก่า (pedcal_hospital_drugs) → รพ.ทุ่งสง</li>
     <li><span style="color:#ffa726;">[2026/05/23]</span> +Tab "Duration" (สีฟ้า cyan) — คำนวณวันครบยา: input เริ่มยา date/time + Interval (q4/6/8/12/24 hr) + จำนวนวัน (quick 3/5/7/10/14/21 + custom) → แสดง total doses, dose แรก/สุดท้าย, วันครบยา + ตารางทุก dose แบบขยายได้. ไม่ต้องรอ Calculate (ใช้ได้ทันทีตอนเปิด tab)</li>
     <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: PALS tab ค้างตอน pinch-zoom — repositionBtns เดิม fire ทุก visualViewport event (หลายร้อยครั้ง/วินาที) ทำให้ layout thrash บน DOM ใหญ่. แก้: rAF-throttle + skip ถ้า scale/offset ไม่เปลี่ยน → fire สูงสุด 1 ครั้ง/frame</li>
     <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: GG (และยาที่ indication.iv มี annotation วงเล็บ เช่น 'q 4 hr (max 6x/d)') Interval dropdown แสดง fallback "3 ครั้ง" — intervalToOptions ตอนนี้ strip trailing `(...)` ก่อน match แล้ว → q4hr (6x) แสดงถูกต้อง</li>
@@ -1289,6 +1300,10 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 <div class="hospital-modal">
   <button class="changelog-close" onclick="closeHospitalList()">&#10005;</button>
   <h2>รายการยา รพ.</h2>
+  <div class="hosp-subtabs">
+    <button class="hosp-subtab" id="hospTab-thungsong" onclick="switchHospTab('thungsong')">รพ.ทุ่งสง<span class="hosp-badge" id="hospBadge-thungsong"></span></button>
+    <button class="hosp-subtab" id="hospTab-khanom" onclick="switchHospTab('khanom')">รพ.ขนอม<span class="hosp-badge" id="hospBadge-khanom"></span></button>
+  </div>
   <div class="hospital-toolbar">
     <button onclick="toggleAllHospital(true)">เลือกทั้งหมด</button>
     <button onclick="toggleAllHospital(false)">ยกเลิกทั้งหมด</button>
@@ -4770,56 +4785,109 @@ window.addEventListener('scroll', () => {
   }
 })();
 
-// ===== Hospital Drug List =====
-const HOSP_KEY = 'pedcal_hospital_drugs';
-let hospitalExcluded = new Set();
+// ===== Hospital Drug List (per-hospital sub-lists) =====
+const HOSP_KEYS = { thungsong: 'pedcal_hosp_thungsong', khanom: 'pedcal_hosp_khanom' };
+const HOSP_ACTIVE_KEY = 'pedcal_hosp_active';
+const HOSP_LABELS = { thungsong: 'รพ.ทุ่งสง', khanom: 'รพ.ขนอม' };
+const OLD_HOSP_KEY = 'pedcal_hospital_drugs'; // legacy single-hospital key
+const HOSP_CAT_COLORS = {
+  'Antipyretic':'#66bb6a','Antihistamine':'#42a5f5','Mucolytic':'#78909c','Antitussive':'#78909c',
+  'Decongestant':'#ab47bc','Asthma':'#26c6da','Adrenaline':'#ef5350','Antiemetic':'#ffa726',
+  'Antacid':'#8d6e63','Laxatives':'#a1887f','Steroid':'#ec407a','Anti-epileptic':'#7e57c2',
+  'Sedation':'#5c6bc0','Penicillins':'#29b6f6','Cephalosporins':'#26a69a','Macrolides':'#9ccc65',
+  'Lincosamides':'#d4e157','Sulfonamides':'#ffca28','Quinolones':'#ff7043','Others':'#bdbdbd',
+  'Antivirals':'#ce93d8'
+};
+let hospLists = { thungsong: new Set(), khanom: new Set() };
+let hospActive = 'thungsong';   // used by isInHospital() for Reverse-tab filtering
+let hospEditing = 'thungsong';  // currently viewed sub-tab in modal
 
 function loadHospitalList() {
   try {
-    const saved = localStorage.getItem(HOSP_KEY);
-    if (saved) hospitalExcluded = new Set(JSON.parse(saved));
+    // Migrate legacy key → Tung Song (only if new key doesn't exist yet)
+    const legacy = localStorage.getItem(OLD_HOSP_KEY);
+    if (legacy && !localStorage.getItem(HOSP_KEYS.thungsong)) {
+      localStorage.setItem(HOSP_KEYS.thungsong, legacy);
+    }
+    Object.keys(HOSP_KEYS).forEach(h => {
+      const saved = localStorage.getItem(HOSP_KEYS[h]);
+      if (saved) hospLists[h] = new Set(JSON.parse(saved));
+    });
+    const active = localStorage.getItem(HOSP_ACTIVE_KEY);
+    if (active && HOSP_KEYS[active]) hospActive = active;
+    hospEditing = hospActive;
   } catch(e) {}
 }
 
-function saveHospitalList() {
-  localStorage.setItem(HOSP_KEY, JSON.stringify([...hospitalExcluded]));
+function saveHospitalList(hosp) {
+  hosp = hosp || hospEditing;
+  localStorage.setItem(HOSP_KEYS[hosp], JSON.stringify([...hospLists[hosp]]));
 }
 
 function isInHospital(drugId) {
-  return !hospitalExcluded.has(drugId);
+  return !hospLists[hospActive].has(drugId);
 }
 
 function updateHospCount() {
   const total = drugRegistry.length;
-  const available = total - hospitalExcluded.size;
-  const el = document.getElementById('hospCount');
-  if (el) el.textContent = available + '/' + total + ' รายการ';
+  // Sub-tab badges (both hospitals)
+  Object.keys(HOSP_KEYS).forEach(h => {
+    const avail = total - hospLists[h].size;
+    const badge = document.getElementById('hospBadge-' + h);
+    if (badge) badge.textContent = ` (${avail}/${total})`;
+  });
+  // Toolbar count for currently-edited hospital
+  const cnt = document.getElementById('hospCount');
+  if (cnt) {
+    const avail = total - hospLists[hospEditing].size;
+    cnt.textContent = `${avail}/${total} รายการ · ใช้อยู่: ${HOSP_LABELS[hospActive]}`;
+  }
+  // Header button reflects the ACTIVE hospital (what filters Reverse tab)
+  const btn = document.getElementById('hospitalBtn');
+  if (btn) {
+    const avail = total - hospLists[hospActive].size;
+    btn.textContent = `${HOSP_LABELS[hospActive]} (${avail}/${total})`;
+  }
 }
 
-function openHospitalList() {
+function refreshReverseIfActive() {
+  const revTab = document.getElementById('tab-reverse');
+  if (revTab && revTab.classList.contains('active')) renderReverseDose();
+}
+
+function switchHospTab(hosp) {
+  // Click sub-tab = view + set as ACTIVE (single-click UX)
+  hospEditing = hosp;
+  hospActive = hosp;
+  localStorage.setItem(HOSP_ACTIVE_KEY, hospActive);
+  document.querySelectorAll('.hosp-subtab').forEach(t => t.classList.toggle('active', t.id === 'hospTab-' + hosp));
+  renderHospitalDrugList();
+  refreshReverseIfActive();
+}
+
+function renderHospitalDrugList() {
   const container = document.getElementById('hospitalDrugList');
   if (!container) return;
   const cats = [...new Set(drugRegistry.map(d => d.cat))];
-  const catColors = {
-    'Antipyretic':'#66bb6a','Antihistamine':'#42a5f5','Mucolytic':'#78909c','Antitussive':'#78909c',
-    'Decongestant':'#ab47bc','Asthma':'#26c6da','Adrenaline':'#ef5350','Antiemetic':'#ffa726',
-    'Antacid':'#8d6e63','Laxatives':'#a1887f','Steroid':'#ec407a','Anti-epileptic':'#7e57c2',
-    'Sedation':'#5c6bc0','Penicillins':'#29b6f6','Cephalosporins':'#26a69a','Macrolides':'#9ccc65',
-    'Lincosamides':'#d4e157','Sulfonamides':'#ffca28','Quinolones':'#ff7043','Others':'#bdbdbd',
-    'Antivirals':'#ce93d8'
-  };
   let html = '';
   cats.forEach(cat => {
     const drugs = drugRegistry.filter(d => d.cat === cat);
-    const cc = catColors[cat] || '#607d8b';
+    const cc = HOSP_CAT_COLORS[cat] || '#607d8b';
     html += `<div class="hospital-cat" style="border-left:3px solid ${cc};color:${cc};">${cat} (${drugs.length})</div>`;
     drugs.forEach(d => {
-      const checked = !hospitalExcluded.has(d.id) ? ' checked' : '';
+      const checked = !hospLists[hospEditing].has(d.id) ? ' checked' : '';
       html += `<label class="hospital-item"><input type="checkbox" value="${d.id}"${checked} onchange="toggleHospitalDrug('${d.id}',this.checked)"><span>${d.name}</span><span class="hosp-prep">${d.prep}</span></label>`;
     });
   });
   container.innerHTML = html;
   updateHospCount();
+}
+
+function openHospitalList() {
+  // Open with the current active hospital selected
+  hospEditing = hospActive;
+  document.querySelectorAll('.hosp-subtab').forEach(t => t.classList.toggle('active', t.id === 'hospTab-' + hospEditing));
+  renderHospitalDrugList();
   document.getElementById('hospitalOverlay').classList.add('open');
 }
 
@@ -4828,22 +4896,25 @@ function closeHospitalList() {
 }
 
 function toggleHospitalDrug(id, checked) {
-  if (checked) hospitalExcluded.delete(id);
-  else hospitalExcluded.add(id);
+  if (checked) hospLists[hospEditing].delete(id);
+  else hospLists[hospEditing].add(id);
   saveHospitalList();
   updateHospCount();
+  if (hospEditing === hospActive) refreshReverseIfActive();
 }
 
 function toggleAllHospital(checked) {
-  if (checked) hospitalExcluded.clear();
-  else drugRegistry.forEach(d => hospitalExcluded.add(d.id));
+  if (checked) hospLists[hospEditing].clear();
+  else drugRegistry.forEach(d => hospLists[hospEditing].add(d.id));
   saveHospitalList();
-  // Update all checkboxes
   document.querySelectorAll('#hospitalDrugList input[type=checkbox]').forEach(cb => cb.checked = checked);
   updateHospCount();
+  if (hospEditing === hospActive) refreshReverseIfActive();
 }
 
 loadHospitalList();
+// Update header button label on page load (after DOM is ready)
+setTimeout(updateHospCount, 0);
 </script>
 </body>
 </html>
