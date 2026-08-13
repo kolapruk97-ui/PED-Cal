@@ -1187,6 +1187,9 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
     <li><span style="color:#ffa726;">[2026/08/13]</span> Fix Lactulose ตาม QSNICH: ความเข้มข้นเดิม "10 mg/5 mL" ผิด → syr 66.7% (10 g/15 mL, Hepalac) | dose 1-3 mL/kg/day → <strong>1-2 g/kg/day (1.5-3 mL/kg/day)</strong> แบ่งวันละ 1-2 ครั้ง | MAX 60 mL/<strong>day</strong> (เดิมเขียนผิดเป็น mL/dose) | interval q 24 hr/hs → q 12-24 hr | เพิ่มขนาดตามอายุ (1-11 เดือน 2.5 mL bid, 1-4 ปี 2.5-10 mL bid, 5-17 ปี 5-20 mL bid) และ PSE dose | เดิม Reverse คิดช่วงปลอดภัยผิดครึ่งหนึ่ง ตอนนี้คำนวณ mL ถูกต้องแล้ว</li>
     <li><span style="color:#ffa726;">[2026/08/13]</span> เพิ่ม field `safeRangeText` ใน drugRegistry — ให้ยาที่สั่งเป็นหน่วยอื่น (เช่น Lactulose = g/kg/day) แสดงช่วงปลอดภัยด้วยหน่วยจริงแทน mg/kg</li>
     <li><span style="color:#ffa726;">[2026/08/13]</span> Lactulose มี indication ให้เลือกใน Reverse แล้ว: <strong>ท้องผูก</strong> (1-2 g/kg/day, q12-24hr) และ <strong>PSE</strong> (ตามอายุ: infant 2.5-10 mL/day, child 40-90 mL/day แบ่ง 3-4 ครั้ง, tid-qid) พร้อมขนาด adult acute/chronic และ rectal ใน Note</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> +Preparation <strong>Metronidazole 400 mg/tab</strong> (ใช้ขนาดเดิม 30-50 mk/day ÷ q8hr เหมือน tab 200/500 mg) และ <strong>Lactulose 20 g/30 mL ทั้งขวด 100 mL และ 30 mL</strong> — ความเข้มข้นเท่ากับ 10 g/15 mL (66.7% = 666.7 mg/mL) ตัวเลข mL ที่คำนวณจึงเท่ากันทุก prep, ใช้ indication ท้องผูก/PSE ชุดเดียวกัน</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> Ondansetron IV: แก้รูปแบบยาเป็น <strong>8 mg/4 mL amp</strong> (เดิมระบุ 4 mg/amp) — ความเข้มข้น 2 mg/mL เท่าเดิม ตัวเลข mL ที่คำนวณจึงไม่เปลี่ยน</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> <strong>+Preparation GG 100 mg/tab</strong> — ใช้ขนาดตามช่วงอายุชุดเดียวกับ syrup ตาม QSNICH (&lt;2yr 12mk/d÷6 | 2-&lt;6yr 50-100mg | 6-&lt;12yr 100-200mg | ≥12yr 200-400mg q4hr) ทั้ง Dose tab และ Reverse<br>เปลี่ยนชื่อกลุ่มยาจาก "GG syrup" เป็น "GG" เพราะมีทั้ง syr และ tab แล้ว (ค้นด้วย GG / Guaifenesin / Glyceryl guaiacolate / GG syrup / GG tab ได้เหมือนเดิม) และรวม indications ของทุก prep เป็นชุดเดียว<br>หมายเหตุ: QSNICH ระบุรูปแบบยาไว้เฉพาะ syr 50 mg/5 mL — ตัวเลขขนาดยาทั้งหมดมาจาก QSNICH ส่วนความแรง 100 mg/tab เป็นรูปแบบที่ รพ. มี</li>
     <li><span style="color:#ffa726;">[2026/08/13]</span> <strong>ยาแก้อาเจียนตาม QSNICH</strong> — Domperidone: 0.25 mk (เพิ่มได้ถึง 0.4) tid, แยก indication N/V (MAX 0.75 mk/day) กับ GERD (MAX 10→20 mg/dose), เดิมเป็น 0.2-0.3 mk ไม่มีเพดาน | Ondansetron IV: แก้ความเข้มข้นเป็น 2 mg/mL (เดิม 4 mg/mL คิด mL ผิด 2 เท่า), MAX 16 mg/dose, เพิ่ม indication AGE/CVS/PONV/CINV และขนาด oral ตามน้ำหนัก 8-15/15-30/&gt;30 kg | Metoclopramide: แก้เป็น 5 mg/mL (เดิม 10 mg/mL ผิด 2 เท่า), 0.1-0.2 mk/dose q6-8hr MAX 10 mg/dose, เพิ่มการปรับขนาดตามการทำงานของไตและคำเตือน extrapyramidal effect</li>
     <li><span style="color:#ffa726;">[2026/08/13]</span> <strong>ยากันชักตาม QSNICH</strong> — Diazepam: status epilepticus แยกตามอายุ (&lt;5 ปี 0.2-0.5 mk MAX total 5 mg | ≥5 ปี 1 mg/dose MAX total 10 mg) + indication sedation IV/oral, febrile seizure px, spasticity, คำเตือน sudden apnea | Phenobarbital: load 15-20 mk, maintenance ตามอายุ (neonate 3-4 → &gt;12 ปี 1-3 mk/day) + sedative/hypnotic/hyperbilirubinemia, level 15-40 | Phenytoin: load 15-20 mk MAX 1,500 mg, maintenance ตามอายุ 5-10 mk/day, ห้ามให้ IM, level 10-20 | Valproate: maintenance แก้เป็น 30-60 mk/day (เดิม 5-20), level 50-100, ไม่แนะนำ &lt;2 ปี | Levetiracetam: load แก้เป็น 60 mk ครั้งเดียว MAX 4,500 mg (เดิม 20-40 mk), maintenance ตามอายุ/ข้อบ่งใช้ + การปรับขนาดในไตบกพร่อง</li>
     <li><span style="color:#ffa726;">[2026/08/13]</span> Fix: ช่วงอายุ neonate (maxMo:0) ใน byAge ไม่ทำงาน — `a.maxMo||9999` ทำให้ 0 กลายเป็น 9999 จึง match ทุกอายุ (เปลี่ยนเป็น `??`) | Reverse รองรับเพดาน mg/kg/day ระดับ indication และไม่พังเมื่ออายุไม่อยู่ในช่วงที่ QSNICH ระบุ</li>
@@ -2078,6 +2081,25 @@ function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, in
 }
 
 // ===== Registry shared blocks (ใช้ซ้ำในยาหลาย prep ของตัวเดียวกัน) =====
+// Lactulose — QSNICH ใช้ชุดเดียวกันทุก prep (66.7% เท่ากันหมด, mL ที่ได้จึงเท่ากัน)
+const lactuAlias = 'Hepalac, Duphalac';
+const lactuNote = 'ปรับขนาดยาทุก 1-2 วัน จนถ่ายอุจจาระอ่อนนุ่มวันละ 2-3 ครั้ง — MAX 60 mL/day';
+const lactuInds = [
+  {label:'ท้องผูก', minD:1000, maxD:2000, daily:true, iv:'q 12-24 hr', safeRangeText:'1–2 g/kg/day (1.5–3 mL/kg/day)',
+   note:'ตามน้ำหนัก: 1-2 g/kg/day (1.5-3 mL/kg/day) แบ่งวันละ 1-2 ครั้ง<br>ตามอายุ: 1-11 เดือน 2.5 mL bid | 1-4 ปี 2.5-10 mL bid | 5-17 ปี 5-20 mL bid<br>MAX 60 mL/day'},
+  {label:'PSE', minD:0, maxD:0, daily:true, iv:'tid-qid',
+   byAge:[{minMo:0, maxMo:11, minTotal:2.5*(10000/15), maxTotal:10*(10000/15), note:'Infant (&lt;1 ปี): 2.5-10 mL/day แบ่ง 3-4 ครั้ง'},
+          {minMo:12, maxMo:9999, minTotal:40*(10000/15), maxTotal:90*(10000/15), note:'Child (&ge;1 ปี): 40-90 mL/day แบ่ง 3-4 ครั้ง'}],
+   note:'Portal systemic encephalopathy — ปรับขนาดจนถ่ายอุจจาระวันละ 2-3 ครั้ง<br>Adult: acute 30-45 mL ทุก 1-2 ชม. จนถ่าย | chronic 30-45 mL วันละ 3-4 ครั้ง<br>Rectal (adult): 300 mL + น้ำ/NSS 700 mL สวนเก็บไว้ 30-60 นาที ซ้ำได้ q4-6hr'}
+];
+// GG (Guaifenesin) — QSNICH ให้ขนาดตามช่วงอายุ ใช้ชุดเดียวกันทุก prep
+const ggInds = [
+  {label:'<2yr', minMo:0, maxMo:23, minD:2, maxD:2, iv:'q 4 hr (max 6x/d)', note:'12mk/d÷6 MAX600mg/d'},
+  {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:75, maxDay:600, iv:'q 4 hr (max 6x/d)', note:'50-100mg q4hr MAX600mg/d'},
+  {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:150, maxDay:1200, iv:'q 4 hr (max 6x/d)', note:'100-200mg q4hr MAX1.2g/d'},
+  {label:'≥12yr', minMo:144, maxMo:999, fixedMg:300, maxDay:2400, iv:'q 4 hr (max 6x/d)', note:'200-400mg q4hr MAX2.4g/d'}
+];
+const ggAlias = 'Guaifenesin,Guaiphenesin,Glyceryl guaiacolate,Glycerol guaiacolate,GG,GG syrup,GG tab';
 // Antiemetics — QSNICH
 const domNote = 'กินก่อนอาหารอย่างน้อย 15 นาที<br>N/V (อายุ &gt;1 เดือน หรือ ≤35 kg): 0.25 mk วันละ 3 ครั้ง (MAX 0.75 mk/day)<br>N/V (12-17 ปี หรือ ≥35 kg): 10 mg วันละ 3 ครั้ง (MAX 30 mg/day)<br>GERD 1 เดือน-12 ปี: 0.25 mk (MAX 10 mg/dose) วันละ 3 ครั้ง — ถ้าไม่ได้ผลเพิ่มได้ถึง 0.4 mk (MAX 20 mg/dose)<br>GERD 12-18 ปี: 10 mg วันละ 3 ครั้ง | Neonates: 0.25 mk วันละ 3 ครั้ง (เพิ่มได้ถึง 0.4 mk)';
 const domInds = [
@@ -2177,20 +2199,9 @@ const drugRegistry = [
   {id:'brom-syr', name:'Bromhexine syr', prep:'4 mg/5 mL', concMg:4, concVol:5, unit:'mL', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   {id:'brom-tab', name:'Bromhexine tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   // Antitussive
-  {id:'gg-syr', name:'GG syrup', prep:'50 mg/5 mL', concMg:50, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin,Guaiphenesin,Glyceryl guaiacolate,Glycerol guaiacolate,GG',
-    autoByAge:true, indications:[
-      {label:'<2yr', minMo:0, maxMo:23, minD:2, maxD:2, iv:'q 4 hr (max 6x/d)', note:'12mk/d÷6 MAX600mg/d'},
-      {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:75, maxDay:600, iv:'q 4 hr (max 6x/d)', note:'50-100mg q4hr MAX600mg/d'},
-      {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:150, maxDay:1200, iv:'q 4 hr (max 6x/d)', note:'100-200mg q4hr MAX1.2g/d'},
-      {label:'≥12yr', minMo:144, maxMo:999, fixedMg:300, maxDay:2400, iv:'q 4 hr (max 6x/d)', note:'200-400mg q4hr MAX2.4g/d'}
-    ]},
-  {id:'gg-syr-100', name:'GG syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin,Guaiphenesin,Glyceryl guaiacolate,Glycerol guaiacolate,GG',
-    autoByAge:true, indications:[
-      {label:'<2yr', minMo:0, maxMo:23, minD:2, maxD:2, iv:'q 4 hr (max 6x/d)', note:'12mk/d÷6 MAX600mg/d'},
-      {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:75, maxDay:600, iv:'q 4 hr (max 6x/d)', note:'50-100mg q4hr MAX600mg/d'},
-      {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:150, maxDay:1200, iv:'q 4 hr (max 6x/d)', note:'100-200mg q4hr MAX1.2g/d'},
-      {label:'≥12yr', minMo:144, maxMo:999, fixedMg:300, maxDay:2400, iv:'q 4 hr (max 6x/d)', note:'200-400mg q4hr MAX2.4g/d'}
-    ]},
+  {id:'gg-syr', name:'GG', prep:'50 mg/5 mL', concMg:50, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:ggAlias, autoByAge:true, indications:ggInds},
+  {id:'gg-syr-100', name:'GG', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:ggAlias, autoByAge:true, indications:ggInds},
+  {id:'gg-tab-100', name:'GG', prep:'100 mg/tab', concMg:100, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Antitussive', alias:ggAlias, autoByAge:true, indications:ggInds},
   {id:'levo-syr', name:'Levodropropizine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Antitussive'},
   // Decongestant
   {id:'pseudo-syr', name:'Pseudoephedrine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Decongestant'},
@@ -2207,7 +2218,7 @@ const drugRegistry = [
   // Antiemetic
   {id:'dom-syr', name:'Domperidone syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.4, maxDose:20, cat:'Antiemetic', alias:'Dominox,Motilium', note:domNote, indications:domInds},
   {id:'dom-tab', name:'Domperidone tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.4, maxDose:20, cat:'Antiemetic', alias:'Motilium', note:domNote, indications:domInds},
-  {id:'onda-iv', name:'Ondansetron IV', prep:'4 mg/amp (2 mg/mL)', concMg:2, concVol:1, unit:'mL', minD:0.15, maxD:0.3, maxDose:16, cat:'Antiemetic',
+  {id:'onda-iv', name:'Ondansetron IV', prep:'8 mg/4 mL amp (2 mg/mL)', concMg:2, concVol:1, unit:'mL', minD:0.15, maxD:0.3, maxDose:16, cat:'Antiemetic',
     indications:[
       {label:'AGE (ครั้งเดียว)', minD:0.15, maxD:0.3, maxDose:16, iv:'single', note:'Acute gastroenteritis — IV Infants &amp; Children ≥1 เดือน: 0.15-0.3 mk ครั้งเดียว (MAX 16 mg/dose)<br>QSNICH: ไม่แนะนำเป็นยาตัวแรก'},
       {label:'CVS (&gt;2 ปี)', minD:0.15, maxD:0.4, maxDose:16, iv:'q 4 hr', note:'Cyclic vomiting syndrome, acute attack: IV 0.15 mk ทุก 4 ชม. อาจใช้ขนาดสูง 0.3-0.4 mk/dose (MAX 16 mg/dose, ไม่เกิน 3 dose/day)'},
@@ -2273,16 +2284,10 @@ const drugRegistry = [
     note:'⚠️ Anticholinergic — ห้ามใน narrow-angle glaucoma, myasthenia gravis, GI/urinary obstruction, megacolon, tachycardia<br>IV ต้องฉีดช้าๆ (เสี่ยง tachycardia/hypotension)'
   },
   // Laxatives
-  {id:'lactu-syr', name:'Lactulose', prep:'syr 10 g/15 mL (66.7%)', concMg:10000, concVol:15, unit:'mL', minD:1000, maxD:2000, daily:true, cat:'Laxatives', alias:'Hepalac, Duphalac',
-   note:'ปรับขนาดยาทุก 1-2 วัน จนถ่ายอุจจาระอ่อนนุ่มวันละ 2-3 ครั้ง — MAX 60 mL/day',
-   indications:[
-     {label:'ท้องผูก', minD:1000, maxD:2000, daily:true, iv:'q 12-24 hr', safeRangeText:'1–2 g/kg/day (1.5–3 mL/kg/day)',
-      note:'ตามน้ำหนัก: 1-2 g/kg/day (1.5-3 mL/kg/day) แบ่งวันละ 1-2 ครั้ง<br>ตามอายุ: 1-11 เดือน 2.5 mL bid | 1-4 ปี 2.5-10 mL bid | 5-17 ปี 5-20 mL bid<br>MAX 60 mL/day'},
-     {label:'PSE', minD:0, maxD:0, daily:true, iv:'tid-qid',
-      byAge:[{minMo:0, maxMo:11, minTotal:2.5*(10000/15), maxTotal:10*(10000/15), note:'Infant (&lt;1 ปี): 2.5-10 mL/day แบ่ง 3-4 ครั้ง'},
-             {minMo:12, maxMo:9999, minTotal:40*(10000/15), maxTotal:90*(10000/15), note:'Child (&ge;1 ปี): 40-90 mL/day แบ่ง 3-4 ครั้ง'}],
-      note:'Portal systemic encephalopathy — ปรับขนาดจนถ่ายอุจจาระวันละ 2-3 ครั้ง<br>Adult: acute 30-45 mL ทุก 1-2 ชม. จนถ่าย | chronic 30-45 mL วันละ 3-4 ครั้ง<br>Rectal (adult): 300 mL + น้ำ/NSS 700 mL สวนเก็บไว้ 30-60 นาที ซ้ำได้ q4-6hr'}
-   ]},
+  // ทุก prep เป็นน้ำเชื่อม 66.7% ความเข้มข้นเดียวกัน (10 g/15 mL = 20 g/30 mL = 666.7 mg/mL) ต่างกันแค่ฉลากและขนาดขวด
+  {id:'lactu-syr', name:'Lactulose', prep:'syr 10 g/15 mL (66.7%)', concMg:10000, concVol:15, unit:'mL', minD:1000, maxD:2000, daily:true, cat:'Laxatives', alias:lactuAlias, note:lactuNote, indications:lactuInds},
+  {id:'lactu-syr-100', name:'Lactulose', prep:'20 g/30 mL (ขวด 100 mL)', concMg:20000, concVol:30, unit:'mL', minD:1000, maxD:2000, daily:true, cat:'Laxatives', alias:lactuAlias, note:lactuNote, indications:lactuInds},
+  {id:'lactu-syr-30', name:'Lactulose', prep:'20 g/30 mL (ขวด 30 mL)', concMg:20000, concVol:30, unit:'mL', minD:1000, maxD:2000, daily:true, cat:'Laxatives', alias:lactuAlias, note:lactuNote, indications:lactuInds},
   // Steroid
   {id:'hydro-iv', name:'Hydrocortisone', prep:'100 mg/vial', concMg:1, concVol:1, unit:'mg', minD:1, maxD:5, cat:'Steroid', alias:'Solu-Cortef',
     indications:[
@@ -2530,6 +2535,7 @@ const drugRegistry = [
   {id:'metro-iv', name:'Metronidazole IV', prep:'500 mg/100mL', concMg:500, concVol:100, unit:'mL', minD:7.5, maxD:13.3, cat:'Others'},
   {id:'metro-syr', name:'Metronidazole syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:10, maxD:16.7, cat:'Others'},
   {id:'metro-tab-200', name:'Metronidazole tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
+  {id:'metro-tab-400', name:'Metronidazole tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
   {id:'metro-tab-500', name:'Metronidazole tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
   {id:'doxy-cap', name:'Doxycycline', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:2, maxD:5, daily:true, cat:'Others'},
   // Antivirals
@@ -2654,10 +2660,12 @@ function renderDose(w, am) {
   const ggMax = ageYr<2?null:null;
   const ggMinMl50 = ageYr<2?((w*2)*5/50):null;
   const ggMinMl100 = ageYr<2?((w*2)*5/100):null;
+  const ggMinTab100 = ageYr<2?((w*2)/100):null;
   const ggMaxMl = null;
   html += makeTable(doseHeaders, [
-    drugRow('GG syrup','(Guaifenesin, Glyceryl guaiacolate)','50 mg/5 mL',ggDose,'', ggMin, ggMax, ggMinMl50, ggMaxMl, 'q 4 hr (max 6x/d)', '&lt;2yr:12mk/d÷6 MAX600mg/d | 2-&lt;6yr:50-100mg MAX600mg/d | 6-&lt;12yr:100-200mg MAX1.2g/d | &ge;12yr:200-400mg MAX2.4g/d'),
-    drugRow('GG syrup','','100 mg/5 mL','','', null, null, ggMinMl100, ggMaxMl, '', ''),
+    drugRow('GG','(Guaifenesin, Glyceryl guaiacolate)','syr 50 mg/5 mL',ggDose,'', ggMin, ggMax, ggMinMl50, ggMaxMl, 'q 4 hr (max 6x/d)', '&lt;2yr:12mk/d÷6 MAX600mg/d | 2-&lt;6yr:50-100mg MAX600mg/d | 6-&lt;12yr:100-200mg MAX1.2g/d | &ge;12yr:200-400mg MAX2.4g/d'),
+    drugRow('GG','','syr 100 mg/5 mL','','', null, null, ggMinMl100, ggMaxMl, '', ''),
+    drugRow('GG','','100 mg/tab','','', null, null, ggMinTab100, null, '', ''),
     drugRow('Levodropropizine','(Levopront)','30 mg/5 mL','1 mk/Dose','10 kg = ½ ช้อนชา bid', w*1, null, (w*1*5)/30, null, 'q 12 hr', 'MAX 60 mg/dose'),
   ]);
 
@@ -2714,7 +2722,7 @@ function renderDose(w, am) {
   html += makeTable(doseHeaders, [
     drugRow('Domperidone syr','(Dominox, Motilium)','5 mg/5 mL','0.25 mk/Dose<br>(เพิ่มได้ถึง 0.4)','10 kg = ½ ช้อนชา tid', w*0.25, w*0.4, (w*0.25*5)/5, (w*0.4*5)/5, 'tid', domRowNote, 20),
     drugRow('Domperidone tab','','10 mg/tab','','25 kg = ½ tab tid', w*0.25, w*0.4, (w*0.25)/10, (w*0.4)/10, '', '', 20),
-    drugRow('Ondansetron IV','','4 mg/amp (2 mg/mL)','0.15-0.3 mk/Dose','', w*0.15, w*0.3, (w*0.15)/2, (w*0.3)/2, 'IV single dose', ondaRowNote, 16),
+    drugRow('Ondansetron IV','','8 mg/4 mL amp (2 mg/mL)','0.15-0.3 mk/Dose','', w*0.15, w*0.3, (w*0.15)/2, (w*0.3)/2, 'IV single dose', ondaRowNote, 16),
     drugRow('Ondansetron tab','','8 mg/tab','ตามน้ำหนัก (oral)','', null, null, null, null, 'ครั้งเดียว', ''),
     drugRow('Metoclopramide IV','(Plasil)','10 mg/amp (5 mg/mL)','0.1-0.2 mk/Dose','', w*0.1, w*0.2, (w*0.1)/5, (w*0.2)/5, 'q 6-8 hr', metoclRowNote, 10),
     drugRow('Metoclopramide syr','','5 mg/5 mL','','', w*0.1, w*0.2, (w*0.1*5)/5, (w*0.2*5)/5, '', '', 10),
@@ -2755,8 +2763,10 @@ function renderDose(w, am) {
   // Laxatives
   html += sectionHead('Laxatives', 'ยาระบาย');
   let laxRows = `<table style="table-layout:fixed">${doseColgroup}${makeManualTableHead()}<tbody>`;
-  const lactuNote = 'Constipation ตามอายุ: 1-11 เดือน 2.5 mL bid | 1-4 ปี 2.5-10 mL bid | 5-17 ปี 5-20 mL bid<br>MAX 60 mL/day<br>PSE: Infant 2.5-10 mL/day | Child 40-90 mL/day แบ่ง 3-4 ครั้ง';
-  laxRows += makeRowHtml(drugRow('Lactulose','(Hepalac, Duphalac)','syr 10 g/15 mL (66.7%)','1-2 g/kg/Day<br>(1.5-3 mL/kg/Day)','', null, null, w*1.5, w*3, 'q 12-24 hr', lactuNote));
+  const lactuRowNote = 'Constipation ตามอายุ: 1-11 เดือน 2.5 mL bid | 1-4 ปี 2.5-10 mL bid | 5-17 ปี 5-20 mL bid<br>MAX 60 mL/day<br>PSE: Infant 2.5-10 mL/day | Child 40-90 mL/day แบ่ง 3-4 ครั้ง';
+  laxRows += makeRowHtml(drugRow('Lactulose','(Hepalac, Duphalac)','syr 10 g/15 mL (66.7%)','1-2 g/kg/Day<br>(1.5-3 mL/kg/Day)','', null, null, w*1.5, w*3, 'q 12-24 hr', lactuRowNote));
+  laxRows += makeRowHtml(drugRow('Lactulose','','20 g/30 mL (ขวด 100 mL)','','ความเข้มข้นเท่ากัน (66.7%)', null, null, w*1.5, w*3, '', ''));
+  laxRows += makeRowHtml(drugRow('Lactulose','','20 g/30 mL (ขวด 30 mL)','','ความเข้มข้นเท่ากัน (66.7%)', null, null, w*1.5, w*3, '', ''));
   const momDose = ageYr<2?`0.5mL/kg (${r(w*0.5)}mL)`:ageYr<6?'5-15 mL':ageYr<12?'15-30 mL':'30-60 mL';
   laxRows += makeRowHtml(drugRow('Milk of Magnesia','','','0.5-1 mL/kg/dose',momDose, null, null, null, null, 'q 24 hr / hs or bid', '&lt;2yr:0.5mL/kg | 2-5yr:5-15mL | 6-11yr:15-30mL | &gt;12yr:30-60mL'));
   laxRows += '</tbody></table>';
@@ -2916,6 +2926,7 @@ function renderATB(w, am) {
     drugRow('Metronidazole IV','','500 mg/100mL','22.5-40 mk/Day','q 8 hr', (w*22.5)/3, (w*40)/3, null, null, 'q 8 hr', 'MAX 1.5gm IV/day'),
     drugRow('Metronidazole syr','','200 mg/5 mL','30-50 mk/Day','10 kg = ½ ช้อนชา', (w*30)/3, (w*50)/3, ((w*30)/3*5)/200, ((w*50)/3*5)/200, 'q 8 hr', 'MAX 2.25gm PO/day'),
     drugRow('Metronidazole tab','','200 mg/tab','','ใช้ 200mg/tab', (w*30)/3, (w*50)/3, ((w*30)/3)/200, ((w*50)/3)/200, 'q 8 hr', ''),
+    drugRow('Metronidazole tab','','400 mg/tab','','', null, null, ((w*30)/3)/400, ((w*50)/3)/400, '', ''),
     drugRow('Metronidazole tab','','500 mg/tab','','', null, null, ((w*30)/3)/500, ((w*50)/3)/500, '', ''),
     drugRow('Doxycycline','','100 mg/cap','2-5 mk/Day','q 12-24 hr', (w*2)/2, (w*5)/2, ((w*2)/2)/100, ((w*5)/2)/100, 'q 12 hr', 'MAX 200 mg/day'),
   ]);
@@ -3956,7 +3967,7 @@ const drugIntervals = {
   'carbo-syr-250':'bid-tid','carbo-syr-100':'bid-tid','carbo-tab':'bid-tid','carbo-lys':'bid',
   'acetyl-100':'bid-qid','acetyl-200':'bid-qid','acetyl-600':'bid-qid',
   // Antitussive
-  'gg-syr':'q 4 hr','gg-syr-100':'q 4 hr','levo-syr':'q 6-8 hr',
+  'gg-syr':'q 4 hr','gg-syr-100':'q 4 hr','gg-tab-100':'q 4 hr','levo-syr':'q 6-8 hr',
   // Decongestant
   'pseudo-syr':'q 8 hr','pseudo-tab':'q 8 hr',
   // Asthma
@@ -3967,7 +3978,7 @@ const drugIntervals = {
   'dimen-iv':'single','dimen-tab':'q 8 hr',
   // Antacid
   'omep-iv':'q 24 hr','omep-tab':'q 24 hr','rani-iv':'q 12 hr','rani-tab':'q 12 hr','famo-tab':'q 12-24 hr',
-  'lactu-syr':'q 12-24 hr',
+  'lactu-syr':'q 12-24 hr','lactu-syr-100':'q 12-24 hr','lactu-syr-30':'q 12-24 hr',
   'buscopan-syr':'tid','buscopan-tab':'tid','buscopan-inj':'tid-qid',
   // Steroid
   'hydro-iv':'q 6-8 hr','dexa-iv':'single','dexa-tab':'qd','pred-tab':'qd-qid','pred-susp':'qd-qid',
@@ -4001,7 +4012,7 @@ const drugIntervals = {
   'cipro-tab-250':'q 12 hr','cipro-tab-500':'q 12 hr',
   'norflox-tab-100':'q 12 hr','norflox-tab-200':'q 12 hr','norflox-tab-400':'q 12 hr',
   // Others
-  'metro-iv':'q 8 hr','metro-syr':'q 8 hr','metro-tab-200':'q 8 hr','metro-tab-500':'q 8 hr',
+  'metro-iv':'q 8 hr','metro-syr':'q 8 hr','metro-tab-200':'q 8 hr','metro-tab-400':'q 8 hr','metro-tab-500':'q 8 hr',
   'doxy-cap':'q 12-24 hr',
   // Antivirals
   'osel-30':'q 12-24 hr','osel-45':'q 12-24 hr','osel-75':'q 12-24 hr',
@@ -4336,7 +4347,7 @@ const allDrugs = [
   'Bromhexine','Bisolvon','Carbocysteine','Flemex','Fluifort',
   'Acetylcysteine','Fluimucil',
   // Antitussive
-  'Guaifenesin','Guaiphenesin','Glyceryl guaiacolate','Glycerol guaiacolate','GG','GG syrup',
+  'Guaifenesin','Guaiphenesin','Glyceryl guaiacolate','Glycerol guaiacolate','GG','GG syrup','GG tab',
   'Levodropropizine','Levopront',
   // Decongestant
   'Oxymetazoline','Iliadin','Pseudoephedrine','Maxiphed','Nasolin',
