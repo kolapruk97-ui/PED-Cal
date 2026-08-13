@@ -1169,7 +1169,7 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
     <button class="hospital-btn" id="hospitalBtn" onclick="openHospitalList()">รายการยา รพ.</button>
   </div>
   <h1>Pediatric Calculator</h1>
-  <div class="warning"><span class="warn-label">BETA V.5</span>กรุณา re-check dose ซ้ำ<br>หากพบข้อผิดพลาด แจ้งแพทย์ธนกฤต</div>
+  <div class="warning"><span class="warn-label">BETA V.6</span>กรุณา re-check dose ซ้ำ<br>หากพบข้อผิดพลาด แจ้งแพทย์ธนกฤต</div>
   <div class="subtitle">Source: ER TSH Ped Cal, Rx QSNICH</div>
 </div>
 
@@ -1178,8 +1178,23 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
   <button class="changelog-close" onclick="document.getElementById('changelogOverlay').classList.remove('open')">&#10005;</button>
   <h2>Change Log</h2>
 
-  <h3>V.5</h3>
+  <h3>V.6</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
+  <ul>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> เริ่ม V.6 (คัดลอกจาก V.5) — V.5 finalized</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> Search ใน Dose/ATB tab ค้นด้วย alias ใน drugRegistry ได้แล้ว (เดิมค้นได้เฉพาะข้อความที่พิมพ์อยู่ในตาราง) — เช่น Dormicum→Midazolam, Kapanol→Morphine SR, Scopolamine→Hyoscine, Guaiphenesin→GG syrup</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> GG syrup: เพิ่มชื่อยาให้ครบ — แสดง "(Guaifenesin, Glyceryl guaiacolate)" ใน Dose tab + alias ครบทุกชื่อ (Guaifenesin / Guaiphenesin / Glyceryl guaiacolate / Glycerol guaiacolate / GG) ค้นหาได้ทุกชื่อทั้ง Dose tab, Reverse และ autocomplete</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> Fix Lactulose ตาม QSNICH: ความเข้มข้นเดิม "10 mg/5 mL" ผิด → syr 66.7% (10 g/15 mL, Hepalac) | dose 1-3 mL/kg/day → <strong>1-2 g/kg/day (1.5-3 mL/kg/day)</strong> แบ่งวันละ 1-2 ครั้ง | MAX 60 mL/<strong>day</strong> (เดิมเขียนผิดเป็น mL/dose) | interval q 24 hr/hs → q 12-24 hr | เพิ่มขนาดตามอายุ (1-11 เดือน 2.5 mL bid, 1-4 ปี 2.5-10 mL bid, 5-17 ปี 5-20 mL bid) และ PSE dose | เดิม Reverse คิดช่วงปลอดภัยผิดครึ่งหนึ่ง ตอนนี้คำนวณ mL ถูกต้องแล้ว</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> เพิ่ม field `safeRangeText` ใน drugRegistry — ให้ยาที่สั่งเป็นหน่วยอื่น (เช่น Lactulose = g/kg/day) แสดงช่วงปลอดภัยด้วยหน่วยจริงแทน mg/kg</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> Lactulose มี indication ให้เลือกใน Reverse แล้ว: <strong>ท้องผูก</strong> (1-2 g/kg/day, q12-24hr) และ <strong>PSE</strong> (ตามอายุ: infant 2.5-10 mL/day, child 40-90 mL/day แบ่ง 3-4 ครั้ง, tid-qid) พร้อมขนาด adult acute/chronic และ rectal ใน Note</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> <strong>ยาแก้อาเจียนตาม QSNICH</strong> — Domperidone: 0.25 mk (เพิ่มได้ถึง 0.4) tid, แยก indication N/V (MAX 0.75 mk/day) กับ GERD (MAX 10→20 mg/dose), เดิมเป็น 0.2-0.3 mk ไม่มีเพดาน | Ondansetron IV: แก้ความเข้มข้นเป็น 2 mg/mL (เดิม 4 mg/mL คิด mL ผิด 2 เท่า), MAX 16 mg/dose, เพิ่ม indication AGE/CVS/PONV/CINV และขนาด oral ตามน้ำหนัก 8-15/15-30/&gt;30 kg | Metoclopramide: แก้เป็น 5 mg/mL (เดิม 10 mg/mL ผิด 2 เท่า), 0.1-0.2 mk/dose q6-8hr MAX 10 mg/dose, เพิ่มการปรับขนาดตามการทำงานของไตและคำเตือน extrapyramidal effect</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> <strong>ยากันชักตาม QSNICH</strong> — Diazepam: status epilepticus แยกตามอายุ (&lt;5 ปี 0.2-0.5 mk MAX total 5 mg | ≥5 ปี 1 mg/dose MAX total 10 mg) + indication sedation IV/oral, febrile seizure px, spasticity, คำเตือน sudden apnea | Phenobarbital: load 15-20 mk, maintenance ตามอายุ (neonate 3-4 → &gt;12 ปี 1-3 mk/day) + sedative/hypnotic/hyperbilirubinemia, level 15-40 | Phenytoin: load 15-20 mk MAX 1,500 mg, maintenance ตามอายุ 5-10 mk/day, ห้ามให้ IM, level 10-20 | Valproate: maintenance แก้เป็น 30-60 mk/day (เดิม 5-20), level 50-100, ไม่แนะนำ &lt;2 ปี | Levetiracetam: load แก้เป็น 60 mk ครั้งเดียว MAX 4,500 mg (เดิม 20-40 mk), maintenance ตามอายุ/ข้อบ่งใช้ + การปรับขนาดในไตบกพร่อง</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> Fix: ช่วงอายุ neonate (maxMo:0) ใน byAge ไม่ทำงาน — `a.maxMo||9999` ทำให้ 0 กลายเป็น 9999 จึง match ทุกอายุ (เปลี่ยนเป็น `??`) | Reverse รองรับเพดาน mg/kg/day ระดับ indication และไม่พังเมื่ออายุไม่อยู่ในช่วงที่ QSNICH ระบุ</li>
+    <li><span style="color:#ffa726;">[2026/08/13]</span> เพิ่มระบบขนาดยาแบบ `minTotal`/`maxTotal` — ขนาดรวมที่ไม่อิงน้ำหนัก (สั่งตามช่วงอายุ) ใช้ได้ทั้ง safe range, สถานะ OK/สูง/ต่ำ และแสดงผลเป็น mL/day แทน mg/kg ที่ไม่มีความหมาย</li>
+  </ul></div>
+
+  <h3>V.5</h3>
+  <div class="cl-new">
   <ul>
     <li><span style="color:#ffa726;">[2026/05/23]</span> Fix: Search highlight ใน Dose tab ครอบแถวไม่ครบสำหรับยา multi-prep (GG/Acyclovir/Paracetamol) — เพิ่ม group-by-name: ถ้าแถวใดของยาเดียวกัน match (เช่นค้น "Guaifenesin" เจอแถว 1) → highlight ทุกแถวในกลุ่มเดียวกัน (50/100 mg/5 mL)</li>
     <li><span style="color:#ffa726;">[2026/05/23]</span> รายการยา รพ. — แยกเป็น 2 sub-tabs: รพ.ทุ่งสง / รพ.ขนอม (list ยาแต่ละ รพ. อิสระ). Click sub-tab = view + set as active (filter Reverse tab ตาม รพ. ที่เลือก). Header button แสดง "รพ.ทุ่งสง (135/150)" ตาม active hospital. Auto-migrate ข้อมูลเก่า (pedcal_hospital_drugs) → รพ.ทุ่งสง</li>
@@ -2062,6 +2077,62 @@ function drugRow(name, brand, prep, dose, approx, minMg, maxMg, minMl, maxMl, in
   return [n, p, d, a, mn, mx, mvn, mvx, iv, nt];
 }
 
+// ===== Registry shared blocks (ใช้ซ้ำในยาหลาย prep ของตัวเดียวกัน) =====
+// Antiemetics — QSNICH
+const domNote = 'กินก่อนอาหารอย่างน้อย 15 นาที<br>N/V (อายุ &gt;1 เดือน หรือ ≤35 kg): 0.25 mk วันละ 3 ครั้ง (MAX 0.75 mk/day)<br>N/V (12-17 ปี หรือ ≥35 kg): 10 mg วันละ 3 ครั้ง (MAX 30 mg/day)<br>GERD 1 เดือน-12 ปี: 0.25 mk (MAX 10 mg/dose) วันละ 3 ครั้ง — ถ้าไม่ได้ผลเพิ่มได้ถึง 0.4 mk (MAX 20 mg/dose)<br>GERD 12-18 ปี: 10 mg วันละ 3 ครั้ง | Neonates: 0.25 mk วันละ 3 ครั้ง (เพิ่มได้ถึง 0.4 mk)';
+const domInds = [
+  {label:'N/V', minD:0.25, maxD:0.25, maxDose:10, maxDayMk:0.75, iv:'tid', note:'อายุ &gt;1 เดือน หรือ ≤35 kg: 0.25 mk วันละ 3 ครั้ง (MAX 0.75 mk/day)<br>อายุ 12-17 ปี หรือ ≥35 kg: 10 mg วันละ 3 ครั้ง (MAX 30 mg/day)'},
+  {label:'GERD', minD:0.25, maxD:0.4, maxDose:20, iv:'tid', note:'1 เดือน-12 ปี: 0.25 mk (MAX 10 mg/dose) วันละ 3 ครั้ง — ถ้าไม่ได้ผลเพิ่มได้ถึง 0.4 mk (MAX 20 mg/dose)<br>12-18 ปี: 10 mg วันละ 3 ครั้ง | Neonates: 0.25 mk วันละ 3 ครั้ง (เพิ่มได้ถึง 0.4 mk)'}
+];
+const ondaOralNote ='AGE (oral, Infants &amp; Children 6 เดือน-10 ปี) ครั้งเดียว: 8-15 kg 2 mg | &gt;15-30 kg 4 mg | &gt;30 kg 8 mg<br>เคมีบำบัด (oral): 4-11 ปี 4 mg ก่อนเคมี 30 นาที แล้ว 4 mg ทุก 8 ชม. นาน 1-2 วันหลังให้เคมีครบ | ≥12 ปี 8 mg ก่อนเคมี แล้ว 8 mg ทุก 12 ชม.<br>ช่วง 0.15-0.3 mk/dose (MAX 16 mg/dose) เป็นขนาดของรูปแบบฉีด';
+const metoclNote = 'GERD Infants-Adolescents: 0.1-0.2 mk/dose ทุก 6-8 ชม. (MAX 10 mg/dose)<br>Neonates: 0.1-0.15 mk/dose ทุก 6 ชม. (MAX 0.15 mk/dose)<br>ป้องกันอาเจียนหลังผ่าตัด (IV): 0.1-0.5 mk ครั้งเดียวหลัง induction (MAX 10 mg/dose)<br>ใส่สาย postpyloric / ตรวจ upper GI (IV ช้าๆ): &lt;6 ปี 0.1 mk | 6-14 ปี 2.5-5 mg | &gt;14 ปี 10 mg ครั้งเดียว<br>ไตบกพร่อง: GFR 30-50 หรือ CRRT ให้ 75% | GFR 10-29 ให้ 50% | GFR &lt;10 หรือ HD/PD ให้ 25%<br>⚠️ ขนาดสูง (เคมีบำบัด) ควรให้ diphenhydramine ร่วม เพื่อลดความเสี่ยง extrapyramidal effect';
+// Diazepam — QSNICH
+const diazNote = '⚠️ การให้ IV push อาจทำให้เกิด sudden apnea ได้';
+const diazPrNote = 'QSNICH ระบุขนาดทาง rectal เฉพาะหัวข้อ Adults (ใช้ยาฉีด 5 mg/mL): เริ่ม 0.2-0.5 mk/dose แล้วอาจให้ซ้ำ 0.25 mk/dose ภายใน 10 นาที (MAX 20 mg/dose)<br>⚠️ ขนาด 0.5 mk/dose ทาง PR ในเด็กเป็นข้อมูลเดิมในแอป ไม่มีใน QSNICH';
+// Phenobarbital maintenance — QSNICH แบ่งขนาดตามอายุ
+const phenoMaintInds = [
+  {label:'Maintenance', daily:true, iv:'q 12-24 hr', byAge:[
+    {minMo:0, maxMo:0, minD:3, maxD:4, note:'Neonate: 3-4 mk/day วันละ 1 ครั้ง (ปรับได้ถึง 5 mk/day ภายในสัปดาห์ที่ 2)'},
+    {minMo:1, maxMo:11, minD:5, maxD:6, note:'Infant: 5-6 mk/day แบ่งวันละ 1-2 ครั้ง'},
+    {minMo:12, maxMo:59, minD:6, maxD:8, note:'1-5 ปี: 6-8 mk/day แบ่งวันละ 1-2 ครั้ง'},
+    {minMo:60, maxMo:144, minD:4, maxD:6, note:'5-12 ปี: 4-6 mk/day แบ่งวันละ 1-2 ครั้ง'},
+    {minMo:145, maxMo:9999, minD:1, maxD:3, note:'&gt;12 ปี: 1-3 mk/day แบ่งวันละ 1-2 ครั้ง'}
+  ]},
+  {label:'Sedative (oral)', minD:2, maxD:2, maxDose:40, iv:'tid', note:'Oral 2 mk/dose วันละ 3 ครั้ง (MAX 40 mg/dose)'},
+  {label:'Hypnotic', minD:2, maxD:3, iv:'qd', note:'IM/Oral 2-3 mk/dose ก่อนนอน'},
+  {label:'Hyperbilirubinemia', minD:3, maxD:8, daily:true, iv:'q 8-12 hr', note:'Oral 3-8 mk/day แบ่งวันละ 2-3 ครั้ง (MAX 12 mk/day)'}
+];
+// Levetiracetam maintenance — QSNICH แบ่งตามข้อบ่งใช้และอายุ
+const leveMaintInds = [
+  {label:'Partial onset', iv:'q 12 hr', note:'QSNICH ระบุขนาด partial onset ตั้งแต่อายุ 1 เดือนขึ้นไป — สำหรับ neonate ให้เลือก indication "Neonatal seizures"', byAge:[
+    {minMo:1, maxMo:5, minD:7, maxD:21, note:'1-&lt;6 เดือน: 7 mk/dose วันละ 2 ครั้ง เพิ่มครั้งละ 7 mk ทุก 2 สัปดาห์ (ขนาดแนะนำ 21 mk วันละ 2 ครั้ง)'},
+    {minMo:6, maxMo:47, minD:10, maxD:25, note:'≥6 เดือน-&lt;4 ปี: 10 mk/dose วันละ 2 ครั้ง เพิ่มครั้งละ 10 mk ทุก 2 สัปดาห์ (ขนาดแนะนำ 25 mk วันละ 2 ครั้ง)'},
+    {minMo:48, maxMo:191, minD:10, maxD:30, note:'≥4-&lt;16 ปี: 10 mk/dose วันละ 2 ครั้ง เพิ่มครั้งละ 10 mk ทุก 2 สัปดาห์ (ขนาดแนะนำ 30 mk วันละ 2 ครั้ง, MAX 3,000 mg/day)'},
+    {minMo:192, maxMo:9999, minTotal:500, maxTotal:1500, note:'≥16 ปี: 500 mg วันละ 2 ครั้ง เพิ่มครั้งละ 500 mg ทุก 2 สัปดาห์ (ขนาดแนะนำ 1,500 mg วันละ 2 ครั้ง)'}
+  ]},
+  {label:'Tonic-clonic', iv:'q 12 hr', note:'QSNICH ระบุขนาด tonic-clonic ตั้งแต่อายุ 6 ปีขึ้นไป', byAge:[
+    {minMo:72, maxMo:191, minD:10, maxD:30, note:'≥6-&lt;16 ปี: 10 mk/dose วันละ 2 ครั้ง เพิ่มครั้งละ 10 mk ทุก 2 สัปดาห์ (ขนาดแนะนำ 30 mk วันละ 2 ครั้ง, MAX 3,000 mg/day)'},
+    {minMo:192, maxMo:9999, minTotal:500, maxTotal:1500, note:'≥16 ปี: 500 mg วันละ 2 ครั้ง (ขนาดแนะนำ 1,500 mg วันละ 2 ครั้ง)'}
+  ]},
+  {label:'Myoclonic (≥12 ปี)', minTotal:500, maxTotal:1500, iv:'q 12 hr', note:'≥12 ปี-Adolescents: 500 mg วันละ 2 ครั้ง เพิ่มครั้งละ 500 mg ทุก 2 สัปดาห์ (ขนาดแนะนำ 1,500 mg วันละ 2 ครั้ง)'},
+  {label:'Neonatal seizures', minD:10, maxD:30, daily:true, iv:'q 12 hr', note:'IV 10 mk/day แบ่งวันละ 2 ครั้ง เพิ่มครั้งละ 10 mk ห่างกันอย่างน้อย 3 วัน ถึง 30 mk/day (ชักคุมยากอาจให้ถึง 60 mk/day)<br>Oral: เริ่ม 10 mk/day แบ่งวันละ 1-2 ครั้ง เพิ่มได้ถึง 30 mk/day (MAX 60 mk/day)'}
+];
+const leveRenalNote = 'ไตบกพร่อง: CrCl &lt;50 ml/min/1.73m² ให้ 50% ของขนาดปกติ | Hemodialysis 50% ทุก 24 ชม. + supplement dose หลังฟอก | CAPD/CRRT 50%';
+// Phenytoin maintenance — QSNICH ให้ทั้งขนาดทั่วไปและตามช่วงอายุ
+const phenytMaintInds = [
+  {label:'Maintenance (IV/PO)', daily:true, iv:'q 8-12 hr', byAge:[
+    {minMo:0, maxMo:0, minD:5, maxD:10, note:'Neonate: 5-10 mk/day แบ่งวันละ 2 ครั้ง (บางรายอาจต้องให้ทุก 8 ชม.)'},
+    {minMo:1, maxMo:5, minD:5, maxD:10, note:'ทั่วไป: 5-10 mk/day แบ่งวันละ 2-3 ครั้ง'},
+    {minMo:6, maxMo:47, minD:8, maxD:10, note:'6 เดือน-3 ปี: 8-10 mk/day'},
+    {minMo:48, maxMo:83, minD:7.5, maxD:9, note:'4-6 ปี: 7.5-9 mk/day'},
+    {minMo:84, maxMo:119, minD:7, maxD:8, note:'7-9 ปี: 7-8 mk/day'},
+    {minMo:120, maxMo:9999, minD:6, maxD:7, note:'10-16 ปี: 6-7 mk/day'}
+  ]},
+  {label:'Oral focal/generalized', minD:2.5, maxD:5, iv:'q 12 hr', note:'1-11 ปี: เริ่ม 1.5-2.5 mk วันละ 2 ครั้ง ปรับเป็น 2.5-5 mk/dose วันละ 2 ครั้ง (MAX 7.5 mk/dose และไม่เกิน 300 mg/day)<br>12-17 ปี: เริ่ม 75-150 mg วันละ 2 ครั้ง ปรับเป็น 150-200 mg วันละ 2 ครั้ง (MAX 300 mg วันละ 2 ครั้ง)<br>รูปแบบออกฤทธิ์สั้น/เคี้ยว แบ่งทุก 8 ชม. | sustained release ทุก 12-24 ชม.'},
+  {label:'Seizure px (TBI)', minD:6, maxD:6, daily:true, iv:'q 8 hr', note:'หลัง load 18 mk: 6 mk/day แบ่งทุก 8 ชม. นาน 48 ชม.'}
+];
+const phenytNote = 'Therapeutic level (total phenytoin) 10-20 mcg/mL (infant &amp; children) | 8-15 mcg/mL (neonate)<br>⚠️ ไม่ควรให้ทาง IM เนื่องจากดูดซึมทางกล้ามเนื้อไม่ดี';
+
 // ===== Drug Registry for Reverse Dose =====
 const drugRegistry = [
   // === DOSE TAB ===
@@ -2106,14 +2177,14 @@ const drugRegistry = [
   {id:'brom-syr', name:'Bromhexine syr', prep:'4 mg/5 mL', concMg:4, concVol:5, unit:'mL', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   {id:'brom-tab', name:'Bromhexine tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0.3, maxD:1.5, cat:'Mucolytic'},
   // Antitussive
-  {id:'gg-syr', name:'GG syrup', prep:'50 mg/5 mL', concMg:50, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin',
+  {id:'gg-syr', name:'GG syrup', prep:'50 mg/5 mL', concMg:50, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin,Guaiphenesin,Glyceryl guaiacolate,Glycerol guaiacolate,GG',
     autoByAge:true, indications:[
       {label:'<2yr', minMo:0, maxMo:23, minD:2, maxD:2, iv:'q 4 hr (max 6x/d)', note:'12mk/d÷6 MAX600mg/d'},
       {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:75, maxDay:600, iv:'q 4 hr (max 6x/d)', note:'50-100mg q4hr MAX600mg/d'},
       {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:150, maxDay:1200, iv:'q 4 hr (max 6x/d)', note:'100-200mg q4hr MAX1.2g/d'},
       {label:'≥12yr', minMo:144, maxMo:999, fixedMg:300, maxDay:2400, iv:'q 4 hr (max 6x/d)', note:'200-400mg q4hr MAX2.4g/d'}
     ]},
-  {id:'gg-syr-100', name:'GG syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin',
+  {id:'gg-syr-100', name:'GG syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antitussive', alias:'Guaifenesin,Guaiphenesin,Glyceryl guaiacolate,Glycerol guaiacolate,GG',
     autoByAge:true, indications:[
       {label:'<2yr', minMo:0, maxMo:23, minD:2, maxD:2, iv:'q 4 hr (max 6x/d)', note:'12mk/d÷6 MAX600mg/d'},
       {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:75, maxDay:600, iv:'q 4 hr (max 6x/d)', note:'50-100mg q4hr MAX600mg/d'},
@@ -2134,13 +2205,19 @@ const drugRegistry = [
   {id:'adr-pals', name:'Adrenaline PALS', prep:'1:10,000', concMg:0.1, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Adrenaline'},
   {id:'adr-anaph', name:'Adrenaline', prep:'1:1,000', concMg:1, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Adrenaline'},
   // Antiemetic
-  {id:'dom-syr', name:'Domperidone syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.2, maxD:0.3, cat:'Antiemetic'},
-  {id:'dom-tab', name:'Domperidone tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.2, maxD:0.3, cat:'Antiemetic'},
-  {id:'onda-iv', name:'Ondansetron IV', prep:'4 mg/amp', concMg:4, concVol:1, unit:'mL', minD:0.15, maxD:0.3, cat:'Antiemetic'},
-  {id:'onda-tab', name:'Ondansetron tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0.15, maxD:0.3, cat:'Antiemetic'},
-  {id:'metocl-iv', name:'Metoclopramide IV', prep:'10 mg/amp', concMg:10, concVol:1, unit:'mL', minD:0.1, maxD:0.1, cat:'Antiemetic'},
-  {id:'metocl-syr', name:'Metoclopramide syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.1, maxD:0.1, cat:'Antiemetic'},
-  {id:'metocl-tab', name:'Metoclopramide tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.1, maxD:0.1, cat:'Antiemetic'},
+  {id:'dom-syr', name:'Domperidone syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.4, maxDose:20, cat:'Antiemetic', alias:'Dominox,Motilium', note:domNote, indications:domInds},
+  {id:'dom-tab', name:'Domperidone tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.4, maxDose:20, cat:'Antiemetic', alias:'Motilium', note:domNote, indications:domInds},
+  {id:'onda-iv', name:'Ondansetron IV', prep:'4 mg/amp (2 mg/mL)', concMg:2, concVol:1, unit:'mL', minD:0.15, maxD:0.3, maxDose:16, cat:'Antiemetic',
+    indications:[
+      {label:'AGE (ครั้งเดียว)', minD:0.15, maxD:0.3, maxDose:16, iv:'single', note:'Acute gastroenteritis — IV Infants &amp; Children ≥1 เดือน: 0.15-0.3 mk ครั้งเดียว (MAX 16 mg/dose)<br>QSNICH: ไม่แนะนำเป็นยาตัวแรก'},
+      {label:'CVS (&gt;2 ปี)', minD:0.15, maxD:0.4, maxDose:16, iv:'q 4 hr', note:'Cyclic vomiting syndrome, acute attack: IV 0.15 mk ทุก 4 ชม. อาจใช้ขนาดสูง 0.3-0.4 mk/dose (MAX 16 mg/dose, ไม่เกิน 3 dose/day)'},
+      {label:'PONV', minD:0.1, maxD:0.1, maxDose:4, iv:'single', note:'ป้องกันคลื่นไส้อาเจียนหลังผ่าตัด (IV): ≤40 kg 0.1 mk ครั้งเดียว (MAX 4 mg/dose) | &gt;40 kg และ Adolescents 4 mg ครั้งเดียว'},
+      {label:'CINV', minD:0.15, maxD:0.15, maxDose:16, iv:'q 8 hr', note:'เคมีบำบัด — IV 0.15 mk/dose (MAX 16 mg/dose) ให้ 30 นาทีก่อนเริ่มเคมี ต่อมาทุก 4-8 ชม. รวม 3 dose'}
+    ]},
+  {id:'onda-tab', name:'Ondansetron tab', prep:'8 mg/tab', concMg:8, concVol:1, unit:'tab', minD:0.15, maxD:0.3, maxDose:16, cat:'Antiemetic', note:ondaOralNote},
+  {id:'metocl-iv', name:'Metoclopramide IV', prep:'10 mg/amp (5 mg/mL)', concMg:5, concVol:1, unit:'mL', minD:0.1, maxD:0.2, maxDose:10, cat:'Antiemetic', alias:'Plasil', note:metoclNote},
+  {id:'metocl-syr', name:'Metoclopramide syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.1, maxD:0.2, maxDose:10, cat:'Antiemetic', alias:'Plasil', note:metoclNote},
+  {id:'metocl-tab', name:'Metoclopramide tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.1, maxD:0.2, maxDose:10, cat:'Antiemetic', alias:'Plasil', note:metoclNote},
   {id:'dimen-iv', name:'Dimenhydrinate IV', prep:'50 mg/amp', concMg:50, concVol:1, unit:'mL', minD:1, maxD:1, cat:'Antiemetic'},
   {id:'dimen-tab', name:'Dimenhydrinate tab', prep:'50 mg/tab', concMg:50, concVol:1, unit:'tab', minD:1, maxD:1, cat:'Antiemetic'},
   // Antacid
@@ -2196,7 +2273,16 @@ const drugRegistry = [
     note:'⚠️ Anticholinergic — ห้ามใน narrow-angle glaucoma, myasthenia gravis, GI/urinary obstruction, megacolon, tachycardia<br>IV ต้องฉีดช้าๆ (เสี่ยง tachycardia/hypotension)'
   },
   // Laxatives
-  {id:'lactu-syr', name:'Lactulose', prep:'10 mg/5 mL', concMg:10, concVol:5, unit:'mL', minD:1, maxD:3, cat:'Laxatives'},
+  {id:'lactu-syr', name:'Lactulose', prep:'syr 10 g/15 mL (66.7%)', concMg:10000, concVol:15, unit:'mL', minD:1000, maxD:2000, daily:true, cat:'Laxatives', alias:'Hepalac, Duphalac',
+   note:'ปรับขนาดยาทุก 1-2 วัน จนถ่ายอุจจาระอ่อนนุ่มวันละ 2-3 ครั้ง — MAX 60 mL/day',
+   indications:[
+     {label:'ท้องผูก', minD:1000, maxD:2000, daily:true, iv:'q 12-24 hr', safeRangeText:'1–2 g/kg/day (1.5–3 mL/kg/day)',
+      note:'ตามน้ำหนัก: 1-2 g/kg/day (1.5-3 mL/kg/day) แบ่งวันละ 1-2 ครั้ง<br>ตามอายุ: 1-11 เดือน 2.5 mL bid | 1-4 ปี 2.5-10 mL bid | 5-17 ปี 5-20 mL bid<br>MAX 60 mL/day'},
+     {label:'PSE', minD:0, maxD:0, daily:true, iv:'tid-qid',
+      byAge:[{minMo:0, maxMo:11, minTotal:2.5*(10000/15), maxTotal:10*(10000/15), note:'Infant (&lt;1 ปี): 2.5-10 mL/day แบ่ง 3-4 ครั้ง'},
+             {minMo:12, maxMo:9999, minTotal:40*(10000/15), maxTotal:90*(10000/15), note:'Child (&ge;1 ปี): 40-90 mL/day แบ่ง 3-4 ครั้ง'}],
+      note:'Portal systemic encephalopathy — ปรับขนาดจนถ่ายอุจจาระวันละ 2-3 ครั้ง<br>Adult: acute 30-45 mL ทุก 1-2 ชม. จนถ่าย | chronic 30-45 mL วันละ 3-4 ครั้ง<br>Rectal (adult): 300 mL + น้ำ/NSS 700 mL สวนเก็บไว้ 30-60 นาที ซ้ำได้ q4-6hr'}
+   ]},
   // Steroid
   {id:'hydro-iv', name:'Hydrocortisone', prep:'100 mg/vial', concMg:1, concVol:1, unit:'mg', minD:1, maxD:5, cat:'Steroid', alias:'Solu-Cortef',
     indications:[
@@ -2277,20 +2363,36 @@ const drugRegistry = [
     ],
     note:'ยาเตรียมเฉพาะราย<br>dose เดียวกับ Prednisolone tab'},
   // Anti-epileptic
-  {id:'diaz-iv', name:'Diazepam IV/PO', prep:'10 mg/2 mL', concMg:10, concVol:2, unit:'mL', minD:0.3, maxD:0.3, cat:'Anti-epileptic'},
-  {id:'diaz-pr-2', name:'Diazepam PR', prep:'2 mg/tab', concMg:2, concVol:1, unit:'tab', minD:0.5, maxD:0.5, cat:'Anti-epileptic'},
-  {id:'diaz-pr-5', name:'Diazepam PR', prep:'5 mg/tab', concMg:5, concVol:1, unit:'tab', minD:0.5, maxD:0.5, cat:'Anti-epileptic'},
+  {id:'diaz-iv', name:'Diazepam IV/PO', prep:'10 mg/2 mL', concMg:10, concVol:2, unit:'mL', minD:0.2, maxD:0.5, cat:'Anti-epileptic', note:diazNote,
+    indications:[
+      {label:'Status epilepticus (IV)', iv:'single', byAge:[
+        {minMo:0, maxMo:0, minD:0.2, maxD:0.5, maxDose:5, note:'Neonates: QSNICH ระบุว่าไม่แนะนำเป็นยาตัวแรก'},
+        {minMo:1, maxMo:59, minD:0.2, maxD:0.5, maxDose:5, note:'&gt;30 วัน - &lt;5 ปี: 0.2-0.5 mk/dose slow IV ทุก 2-5 นาที (MAX total dose 5 mg) ให้ซ้ำได้ใน 2-4 ชม.'},
+        {minMo:60, maxMo:9999, fixedMg:1, maxDay:10, note:'≥5 ปี-Adolescents: 1 mg slow IV ทุก 2-5 นาที (MAX total dose 10 mg) ให้ซ้ำได้ใน 2-4 ชม.'}
+      ]},
+      {label:'Sedation ก่อนหัตถการ (IV)', minD:0.05, maxD:0.1, note:'Infants-Children: IV 0.05-0.1 mk/dose ทุก 3-5 ชั่วโมง (MAX total dose 0.25 mk)'},
+      {label:'Sedation ก่อนหัตถการ (oral)', minD:0.2, maxD:0.5, maxDose:10, iv:'single', note:'ให้ 45-60 นาทีก่อนทำหัตถการ — Infants ≥6 เดือน 0.2-0.3 mk | Children 0.2-0.5 mk | Adolescents 0.2-0.3 mk (MAX 10 mg/dose)'},
+      {label:'Febrile seizure px (oral)', minD:1, maxD:1, daily:true, iv:'q 8 hr', note:'Oral 1 mk/day แบ่งให้ทุก 8 ชม. เริ่มตั้งแต่มีไข้ จนไข้หายไป 24 ชม.'},
+      {label:'Spasticity (oral)', minD:0.12, maxD:0.8, daily:true, maxDose:10, iv:'q 6-8 hr', note:'≥6 เดือน-Children: 1-2.5 mg ทุก 6-8 ชม. หรือ 0.12-0.8 mk/day แบ่งทุก 6-8 ชม. (MAX 10 mg/dose)<br>12 ปี-Adolescents: 2-10 mg วันละ 2-4 ครั้ง<br>Cerebral palsy: 0.01-0.3 mk/day แบ่งวันละ 2-4 ครั้ง<br>Tetanus: &gt;30 วัน และ &lt;5 ปี 1-2 mg ทุก 2-4 ชม. | ≥5 ปี 5-10 mg ทุก 3-4 ชม. ตามอาการ'}
+    ]},
+  {id:'diaz-pr-2', name:'Diazepam PR', prep:'2 mg/tab', concMg:2, concVol:1, unit:'tab', minD:0.5, maxD:0.5, cat:'Anti-epileptic', note:diazPrNote},
+  {id:'diaz-pr-5', name:'Diazepam PR', prep:'5 mg/tab', concMg:5, concVol:1, unit:'tab', minD:0.5, maxD:0.5, cat:'Anti-epileptic', note:diazPrNote},
   {id:'midaz', name:'Midazolam', prep:'5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.1, maxD:0.15, cat:'Anti-epileptic'},
-  {id:'pheno-load', name:'Phenobarbital load', prep:'200 mg/mL', concMg:200, concVol:1, unit:'mL', minD:20, maxD:20, cat:'Anti-epileptic'},
-  {id:'pheno-maint-30', name:'Phenobarbital maint', prep:'30 mg/tab', concMg:30, concVol:1, unit:'tab', minD:2, maxD:3, cat:'Anti-epileptic'},
-  {id:'pheno-maint-60', name:'Phenobarbital maint', prep:'60 mg/tab', concMg:60, concVol:1, unit:'tab', minD:2, maxD:3, cat:'Anti-epileptic'},
-  {id:'phenyt-load', name:'Phenytoin load', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:20, maxD:20, cat:'Anti-epileptic'},
-  {id:'phenyt-maint', name:'Phenytoin maint', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:1.67, maxD:2.67, cat:'Anti-epileptic'},
-  {id:'valp-load', name:'Valproate load', prep:'100 mg/mL', concMg:100, concVol:1, unit:'mL', minD:20, maxD:40, cat:'Anti-epileptic'},
-  {id:'valp-maint', name:'Valproate maint', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:5, maxD:20, cat:'Anti-epileptic'},
-  {id:'leve-load', name:'Levetiracetam load', prep:'100 mg/mL', concMg:100, concVol:1, unit:'mL', minD:20, maxD:40, cat:'Anti-epileptic'},
-  {id:'leve-maint-250', name:'Levetiracetam maint', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:10, maxD:30, cat:'Anti-epileptic'},
-  {id:'leve-maint-500', name:'Levetiracetam maint', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:30, cat:'Anti-epileptic'},
+  {id:'pheno-load', name:'Phenobarbital load', prep:'200 mg/mL', concMg:200, concVol:1, unit:'mL', minD:15, maxD:20, cat:'Anti-epileptic',
+    note:'Infant &amp; Children (IV): 15-20 mk ครั้งเดียว หรือให้ซ้ำทุก 30 นาที ที่ 5-10 mk จนหยุดชัก — MAX total 40 mk (cumulative MAX 80 mk/day)<br>Neonates (IV): 5-20 mk ครั้งเดียวหรือให้ซ้ำทุก 15-20 นาที (MAX total 40 mk)<br>Neonatal abstinence syndrome: IV 16 mk ครั้งเดียว | Oral 16 mk แบ่ง 2 ครั้งทุก 4-6 ชม.<br>Neuroprotectant หลัง anoxic injury: IV 40 mk ครั้งเดียวก่อนทำ cooling<br>Therapeutic level 15-40 mcg/mL<br>เริ่ม maintenance หลัง loading 12-24 ชม.'},
+  {id:'pheno-maint-30', name:'Phenobarbital maint', prep:'30 mg/tab', concMg:30, concVol:1, unit:'tab', minD:4, maxD:6, daily:true, cat:'Anti-epileptic', note:'Therapeutic level 15-40 mcg/mL', indications:phenoMaintInds},
+  {id:'pheno-maint-60', name:'Phenobarbital maint', prep:'60 mg/tab', concMg:60, concVol:1, unit:'tab', minD:4, maxD:6, daily:true, cat:'Anti-epileptic', note:'Therapeutic level 15-40 mcg/mL', indications:phenoMaintInds},
+  {id:'phenyt-load', name:'Phenytoin load', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:15, maxD:20, maxDose:1500, cat:'Anti-epileptic',
+    note:'Infants, Children &amp; Adults (IV): load 15-20 mk (MAX 1,500 mg)<br>Neonate (IV): 20 mk ครั้งเดียว<br>Seizure px หลัง traumatic brain injury: 18 mk IV ให้นาน 20 นาที แล้วตามด้วย 6 mk/day แบ่งทุก 8 ชม. นาน 48 ชม.<br>เริ่ม maintenance หลัง loading 12 ชม.<br>' + phenytNote},
+  {id:'phenyt-maint', name:'Phenytoin maint', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:5, maxD:10, daily:true, cat:'Anti-epileptic', note:phenytNote, indications:phenytMaintInds},
+  {id:'valp-load', name:'Valproate load', prep:'400 mg/4 mL (100 mg/mL)', concMg:100, concVol:1, unit:'mL', minD:20, maxD:40, cat:'Anti-epileptic',
+    note:'Refractory status epilepticus (IV) Infants &amp; Children: 20-40 mk ด้วยอัตรา 6 mk/min แล้วตามด้วย continuous IV drip 5 mk/hr (range 1-6 mk/hr)<br>เมื่อ seizure free 6 ชม. ลดอัตราลง 1 mk/hr ทุก 2 ชม.<br>Therapeutic level 50-100 mcg/mL<br>⚠️ ไม่แนะนำให้ใช้ในเด็กอายุ &lt;2 ปี เนื่องจากเพิ่มความเสี่ยงพิษต่อตับ'},
+  {id:'valp-maint', name:'Valproate maint', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:30, maxD:60, daily:true, cat:'Anti-epileptic', alias:'Depakine,Valparin,Epiate',
+    note:'เริ่ม 10-15 mk/day แบ่งวันละ 1-3 ครั้ง เพิ่มสัปดาห์ละ 5-10 mk/day จนถึง therapeutic level<br>Maintenance 30-60 mk/day แบ่งวันละ 2-3 ครั้ง (ถ้าใช้ร่วมกับยากันชักตัวอื่นอาจใช้ถึง 100 mk/day, MAX ผู้ใหญ่ 1,500 mg/day)<br>IV: ขนาดรวมต่อวันเท่ากับ oral แต่แบ่งให้ทุก 6 ชม.<br>Therapeutic level 50-100 mcg/mL<br>⚠️ ไม่แนะนำให้ใช้ในเด็กอายุ &lt;2 ปี เนื่องจากเพิ่มความเสี่ยงพิษต่อตับ'},
+  {id:'leve-load', name:'Levetiracetam load', prep:'100 mg/mL (5 mL vial)', concMg:100, concVol:1, unit:'mL', minD:60, maxD:60, maxDose:4500, safeRangeText:'60 mg/kg ครั้งเดียว', cat:'Anti-epileptic', alias:'Keppra,Lecetam',
+    note:'Status epilepticus / urgent therapy (IV) — Infants, Children &amp; Adolescents: 60 mk ครั้งเดียว (MAX 4,500 mg/dose)<br>Neonates: 20-30 mk ครั้งเดียว<br>Maintenance MAX ในผู้ใหญ่ 3,000 mg/dose<br>QSNICH: ข้อมูลการใช้ใน status epilepticus ยังมีจำกัด<br>' + leveRenalNote},
+  {id:'leve-maint-250', name:'Levetiracetam maint', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:10, maxD:30, cat:'Anti-epileptic', alias:'Keppra,Lecetam', note:leveRenalNote, indications:leveMaintInds},
+  {id:'leve-maint-500', name:'Levetiracetam maint', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:30, cat:'Anti-epileptic', alias:'Keppra,Lecetam', note:leveRenalNote, indications:leveMaintInds},
   // Procedural sedation
   {id:'chloral-250', name:'Chloral hydrate', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation', note:'QSNICH: 25-50 mk q6-8hr MAX 500 mg/dose<br>Pre-EEG/procedure: 25-50 mk (อาจซ้ำใน 30 นาที, total MAX 100-120 mk)<br>Hypnotic: 50 mk MAX 1 g (Infants) / 2 g (Children)<br>NB: 25-75 mk/dose ระวังพิษสะสม<br>Adult Sedation: 250 mg tid | Hypnotic: 500-1000 mg hs (MAX 2 g/24hr)<br>Renal CrCl<50: หลีกเลี่ยง'},
   {id:'chloral-500', name:'Chloral hydrate', prep:'500 mg/5 mL', concMg:500, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation', note:'QSNICH: 25-50 mk q6-8hr MAX 500 mg/dose<br>Pre-EEG/procedure: 25-50 mk (อาจซ้ำใน 30 นาที, total MAX 100-120 mk)<br>Hypnotic: 50 mk MAX 1 g (Infants) / 2 g (Children)<br>NB: 25-75 mk/dose ระวังพิษสะสม<br>Adult Sedation: 250 mg tid | Hypnotic: 500-1000 mg hs (MAX 2 g/24hr)<br>Renal CrCl<50: หลีกเลี่ยง'},
@@ -2554,7 +2656,7 @@ function renderDose(w, am) {
   const ggMinMl100 = ageYr<2?((w*2)*5/100):null;
   const ggMaxMl = null;
   html += makeTable(doseHeaders, [
-    drugRow('GG syrup','(Guaifenesin)','50 mg/5 mL',ggDose,'', ggMin, ggMax, ggMinMl50, ggMaxMl, 'q 4 hr (max 6x/d)', '&lt;2yr:12mk/d÷6 MAX600mg/d | 2-&lt;6yr:50-100mg MAX600mg/d | 6-&lt;12yr:100-200mg MAX1.2g/d | &ge;12yr:200-400mg MAX2.4g/d'),
+    drugRow('GG syrup','(Guaifenesin, Glyceryl guaiacolate)','50 mg/5 mL',ggDose,'', ggMin, ggMax, ggMinMl50, ggMaxMl, 'q 4 hr (max 6x/d)', '&lt;2yr:12mk/d÷6 MAX600mg/d | 2-&lt;6yr:50-100mg MAX600mg/d | 6-&lt;12yr:100-200mg MAX1.2g/d | &ge;12yr:200-400mg MAX2.4g/d'),
     drugRow('GG syrup','','100 mg/5 mL','','', null, null, ggMinMl100, ggMaxMl, '', ''),
     drugRow('Levodropropizine','(Levopront)','30 mg/5 mL','1 mk/Dose','10 kg = ½ ช้อนชา bid', w*1, null, (w*1*5)/30, null, 'q 12 hr', 'MAX 60 mg/dose'),
   ]);
@@ -2606,14 +2708,17 @@ function renderDose(w, am) {
 
   // Antiemetic
   html += sectionHead('Antiemetic', 'ยาแก้อาเจียน');
+  const domRowNote = 'ก่อนอาหาร 15 นาที<br>N/V &gt;1 เดือน หรือ ≤35 kg: 0.25 mk tid (MAX 0.75 mk/day)<br>12-17 ปี หรือ ≥35 kg: 10 mg tid (MAX 30 mg/day)<br>GERD: 0.25 mk (MAX 10 mg/dose) — ถ้าไม่ได้ผลเพิ่มถึง 0.4 mk (MAX 20 mg/dose)';
+  const ondaRowNote = 'AGE: IV ครั้งเดียว ≥1 เดือน (MAX 16 mg/dose) — ไม่แนะนำเป็นยาตัวแรก<br>Oral 6 เดือน-10 ปี ครั้งเดียว: 8-15 kg 2 mg | &gt;15-30 kg 4 mg | &gt;30 kg 8 mg<br>CVS &gt;2 ปี: 0.15 mk q4hr (สูงได้ถึง 0.3-0.4 mk, ไม่เกิน 3 dose/day)<br>PONV: ≤40 kg 0.1 mk (MAX 4 mg) | &gt;40 kg 4 mg ครั้งเดียว';
+  const metoclRowNote = 'GERD: 0.1-0.2 mk/dose q6-8hr (MAX 10 mg/dose) | Neonate 0.1-0.15 mk q6hr<br>PONV (IV): 0.1-0.5 mk ครั้งเดียวหลัง induction (MAX 10 mg/dose)<br>ไตบกพร่อง: GFR 30-50 ให้ 75% | 10-29 ให้ 50% | &lt;10 หรือ HD/PD ให้ 25%<br>⚠️ ขนาดสูงควรให้ diphenhydramine ร่วม ลดความเสี่ยง extrapyramidal effect';
   html += makeTable(doseHeaders, [
-    drugRow('Domperidone syr','(Motilium)','5 mg/5 mL','0.2-0.3 mk/Dose','10 kg = ½ ช้อนชา tid', w*0.2, w*0.3, (w*0.2*5)/5, (w*0.3*5)/5, 'q 8 hr', ''),
-    drugRow('Domperidone tab','','10 mg/tab','','25 kg = ½ tab tid', w*0.2, w*0.3, (w*0.2)/10, (w*0.3)/10, 'q 8 hr', ''),
-    drugRow('Ondansetron IV','','4 mg/amp','0.15-0.3 mk/Dose','', w*0.15, w*0.3, null, null, 'IV single dose', ''),
-    drugRow('Ondansetron tab','','8 mg/tab','IV/PO q 8 hr','', w*0.15, w*0.3, (w*0.15)/8, (w*0.3)/8, 'q 8 hr', ''),
-    drugRow('Metoclopramide IV','(Plasil)','10 mg/amp','0.1 mk/Dose','', w*0.1, null, null, null, 'IV single dose', ''),
-    drugRow('Metoclopramide syr','','5 mg/5 mL','','', w*0.1, null, (w*0.1*5)/5, null, 'q 8 hr', ''),
-    drugRow('Metoclopramide tab','','10 mg/tab','','', w*0.1, null, (w*0.1)/10, null, 'q 8 hr', ''),
+    drugRow('Domperidone syr','(Dominox, Motilium)','5 mg/5 mL','0.25 mk/Dose<br>(เพิ่มได้ถึง 0.4)','10 kg = ½ ช้อนชา tid', w*0.25, w*0.4, (w*0.25*5)/5, (w*0.4*5)/5, 'tid', domRowNote, 20),
+    drugRow('Domperidone tab','','10 mg/tab','','25 kg = ½ tab tid', w*0.25, w*0.4, (w*0.25)/10, (w*0.4)/10, '', '', 20),
+    drugRow('Ondansetron IV','','4 mg/amp (2 mg/mL)','0.15-0.3 mk/Dose','', w*0.15, w*0.3, (w*0.15)/2, (w*0.3)/2, 'IV single dose', ondaRowNote, 16),
+    drugRow('Ondansetron tab','','8 mg/tab','ตามน้ำหนัก (oral)','', null, null, null, null, 'ครั้งเดียว', ''),
+    drugRow('Metoclopramide IV','(Plasil)','10 mg/amp (5 mg/mL)','0.1-0.2 mk/Dose','', w*0.1, w*0.2, (w*0.1)/5, (w*0.2)/5, 'q 6-8 hr', metoclRowNote, 10),
+    drugRow('Metoclopramide syr','','5 mg/5 mL','','', w*0.1, w*0.2, (w*0.1*5)/5, (w*0.2*5)/5, '', '', 10),
+    drugRow('Metoclopramide tab','','10 mg/tab','','', w*0.1, w*0.2, (w*0.1)/10, (w*0.2)/10, '', '', 10),
     drugRow('Dimenhydrinate IV','','50 mg/amp','1 mk/Dose','', w*1, null, null, null, 'IV single dose', ''),
     drugRow('Dimenhydrinate tab','','50 mg/tab','','', w*1, null, (w*1)/50, null, 'q 8 hr', ''),
   ]);
@@ -2650,7 +2755,8 @@ function renderDose(w, am) {
   // Laxatives
   html += sectionHead('Laxatives', 'ยาระบาย');
   let laxRows = `<table style="table-layout:fixed">${doseColgroup}${makeManualTableHead()}<tbody>`;
-  laxRows += makeRowHtml(drugRow('Lactulose','(Hepalac, Duphalac)','10 mg/5 mL','1-3 mL/kg/Day','', null, null, w*1, w*3, 'q 24 hr / hs', 'อายุ &gt;1 เดือน<br>MAX 60 mL/dose'));
+  const lactuNote = 'Constipation ตามอายุ: 1-11 เดือน 2.5 mL bid | 1-4 ปี 2.5-10 mL bid | 5-17 ปี 5-20 mL bid<br>MAX 60 mL/day<br>PSE: Infant 2.5-10 mL/day | Child 40-90 mL/day แบ่ง 3-4 ครั้ง';
+  laxRows += makeRowHtml(drugRow('Lactulose','(Hepalac, Duphalac)','syr 10 g/15 mL (66.7%)','1-2 g/kg/Day<br>(1.5-3 mL/kg/Day)','', null, null, w*1.5, w*3, 'q 12-24 hr', lactuNote));
   const momDose = ageYr<2?`0.5mL/kg (${r(w*0.5)}mL)`:ageYr<6?'5-15 mL':ageYr<12?'15-30 mL':'30-60 mL';
   laxRows += makeRowHtml(drugRow('Milk of Magnesia','','','0.5-1 mL/kg/dose',momDose, null, null, null, null, 'q 24 hr / hs or bid', '&lt;2yr:0.5mL/kg | 2-5yr:5-15mL | 6-11yr:15-30mL | &gt;12yr:30-60mL'));
   laxRows += '</tbody></table>';
@@ -2669,21 +2775,30 @@ function renderDose(w, am) {
 
   // Anti-epileptic
   html += sectionHead('Anti-epileptic Drugs', 'ยากันชัก');
+  const diazRowNote = 'Status epilepticus (IV): &gt;30 วัน-&lt;5 ปี 0.2-0.5 mk/dose slow IV ทุก 2-5 นาที (MAX total 5 mg) | ≥5 ปี 1 mg slow IV ทุก 2-5 นาที (MAX total 10 mg) — ซ้ำได้ใน 2-4 ชม.<br>Neonate: ไม่แนะนำเป็นยาตัวแรก<br>Febrile seizure px (oral): 1 mk/day แบ่ง q8hr จนไข้หายไป 24 ชม.<br>⚠️ IV push อาจทำให้เกิด sudden apnea';
+  const phenoRowNote = 'IV 15-20 mk ครั้งเดียว หรือซ้ำทุก 30 นาที ที่ 5-10 mk จนหยุดชัก<br>MAX total 40 mk (cumulative MAX 80 mk/day)<br>Neonate: 5-20 mk (ซ้ำทุก 15-20 นาที, MAX total 40 mk)<br>Therapeutic level 15-40 mcg/mL';
+  const phenoMaintRowNote = 'Neonate 3-4 | Infant 5-6 | 1-5 ปี 6-8 | 5-12 ปี 4-6 | &gt;12 ปี 1-3 mk/day (แบ่งวันละ 1-2 ครั้ง)<br>เริ่มหลัง loading 12 ชม.';
+  const phenytRowNote = 'IV load 15-20 mk (MAX 1,500 mg) | Neonate 20 mk ครั้งเดียว<br>TBI seizure px: 18 mk IV นาน 20 นาที แล้ว 6 mk/day q8hr นาน 48 ชม.<br>⚠️ ไม่ควรให้ทาง IM';
+  const phenytMaintRowNote = 'ทั่วไป 5-10 mk/day แบ่งวันละ 2-3 ครั้ง<br>ตามอายุ: 6 เดือน-3 ปี 8-10 | 4-6 ปี 7.5-9 | 7-9 ปี 7-8 | 10-16 ปี 6-7 mk/day<br>Therapeutic level 10-20 mcg/mL (8-15 ใน neonate)';
+  const valpRowNote = 'Refractory status epilepticus (IV): 20-40 mk อัตรา 6 mk/min แล้ว drip 5 mk/hr (range 1-6)<br>Therapeutic level 50-100 mcg/mL<br>⚠️ ไม่แนะนำในเด็กอายุ &lt;2 ปี (เสี่ยงพิษต่อตับ)';
+  const valpMaintRowNote = 'เริ่ม 10-15 mk/day แบ่งวันละ 1-3 ครั้ง เพิ่มสัปดาห์ละ 5-10 mk/day<br>Maintenance 30-60 mk/day แบ่งวันละ 2-3 ครั้ง (ร่วมกับยากันชักอื่นอาจถึง 100 mk/day)<br>MAX ผู้ใหญ่ 1,500 mg/day | IV แบ่งทุก 6 ชม.';
+  const leveRowNote = 'Status epilepticus (IV): 60 mk ครั้งเดียว (MAX 4,500 mg/dose)<br>Neonate: 20-30 mk ครั้งเดียว<br>ไตบกพร่อง CrCl &lt;50: ให้ 50% ของขนาดปกติ';
+  const leveMaintRowNote = 'Partial onset (วันละ 2 ครั้ง): 1-&lt;6 เดือน 7→21 mk/dose | ≥6 เดือน-&lt;4 ปี 10→25 mk/dose | ≥4-&lt;16 ปี 10→30 mk/dose (MAX 3,000 mg/day) | ≥16 ปี 500→1,500 mg/dose<br>Neonatal seizures: 10 mk/day แบ่ง 2 ครั้ง เพิ่มถึง 30 mk/day (MAX 60 mk/day)';
   html += makeTable(doseHeaders, [
-    drugRow('Diazepam IV/PO','','10 mg/2 mL','0.3 mg/kg','', w*0.3, null, null, null, '', ''),
-    drugRow('Diazepam PR','','2 mg/tab','0.5 mg/kg','', w*0.5, null, (w*0.5)/2, null, 'Rectal suppo', ''),
+    drugRow('Diazepam IV/PO','','10 mg/2 mL','0.2-0.5 mk/Dose','&lt;5 ปี | ≥5 ปี 1 mg/dose', w*0.2, w*0.5, (w*0.2*2)/10, (w*0.5*2)/10, 'slow IV q2-5min', diazRowNote, 5),
+    drugRow('Diazepam PR','','2 mg/tab','0.5 mg/kg','', w*0.5, null, (w*0.5)/2, null, 'Rectal suppo', diazPrNote),
     drugRow('Diazepam PR','','5 mg/tab','','', null, null, (w*0.5)/5, null, '', ''),
     drugRow('Midazolam','','5 mg/mL','0.1-0.15 mg/kg','IV/IM', w*0.1, w*0.15, null, null, '', ''),
-    drugRow('Phenobarbital load','','200 mg/mL','20 mk/Dose','', w*20, null, null, null, 'Loading', 'MAX 1000 mg'),
-    drugRow('Phenobarbital maint','','30 mg/tab','4-6 mk/Day','', (w*4)/2, (w*6)/2, ((w*4)/2)/30, ((w*6)/2)/30, 'q 12 hr', ''),
+    drugRow('Phenobarbital load','','200 mg/mL','15-20 mk/Dose','', w*15, w*20, (w*15)/200, (w*20)/200, 'Loading', phenoRowNote),
+    drugRow('Phenobarbital maint','','30 mg/tab','4-6 mk/Day<br>(ตามอายุ)','', (w*4)/2, (w*6)/2, ((w*4)/2)/30, ((w*6)/2)/30, 'q 12-24 hr', phenoMaintRowNote),
     drugRow('Phenobarbital maint','','60 mg/tab','','', null, null, ((w*4)/2)/60, ((w*6)/2)/60, '', ''),
-    drugRow('Phenytoin load','','250 mg/5 mL','20 mk/Dose','', w*20, null, null, null, 'Loading', 'MAX 1500 mg/day'),
-    drugRow('Phenytoin maint','','100 mg/cap','5-8 mk/Day','', (w*5)/3, (w*8)/3, null, null, 'q 8 hr', ''),
-    drugRow('Valproate load','','100 mg/mL','20-40 mk/Dose','', w*20, w*40, null, null, 'Loading', 'MAX 60 mk/Day'),
-    drugRow('Valproate maint','','200 mg/tab','15-60 mk/Day','', (w*15)/3, (w*60)/3, null, null, 'q 8 hr', ''),
-    drugRow('Levetiracetam load','','100 mg/mL','20-40 mk/Dose','', w*20, w*40, null, null, 'Loading', ''),
-    drugRow('Levetiracetam maint','','250 mg/tab','20-60 mk/Day','', (w*20)/2, (w*60)/2, ((w*20)/2)/250, ((w*60)/2)/250, 'q 12 hr', 'MAX 60 mk/Day (3000 mg/day)'),
-    drugRow('Levetiracetam maint','','500 mg/tab','','', null, null, ((w*20)/2)/500, ((w*60)/2)/500, '', ''),
+    drugRow('Phenytoin load','','250 mg/5 mL','15-20 mk/Dose','', w*15, w*20, (w*15*5)/250, (w*20*5)/250, 'Loading', phenytRowNote, 1500),
+    drugRow('Phenytoin maint','','100 mg/cap','5-10 mk/Day','', (w*5)/2, (w*10)/2, null, null, 'q 8-12 hr', phenytMaintRowNote),
+    drugRow('Valproate load','','400 mg/4 mL','20-40 mk/Dose','', w*20, w*40, (w*20)/100, (w*40)/100, 'Loading', valpRowNote),
+    drugRow('Valproate maint','','200 mg/tab','30-60 mk/Day','', (w*30)/2, (w*60)/2, ((w*30)/2)/200, ((w*60)/2)/200, 'q 8-12 hr', valpMaintRowNote),
+    drugRow('Levetiracetam load','','100 mg/mL','60 mk/Dose','ครั้งเดียว', w*60, null, (w*60)/100, null, 'Loading', leveRowNote, 4500),
+    drugRow('Levetiracetam maint','','250 mg/tab','10-30 mk/Dose<br>(ตามอายุ)','', w*10, w*30, (w*10)/250, (w*30)/250, 'q 12 hr', leveMaintRowNote),
+    drugRow('Levetiracetam maint','','500 mg/tab','','', null, null, (w*10)/500, (w*30)/500, '', ''),
   ]);
 
   // Procedural sedation
@@ -3273,7 +3388,8 @@ function updateRevBadge() {
 // Resolve byAge within an indication: returns age-matched sub-entry or the indication itself
 function resolveByAge(ind, am) {
   if (!ind || !ind.byAge) return ind;
-  const match = ind.byAge.find(a => am >= (a.minMo||0) && am <= (a.maxMo||9999));
+  // ใช้ ?? ไม่ใช่ || เพราะ maxMo:0 (ช่วง neonate) เป็น falsy — ถ้าใช้ || จะกลายเป็น 9999 และ match ทุกอายุ
+  const match = ind.byAge.find(a => am >= (a.minMo ?? 0) && am <= (a.maxMo ?? 9999));
   if (!match) return ind;
   // Merge: matched age entry overrides, but keep parent fields as fallback
   return Object.assign({}, ind, match);
@@ -3311,6 +3427,15 @@ function reverseCalc(drugId, amount, weight) {
         if (totalMg < ind.fixedMg * 0.8) status = 'low';
         else if (totalMg >= ind.fixedMg * 1.5) status = 'danger';
         else if (totalMg > ind.fixedMg * 1.1) status = 'high';
+      } else if (ind && ind.minTotal > 0) {
+        // ขนาดรวมไม่อิงน้ำหนัก (mg รวม/วัน ถ้า daily) — เทียบกับ minTotal/maxTotal ตรง ๆ
+        const freqSel = document.getElementById('disp-freq-' + drugId);
+        const freq = freqSel ? (parseInt(freqSel.value) || 1) : 1;
+        const checkTotalMg = (ind.daily || drug.daily) ? totalMg * freq : totalMg;
+        const eps = 0.001;
+        if (checkTotalMg < ind.minTotal - eps) status = 'low';
+        else if (checkTotalMg > ind.maxTotal * 1.5 + eps) status = 'danger';
+        else if (checkTotalMg > ind.maxTotal + eps) status = 'high';
       } else if (ind && ind.minD > 0) {
         const freqSel = document.getElementById('disp-freq-' + drugId);
         const freq = freqSel ? (parseInt(freqSel.value) || 1) : 1;
@@ -3321,6 +3446,13 @@ function reverseCalc(drugId, amount, weight) {
         else if (ind.maxDose && checkTotalMg > ind.maxDose) status = 'danger';
         else if (!ind.maxDose && ind.maxD > 0 && checkMk > ind.maxD * 1.5) status = 'danger';
         else if (ind.maxD > 0 && checkMk > ind.maxD) status = 'high';
+        // เพดานต่อวัน (mg/kg/day) ของ indication นั้น เช่น Domperidone N/V MAX 0.75 mk/d
+        const capMk = ind.maxDayMk || drug.maxDayMk;
+        if (capMk && !perDay) {
+          const dailyMk = mgPerKg * freq;
+          if (dailyMk > capMk * 1.2) status = 'danger';
+          else if (dailyMk > capMk && status !== 'danger') status = 'high';
+        }
       }
     }
   } else if (drug.daily) {
@@ -3396,10 +3528,12 @@ function renderSafeRangeHTML(drug, d, w, freq) {
     else { fShow = fmg; u = 'mg'; }
     return `<div class="rev-range">ครั้งละ: <strong>${fShow}</strong> ${u} (${fmg} mg/dose)${d.maxDay ? '<br>MAX ' + d.maxDay + ' mg/day' : ''}${d.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+d.note+'</span>' : ''}</div>`;
   }
-  const mn = d.minD, mx = d.maxD;
-  if (mn <= 0) return d.note ? `<div class="rev-range"><span style="font-size:0.72rem">${d.note}</span></div>` : '';
+  const mn = d.minD || 0, mx = d.maxD || 0; // undefined = ไม่มีช่วงตัวเลข (เช่น byAge ไม่ match อายุนี้)
+  // minTotal/maxTotal = ขนาดรวมเป็น mg ที่ไม่อิงน้ำหนัก (เช่น Lactulose ใน PSE สั่งเป็น mL/day ตามช่วงอายุ)
+  const isTotal = d.minTotal > 0;
+  if (!isTotal && mn <= 0) return d.note ? `<div class="rev-range"><span style="font-size:0.72rem">${d.note}</span></div>` : '';
   const perDay = d.daily || drug.daily;
-  let minMg = mn * w, maxMg = mx * w; // total per day if perDay, else per dose
+  let minMg = isTotal ? d.minTotal : mn * w, maxMg = isTotal ? d.maxTotal : mx * w; // total per day if perDay, else per dose
   if (d.maxDose && !perDay) { minMg = Math.min(minMg, d.maxDose); maxMg = Math.min(maxMg, d.maxDose); }
   const conv = (mg) => {
     if (drug.unit === 'mL') return ((mg * drug.concVol) / drug.concMg).toFixed(1);
@@ -3409,12 +3543,15 @@ function renderSafeRangeHTML(drug, d, w, freq) {
   let u = drug.unit;
   if (u !== 'mL' && u !== 'tab' && u !== 'cap') u = 'mg';
   const rangeLabel = perDay ? 'mg/kg/day' : 'mg/kg/dose';
+  // safeRangeText: override สำหรับยาที่สั่งเป็นปริมาตร/หน่วยอื่น (เช่น Lactulose ที่จริงคือ g/kg/day)
+  const safeTxt = d.safeRangeText || drug.safeRangeText ||
+    (isTotal ? `${conv(minMg)}–${conv(maxMg)} ${u}${perDay ? '/day' : '/dose'} (ตามอายุ ไม่อิงน้ำหนัก)` : `${mn}–${mx} ${rangeLabel}`);
   const maxDoseText = d.maxDose ? ' MAX ' + d.maxDose + ' mg/dose' : '';
   const indNote = d.note || '';
   if (perDay && freq > 0) {
     let minPer = minMg / freq, maxPer = maxMg / freq;
     if (d.maxDose) { minPer = Math.min(minPer, d.maxDose); maxPer = Math.min(maxPer, d.maxDose); }
-    return `<div class="rev-range">ครั้งละ <strong>${conv(minPer)}–${conv(maxPer)}</strong> ${u}/dose @ ${freqToLabel(freq)}<br>รวม/วัน: ${conv(minMg)}–${conv(maxMg)} ${u} (Safe: ${mn}–${mx} ${rangeLabel}${maxDoseText})${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
+    return `<div class="rev-range">ครั้งละ <strong>${conv(minPer)}–${conv(maxPer)}</strong> ${u}/dose @ ${freqToLabel(freq)}<br>รวม/วัน: ${conv(minMg)}–${conv(maxMg)} ${u} (Safe: ${safeTxt}${maxDoseText})${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
   }
   const amtLabel = perDay ? '/day' : '';
   // Per-dose drug with daily MAX (mg/kg/day): show effective per-dose ceiling at current freq
@@ -3428,7 +3565,7 @@ function renderSafeRangeHTML(drug, d, w, freq) {
       maxDayText = `<br><span style="color:#ffa726">MAX ${d.maxDayMk} mk/d</span>`;
     }
   }
-  return `<div class="rev-range">Min: <strong>${conv(minMg)}</strong> ${u}${amtLabel} — Max: <strong>${conv(maxMg)}</strong> ${u}${amtLabel}<br>Safe range: ${mn}–${mx} ${rangeLabel}${maxDoseText}${maxDayText}${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
+  return `<div class="rev-range">Min: <strong>${conv(minMg)}</strong> ${u}${amtLabel} — Max: <strong>${conv(maxMg)}</strong> ${u}${amtLabel}<br>Safe range: ${safeTxt}${maxDoseText}${maxDayText}${indNote ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+indNote+'</span>' : ''}</div>`;
 }
 function updateSafeRange(drugId, w) {
   const drug = drugRegistry.find(d => d.id === drugId);
@@ -3762,9 +3899,9 @@ function updateRevResult(drugId, val, weight) {
   const freq = getCurrentFreq(drugId) || 1;
   // Check if active context is daily-based (drug or selected indication) OR has daily MAX (PRN drugs)
   let isDaily = drug?.daily || drug?.maxDayMk;
+  let activeInd = null;
   if (drug?.indications) {
     const am = getActiveAgeMonths();
-    let activeInd;
     if (drug.autoByAge) {
       activeInd = drug.indications.find(i => am >= (i.minMo||0) && am <= (i.maxMo||999)) || drug.indications[0];
     } else {
@@ -3772,17 +3909,23 @@ function updateRevResult(drugId, val, weight) {
       const idx = sel ? (parseInt(sel.value) || 0) : 0;
       activeInd = resolveByAge(drug.indications[idx], am);
     }
-    isDaily = (activeInd?.daily) || isDaily;
+    isDaily = (activeInd?.daily) || activeInd?.maxDayMk || isDaily;
   }
+  // ขนาดที่ไม่อิงน้ำหนัก (minTotal) → mg/kg ไม่มีความหมาย แสดงเป็นปริมาณรวม/วันแทน
+  const isTotalInd = !!(activeInd && activeInd.minTotal > 0);
   let extra = '';
-  if (isDaily && freq > 1) {
+  if (isTotalInd) {
+    if (freq > 1) extra = ` <span style="font-size:0.72rem;opacity:0.85;">(× ${freq} = ${(amount*freq).toFixed(1)} ${drug.unit}/d)</span>`;
+  } else if (isDaily && freq > 1) {
     const dailyMk = r.mgPerKg * freq;
-    const overMax = drug?.maxDayMk && dailyMk > drug.maxDayMk;
+    const capMk = activeInd?.maxDayMk || drug?.maxDayMk;
+    const overMax = capMk && dailyMk > capMk;
     const color = overMax ? '#ef4444' : '';
-    extra = ` <span style="font-size:0.72rem;opacity:0.85;${color?'color:'+color+';font-weight:600;':''}">(× ${freq} = ${(r.totalMg*freq).toFixed(0)} mg/d, ${dailyMk.toFixed(1)} mk/d${drug?.maxDayMk ? ' / MAX '+drug.maxDayMk : ''})</span>`;
+    extra = ` <span style="font-size:0.72rem;opacity:0.85;${color?'color:'+color+';font-weight:600;':''}">(× ${freq} = ${(r.totalMg*freq).toFixed(0)} mg/d, ${dailyMk.toFixed(2)} mk/d${capMk ? ' / MAX '+capMk : ''})</span>`;
   }
+  const mgKgPart = isTotalInd ? '' : ` = <strong>${r.mgPerKg.toFixed(2)} mg/kg</strong>`;
   el.innerHTML = `<div class="rev-result ${r.status}">
-    → <strong>${r.totalMg.toFixed(1)} mg</strong> = <strong>${r.mgPerKg.toFixed(2)} mg/kg</strong>${extra} &nbsp; ${statusLabel}
+    → <strong>${r.totalMg.toFixed(1)} mg</strong>${mgKgPart}${extra} &nbsp; ${statusLabel}
   </div>`;
 }
 
@@ -3819,8 +3962,8 @@ const drugIntervals = {
   // Asthma
   'salb-syr':'bid-qid','salb-sol':'prn','salb-neb':'prn','terb':'prn','montel':'q 24 hr','montel-10':'q 24 hr',
   // Antiemetic
-  'dom-syr':'q 8 hr','dom-tab':'q 8 hr','onda-iv':'single','onda-tab':'q 8 hr',
-  'metocl-iv':'single','metocl-syr':'q 8 hr','metocl-tab':'q 8 hr',
+  'dom-syr':'tid','dom-tab':'tid','onda-iv':'single','onda-tab':'single',
+  'metocl-iv':'q 6-8 hr','metocl-syr':'q 6-8 hr','metocl-tab':'q 6-8 hr',
   'dimen-iv':'single','dimen-tab':'q 8 hr',
   // Antacid
   'omep-iv':'q 24 hr','omep-tab':'q 24 hr','rani-iv':'q 12 hr','rani-tab':'q 12 hr','famo-tab':'q 12-24 hr',
@@ -3829,8 +3972,10 @@ const drugIntervals = {
   // Steroid
   'hydro-iv':'q 6-8 hr','dexa-iv':'single','dexa-tab':'qd','pred-tab':'qd-qid','pred-susp':'qd-qid',
   // Anti-epileptic
-  'pheno-maint-30':'q 12 hr','pheno-maint-60':'q 12 hr',
-  'phenyt-maint':'q 8 hr','valp-maint':'q 8 hr',
+  'diaz-iv':'single','diaz-pr-2':'single','diaz-pr-5':'single',
+  'pheno-load':'single','phenyt-load':'single','valp-load':'single','leve-load':'single',
+  'pheno-maint-30':'q 12-24 hr','pheno-maint-60':'q 12-24 hr',
+  'phenyt-maint':'q 8-12 hr','valp-maint':'q 8-12 hr',
   'leve-maint-250':'q 12 hr','leve-maint-500':'q 12 hr',
   // ATB — Penicillins
   'penV-syr':'q 8 hr','penV-tab':'q 8 hr',
@@ -4191,7 +4336,8 @@ const allDrugs = [
   'Bromhexine','Bisolvon','Carbocysteine','Flemex','Fluifort',
   'Acetylcysteine','Fluimucil',
   // Antitussive
-  'Guaifenesin','GG','Levodropropizine','Levopront',
+  'Guaifenesin','Guaiphenesin','Glyceryl guaiacolate','Glycerol guaiacolate','GG','GG syrup',
+  'Levodropropizine','Levopront',
   // Decongestant
   'Oxymetazoline','Iliadin','Pseudoephedrine','Maxiphed','Nasolin',
   'Phenylephrine','Dimetapp',
@@ -4340,6 +4486,12 @@ function doSearch() {
     }
   });
 
+  // Drug names whose drugRegistry entry matches (covers aliases not printed in the table,
+  // e.g. "Guaiphenesin" → GG syrup, "Dormicum" → Midazolam, "Kapanol" → Morphine SR)
+  const aliasNames = drugRegistry
+    .filter(d => ((d.name + ' ' + d.prep + ' ' + d.cat + ' ' + (d.alias || '')).toLowerCase()).includes(val))
+    .map(d => d.name.toLowerCase());
+
   // Find matching rows in active tab only
   // Group consecutive rows by drug-name in each tbody (for multi-prep rows like GG/Acyclovir).
   // If ANY row in a group matches, highlight ALL rows in that group — so search by brand/alias
@@ -4364,7 +4516,10 @@ function doSearch() {
     if (cur.length) groups.push(cur);
     groups.forEach(group => {
       const groupText = group.map(tr => tr.textContent.toLowerCase()).join(' ');
-      if (groupText.includes(val)) group.forEach(tr => matchedSet.add(tr));
+      // Group's drug name (first row carries it); match against registry alias hits too
+      const gName = (group[0].querySelector('.drug-name')?.textContent || '').trim().toLowerCase();
+      const aliasHit = gName && aliasNames.some(n => n === gName || n.includes(gName) || gName.includes(n));
+      if (groupText.includes(val) || aliasHit) group.forEach(tr => matchedSet.add(tr));
     });
   });
   let firstMatch = null;
