@@ -554,6 +554,8 @@ body {
 .rev-input { width:100px; padding:8px; border:2px solid var(--border); border-radius:8px; background:var(--section-bg); color:var(--text); font-size:1rem; text-align:center; }
 .rev-input:focus { border-color:#ffa726; outline:none; }
 .rev-unit { font-size:0.85rem; color:var(--text-muted); }
+.rev-unit-select { padding:6px 4px; border:1px solid var(--border); border-radius:6px; background:var(--section-bg); color:var(--text); font-size:0.85rem; font-weight:600; }
+.rev-unit-select:focus { border-color:#ffa726; outline:none; }
 .rev-result { padding:8px 12px; border-radius:8px; font-size:0.85rem; }
 .rev-result.ok { background:rgba(102,187,106,0.15); color:#66bb6a; border:1px solid rgba(102,187,106,0.3); }
 .rev-result.low { background:rgba(148,163,184,0.15); color:#94a3b8; border:1px solid rgba(148,163,184,0.3); }
@@ -1186,7 +1188,11 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 
   <h3>V.6</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
-  <ul><li><span style="color:#ffa726;">[2026/09/06]</span> Change Log: เรียงรายการใหม่ให้<strong>รายการล่าสุดอยู่บนสุด</strong> ในบล็อก V.6 (ให้ตรงกับ V.5 ลงไปที่เรียงใหม่→เก่าอยู่แล้ว) — เวลาแก้ครั้งถัดไปให้แทรกรายการใหม่ไว้บนสุดของ &lt;ul&gt;</li>
+  <ul><li><span style="color:#ffa726;">[2026/09/27]</span> <strong>Ibuprofen ตาม QSNICH</strong> (เพิ่มรูปอ้างอิงแล้ว) — เดิมมีแค่ 5-10 mk/dose + MAX 40 mk/day ตอนนี้เพิ่ม <strong>MAX 400 mg/dose และ 1,200 mg/day</strong>, ระบุว่าใช้ในอายุ <strong>≥6 เดือน</strong>, และแยก 4 indication ใน Reverse:<br>• ลดไข้/แก้ปวด 5-10 mk/dose q6-8hr (&gt;12 ปี 200 mg q4-6hr)<br>• <strong>ขนาดตามอายุ (fixed dosing)</strong> 6-11 เดือน 50mg | 12-23 เดือน 75mg | 2-3 ปี 100mg | 4-5 ปี 150mg | 6-8 ปี 200mg | 9-10 ปี 250mg | 11 ปี 300mg (ทุก 6-8 ชม. ไม่เกินวันละ 4 ครั้ง)<br>• JIA 30-40 mk/day แบ่ง 3-4 ครั้ง (MAX 800 mg/dose, 2,400 mg/day)<br>• PDA closure (GA &lt;34 wk, BW &lt;1,500 g): 10 mk แล้ว 5 mk ที่ 24 และ 48 ชม.<br>เพิ่มการปรับขนาดในไตบกพร่อง (eGFR 30-&lt;60 พิจารณาหยุดชั่วคราว | &lt;30 หลีกเลี่ยง), ขนาดผู้ใหญ่ และ alias Brufen/Nurofen · ตาราง Dose แสดงขนาดตามอายุของผู้ป่วยในช่อง Approx และขึ้นสีแดงเมื่อคำนวณได้เกิน 400 mg/dose</li>
+    <li><span style="color:#ffa726;">[2026/09/27]</span> Fix: ยอด "ต้องจ่าย" ของยาฉีดไม่ขึ้น "(= 1 ขวด 60mL)" แล้ว — จำนวนขวดใช้เฉพาะยาน้ำกิน</li>
+    <li><span style="color:#ffa726;">[2026/09/27]</span> Reverse: ตั้งหน่วยเริ่มต้นให้ตรงกับที่สั่งจริง — <strong>ยาฉีดเริ่มที่ mg (Fentanyl = mcg)</strong> เช่น Ondansetron IV, Metoclopramide IV, Omeprazole IV, Ranitidine IV, Dimenhydrinate IV, Buscopan inj, Diazepam IV, Levetiracetam load, Midazolam IV/IM, Morphine inj, Ketamine IV/IM, Clindamycin IV, Metronidazole IV · <strong>ยาน้ำกิน/พ่น/หยอด เริ่มที่ mL</strong> และยาเม็ดเริ่มที่ tab/cap เหมือนเดิม (ยาพ่นอย่าง Ipratropium+Albuterol ที่ฉลากเขียน vial ก็ยังเป็น mL) · สลับหน่วยเองได้ทุกตัวเหมือนเดิม</li>
+    <li><span style="color:#ffa726;">[2026/09/27]</span> <strong>Reverse: เลือกหน่วยที่จะกรอกได้แล้ว</strong> — ช่อง "ครั้งละ" เปลี่ยนจากหน่วยตายตัวเป็น dropdown (mL ⇄ mg, tab/cap ⇄ mg, Fentanyl mL ⇄ mcg) สำหรับยาที่รู้ความเข้มข้น ส่วนยาที่กรอกเป็น mg/vial/MU อยู่แล้วยังคงเดิม<br>สลับหน่วยแล้ว<strong>ตัวเลขจะแปลงให้อัตโนมัติ</strong> (เช่น 6 mL ↔ 144 mg) ขนาดยาที่สั่งจึงไม่เปลี่ยน · ช่วงปลอดภัย Min/Max แสดงด้วยหน่วยเดียวกับที่เลือก · ปุ่ม +/− ก้าวตามหน่วย (mL/tab 0.5 · mg 10 · mcg 5) · ยอด "ต้องจ่าย" ยังเป็นหน่วยของรูปแบบยาเสมอ (mL/tab) และวงเล็บบอกยอดรวมในหน่วยที่กรอก</li>
+    <li><span style="color:#ffa726;">[2026/09/06]</span> Change Log: เรียงรายการใหม่ให้<strong>รายการล่าสุดอยู่บนสุด</strong> ในบล็อก V.6 (ให้ตรงกับ V.5 ลงไปที่เรียงใหม่→เก่าอยู่แล้ว) — เวลาแก้ครั้งถัดไปให้แทรกรายการใหม่ไว้บนสุดของ &lt;ul&gt;</li>
     <li><span style="color:#ffa726;">[2026/09/06]</span> Header: แก้เครดิตเป็น "BETA V.6 โดย นพ.ธนกฤต โอลาพฤกษ์ / กรุณา re-check dose ซ้ำ" · ใต้หัวแอปเป็น "Inspired by ER-TSH PED Calc" (ฝังลิงก์ ped-tsh.web.app เปิดแท็บใหม่ ไม่มีเส้นใต้) แล้วตามด้วย "Ref dose : Rx QSNICH" (เดิม "Source: ER TSH Ped Cal, Rx QSNICH")</li>
     <li><span style="color:#ffa726;">[2026/09/06]</span> <strong>Fentanyl แสดงเป็น mcg แล้ว</strong> (เดิมเก็บเป็น mg ทำให้ Safe range ขึ้นเป็น "0.001–0.002 mg/kg" และผลลัพธ์ขึ้น "0.0 mg" อ่านไม่ได้) — เพิ่ม field <code>doseUnit</code> ใน drugRegistry สำหรับยาที่สั่งเป็นหน่วยอื่น ตอนนี้ Reverse แสดง "→ 20.0 mcg = 6.7 mcg/kg" และ "Safe range: 1–2 mcg/kg/dose"<br>ตาราง Dose: เดิมใส่ค่า mcg ไว้ในคอลัมน์ Min/Max <b>mg</b> (14 kg ขึ้น 7/21 ใต้หัวตาราง mg) — เปลี่ยนเป็นแสดงปริมาตรที่ต้องดูดในคอลัมน์ mL แทน และแก้ขนาดตาม QSNICH: acute pain 1-2 mcg/kg/dose q2-4hr (เดิมเขียน 0.5-1.5), ET intubation 1-5 mcg/kg, พร้อม note ครบทุกช่วงอายุ + คำเตือน Naloxone</li>
     <li><span style="color:#ffa726;">[2026/09/06]</span> <strong>ไล่ตรวจทั้งไฟล์ (audit)</strong> แก้ที่เจอ:<br>• <b>ติ๊กเลือกยาไม่ได้ 8 แถว</b> เพราะข้อความ Preparation ในตารางกับใน registry ไม่ตรงกัน (Buscopan 3, Morphine SR 2, Morphine syr, Valproate load, Levetiracetam load) — ปรับให้ตรงกันและรวมชื่อกลุ่ม Buscopan/Morphine SR ให้เหมือนกันทุก prep<br>• <b>Interval ตกลงค่า default "3 ครั้ง" เงียบ ๆ</b>: เพิ่มรูปแบบ q 6-12 hr (Dexamethasone 3 indication ได้ตัวเลือก q6/q8/q12 แล้ว) และ q 4-8 hr | ยาที่ปรับต่อเนื่อง/ให้ครั้งเดียว (Midazolam titrate, Morphine drip, Fentanyl drip, Adrenaline anaphylaxis) แสดงเป็น 1 ครั้ง แทน 3 ครั้ง<br>• <b>ยา 32 รายการไม่มี default interval</b> (Reverse เดาเป็น q8hr ทุกตัว) — เติมให้ครบด้วยค่าเดียวกับที่ตารางแสดงอยู่แล้ว เช่น Ceftriaxone q24hr, Cloxacillin/Ampicillin/PGS q6hr, Cefazolin/Cefotaxime/Ceftazidime q8hr<br>• <b>Alum milk / Penicillin G / Benzathine Pen G ขึ้น "✅ OK" ทุกค่าที่พิมพ์</b> เพราะไม่มีความเข้มข้นในระบบ (คำนวณได้ 0 เสมอ) — เปลี่ยนเป็นข้อความ "ยังไม่มีข้อมูลคำนวณของยานี้ (ดู Note)"<br>• <b>ชื่อยาใน autocomplete ที่ค้นแล้วไม่เจอ</b>: เพิ่ม alias Chlorpheniramine, Epinephrine, Aluminium hydroxide, Sodium valproate, Morphine sulfate, Cotrimoxazole/TMP-SMX, Tamiflu และแก้คำสะกดผิด Adreanaline→Adrenaline, Fomotidine→Famotidine</li>
@@ -2104,6 +2110,25 @@ const lactuInds = [
           {minMo:12, maxMo:9999, minTotal:40*(10000/15), maxTotal:90*(10000/15), note:'Child (&ge;1 ปี): 40-90 mL/day แบ่ง 3-4 ครั้ง'}],
    note:'Portal systemic encephalopathy — ปรับขนาดจนถ่ายอุจจาระวันละ 2-3 ครั้ง<br>Adult: acute 30-45 mL ทุก 1-2 ชม. จนถ่าย | chronic 30-45 mL วันละ 3-4 ครั้ง<br>Rectal (adult): 300 mL + น้ำ/NSS 700 mL สวนเก็บไว้ 30-60 นาที ซ้ำได้ q4-6hr'}
 ];
+// Ibuprofen — QSNICH
+const ibuNote = 'ใช้ในอายุ ≥6 เดือนขึ้นไป (Antipyretic/Analgesic)<br>ไตบกพร่อง (เด็ก): eGFR 30-&lt;60 อาจพิจารณาหยุดยาชั่วคราวในผู้มีความเสี่ยงไตวายเฉียบพลัน | eGFR &lt;30 หลีกเลี่ยงการใช้<br>Adult: inflammatory 400-800 mg วันละ 3-4 ครั้ง (MAX 3.2 g/day) | pain/fever 200-400 mg ทุก 4-6 ชม. (MAX 1.2 g/day)';
+const ibuInds = [
+  {label:'ลดไข้/แก้ปวด', minD:5, maxD:10, maxDose:400, maxDayMk:40, iv:'q 6-8 hr',
+   note:'Infants ≥6 เดือน, Children &amp; Adolescents: 5-10 mk/dose ทุก 6-8 ชม.<br>MAX 400 mg/dose และไม่เกิน 40 mk/day หรือ 1,200 mg/day<br>Children &gt;12 ปี: 200 mg ทุก 4-6 ชม.'},
+  {label:'ตามอายุ (fixed)', iv:'q 6-8 hr',
+   note:'Fixed dosing เฉพาะอายุ 6 เดือน-11 ปี — ให้ทุก 6-8 ชม. ไม่เกินวันละ 4 ครั้ง (อายุอื่นใช้แบบ mg/kg)',
+   byAge:[{minMo:6, maxMo:11, fixedMg:50, maxDay:200, note:'6-11 เดือน: 50 mg ทุก 6-8 ชม. (ไม่เกินวันละ 4 ครั้ง)'},
+          {minMo:12, maxMo:23, fixedMg:75, maxDay:300, note:'12-23 เดือน: 75 mg ทุก 6-8 ชม.'},
+          {minMo:24, maxMo:47, fixedMg:100, maxDay:400, note:'2-3 ปี: 100 mg ทุก 6-8 ชม.'},
+          {minMo:48, maxMo:71, fixedMg:150, maxDay:600, note:'4-5 ปี: 150 mg ทุก 6-8 ชม.'},
+          {minMo:72, maxMo:107, fixedMg:200, maxDay:800, note:'6-8 ปี: 200 mg ทุก 6-8 ชม.'},
+          {minMo:108, maxMo:131, fixedMg:250, maxDay:1000, note:'9-10 ปี: 250 mg ทุก 6-8 ชม.'},
+          {minMo:132, maxMo:143, fixedMg:300, maxDay:1200, note:'11 ปี: 300 mg ทุก 6-8 ชม.'}]},
+  {label:'JIA', minD:30, maxD:40, daily:true, maxDose:800, iv:'q 6-8 hr',
+   note:'Juvenile idiopathic arthritis — Children &amp; Adolescents: 30-40 mk/day แบ่งวันละ 3-4 ครั้ง (MAX 800 mg/dose หรือ 2,400 mg/day)'},
+  {label:'PDA closure (NB)', minD:5, maxD:10, iv:'single',
+   note:'GA &lt;34 สัปดาห์ น้ำหนักแรกเกิด &lt;1,500 g: เริ่ม 10 mk แล้วตามด้วย 5 mk อีก 2 ครั้ง ที่ 24 และ 48 ชม. หลังให้ยาครั้งแรก'}
+];
 // GG (Guaifenesin) — QSNICH ให้ขนาดตามช่วงอายุ ใช้ชุดเดียวกันทุก prep
 const ggInds = [
   {label:'<2yr', minMo:0, maxMo:23, minD:2, maxD:2, iv:'q 4 hr (max 6x/d)', note:'12mk/d÷6 MAX600mg/d'},
@@ -2180,9 +2205,9 @@ const drugRegistry = [
   {id:'para-kit', name:'Paracetamol kit syr', prep:'60 mg/0.6 mL', concMg:60, concVol:0.6, unit:'mL', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d'},
   {id:'para-tab-325', name:'Paracetamol tab', prep:'325 mg/tab', concMg:325, concVol:1, unit:'tab', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
   {id:'para-tab-500', name:'Paracetamol tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
-  {id:'ibu-syr', name:'Ibuprofen syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:5, maxD:10, maxDayMk:40, cat:'Antipyretic', note:'PRN q6-8hr MAX 40 mk/d หรือ 1.2-2.4 g/d (adult)'},
-  {id:'ibu-tab-200', name:'Ibuprofen tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:5, maxD:10, maxDayMk:40, cat:'Antipyretic', note:'PRN q6-8hr MAX 40 mk/d หรือ 1.2-2.4 g/d (adult)'},
-  {id:'ibu-tab-400', name:'Ibuprofen tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:5, maxD:10, maxDayMk:40, cat:'Antipyretic', note:'PRN q6-8hr MAX 40 mk/d หรือ 1.2-2.4 g/d (adult)'},
+  {id:'ibu-syr', name:'Ibuprofen syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:5, maxD:10, maxDose:400, maxDayMk:40, cat:'Antipyretic', alias:'Brufen,Nurofen', note:ibuNote, indications:ibuInds},
+  {id:'ibu-tab-200', name:'Ibuprofen tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:5, maxD:10, maxDose:400, maxDayMk:40, cat:'Antipyretic', alias:'Brufen,Nurofen', note:ibuNote, indications:ibuInds},
+  {id:'ibu-tab-400', name:'Ibuprofen tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:5, maxD:10, maxDose:400, maxDayMk:40, cat:'Antipyretic', alias:'Brufen,Nurofen', note:ibuNote, indications:ibuInds},
   // Antihistamine
   {id:'cet-syr', name:'Cetirizine syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.5, cat:'Antihistamine'},
   {id:'cet-tab', name:'Cetirizine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.5, cat:'Antihistamine'},
@@ -2625,13 +2650,16 @@ function renderDose(w, am) {
 
   // Antipyretic / Analgesia
   html += sectionHead('Antipyretic / Analgesia', 'ยาแก้ปวด / ลดไข้');
+  // Ibuprofen — QSNICH: ขนาดตามอายุ (fixed dosing) และเพดานต่อครั้ง/ต่อวัน
+  const ibuFixedDose = (am||0)<6 ? 'ใช้ ≥6 เดือน' : (am||0)<12 ? '50 mg' : (am||0)<24 ? '75 mg' : ageYr<4 ? '100 mg' : ageYr<6 ? '150 mg' : ageYr<9 ? '200 mg' : ageYr<11 ? '250 mg' : ageYr<12 ? '300 mg' : '200 mg q4-6hr';
+  const ibuRowNote = 'ใช้ในอายุ ≥6 เดือน — MAX 400 mg/dose, 40 mk/day หรือ 1,200 mg/day<br>Fixed dosing 6-11 เดือน 50mg | 12-23 เดือน 75mg | 2-3 ปี 100mg | 4-5 ปี 150mg | 6-8 ปี 200mg | 9-10 ปี 250mg | 11 ปี 300mg (ทุก 6-8 ชม. ไม่เกินวันละ 4 ครั้ง)<br>&gt;12 ปี: 200 mg ทุก 4-6 ชม.<br>JIA: 30-40 mk/day แบ่ง 3-4 ครั้ง (MAX 800 mg/dose, 2,400 mg/day)<br>ไตบกพร่อง: eGFR 30-&lt;60 พิจารณาหยุดชั่วคราว | &lt;30 หลีกเลี่ยง';
   html += makeTable(doseHeaders, [
     drugRow('Paracetamol syrup','','120 mg/5 mL','10-15 mk/Dose','10 kg = 1 ช้อนชา', 10*w, 15*w, (10*w*5)/120, (15*w*5)/120, 'prn q 4-6 hr', 'MAX 90 mk/Day'),
     drugRow('Paracetamol syrup','','250 mg/5 mL','','10 kg = ½ ช้อนชา', null, null, (10*w*5)/250, (15*w*5)/250, '', ''),
     drugRow('Paracetamol kit syr','','60 mg/0.6 mL','','1 kg = 0.1 mL', null, null, (10*w*0.6)/60, (15*w*0.6)/60, '', ''),
     drugRow('Paracetamol tab','','325 mg/tab','','30 kg = 1 tab', null, null, (10*w)/325, (15*w)/325, '', ''),
     drugRow('Paracetamol tab','','500 mg/tab','','25 kg = ½ tab', null, null, (10*w)/500, (15*w)/500, '', ''),
-    drugRow('Ibuprofen syrup','','100 mg/5 mL','5-10 mk/Dose','10 kg = ½ ช้อนชา', 5*w, 10*w, (5*w*5)/100, (10*w*5)/100, 'prn q 6-8 hr', 'MAX 40 mk/Day'),
+    drugRow('Ibuprofen syrup','','100 mg/5 mL','5-10 mk/Dose',ibuFixedDose, 5*w, 10*w, (5*w*5)/100, (10*w*5)/100, 'prn q 6-8 hr', ibuRowNote, 400),
     drugRow('Ibuprofen tab','','200 mg/tab','','20 kg = ½-1 tab', null, null, (5*w)/200, (10*w)/200, '', ''),
     drugRow('Ibuprofen tab','','400 mg/tab','','40 kg = ½-1 tab', null, null, (5*w)/400, (10*w)/400, '', ''),
   ]);
@@ -3449,13 +3477,70 @@ function resolveByAge(ind, am, w) {
   return Object.assign({}, ind, match);
 }
 
+// ===== หน่วยที่กรอกใน Reverse =====
+// ยาที่รู้ความเข้มข้น เลือกกรอกได้ทั้งหน่วยของรูปแบบยา (mL/tab/cap) และหน่วยขนาดยา (mg/mcg)
+function inputUnitOptions(drug) {
+  const du = drug.doseUnit || 'mg';
+  if (!drug.concMg) return [drug.unit];
+  if (drug.unit === 'mL' || drug.unit === 'tab' || drug.unit === 'cap') return [drug.unit, du];
+  return [drug.unit];
+}
+// หน่วยตั้งต้น: ยาฉีดสั่งกันเป็น mg/mcg ส่วนยาน้ำกิน/พ่น/หยอด สั่งเป็น mL และยาเม็ดเป็น tab/cap
+// ยาฉีด = ชื่อ/รูปแบบยาบอกว่า inj / amp / vial / IV / IM และไม่ใช่ยาพ่น-หยอด
+function isInjectable(drug) {
+  const txt = ((drug.name || '') + ' ' + (drug.prep || '')).toLowerCase();
+  const inhaled = /\bneb\b|nebul|nebule|puff|spray|\bdrop\b/.test(txt) || drug.cat === 'Asthma';
+  return !inhaled && /\binj\b|\bamp\b|vial|\biv\b|\bim\b/.test(txt);
+}
+function defaultInputUnit(drug) {
+  const opts = inputUnitOptions(drug);
+  if (opts.length < 2) return opts[0];
+  return isInjectable(drug) ? (drug.doseUnit || 'mg') : opts[0];
+}
+function getInputUnit(drugId, drug) {
+  const sel = document.getElementById('rev-unit-' + drugId);
+  const opts = inputUnitOptions(drug);
+  return (sel && opts.includes(sel.value)) ? sel.value : defaultInputUnit(drug);
+}
+// แปลงจำนวนที่กรอก (ตามหน่วยที่เลือก) → mg/mcg ตาม doseUnit ของยา
+function amountToDose(drug, amount, unit) {
+  if (unit === 'mL') return (amount * drug.concMg) / drug.concVol;
+  if (unit === 'tab' || unit === 'cap') return amount * drug.concMg;
+  return amount; // กรอกเป็น mg/mcg อยู่แล้ว
+}
+// แปลงกลับจาก mg/mcg → หน่วยที่ต้องการ
+function doseToAmount(drug, dose, unit) {
+  if (unit === 'mL') return (dose * drug.concVol) / drug.concMg;
+  if (unit === 'tab' || unit === 'cap') return dose / drug.concMg;
+  return dose;
+}
+function fmtAmount(v) {
+  if (!isFinite(v)) return '';
+  const s = v >= 10 ? v.toFixed(1) : v.toFixed(2);
+  return s.replace(/\.?0+$/, '');
+}
+// เปลี่ยนหน่วย: แปลงตัวเลขที่กรอกไว้ให้เป็นขนาดยาเท่าเดิม แล้วคำนวณใหม่ทั้งการ์ด
+function onUnitChange(drugId, w) {
+  const drug = drugRegistry.find(d => d.id === drugId);
+  const sel = document.getElementById('rev-unit-' + drugId);
+  const inp = document.getElementById('rev-input-' + drugId);
+  if (!drug || !sel || !inp) return;
+  const prev = sel.dataset.prev || drug.unit;
+  const val = parseFloat(inp.value);
+  if (val > 0 && prev !== sel.value) inp.value = fmtAmount(doseToAmount(drug, amountToDose(drug, val, prev), sel.value));
+  sel.dataset.prev = sel.value;
+  updateSafeRange(drugId, w);
+  updateRevResult(drugId, inp.value, w);
+  updateDispense(drugId);
+}
+
 function reverseCalc(drugId, amount, weight) {
   const drug = drugRegistry.find(d => d.id === drugId);
   if (!drug || !amount || !weight) return null;
   // ยาที่ยังไม่มีความเข้มข้นในระบบ (เช่น Alum milk, Penicillin G, Benzathine Pen G) คำนวณไม่ได้
   // เดิมจะได้ 0 mg แล้วขึ้น "✅ OK" ซึ่งหลอกตา — ให้บอกตรง ๆ ว่ายังตรวจให้ไม่ได้
   if (!drug.concMg) return { totalMg: 0, mgPerKg: 0, status: 'na', minD: drug.minD, maxD: drug.maxD };
-  const totalMg = (amount * drug.concMg) / drug.concVol;
+  const totalMg = amountToDose(drug, amount, getInputUnit(drugId, drug));
   const mgPerKg = totalMg / weight;
   let status = 'ok';
   // For daily-dose drugs or autoByAge with fixedMg: check against matched indication
@@ -3579,9 +3664,10 @@ function freqToLabel(freq) {
 function renderSafeRangeHTML(drug, d, w, freq) {
   // doseUnit = หน่วยของตัวเลขขนาดยา (default mg) — ยาที่สั่งเป็น mcg เช่น Fentanyl ตั้ง doseUnit:'mcg'
   const du = drug.doseUnit || 'mg';
+  const iu = getInputUnit(drug.id, drug);   // หน่วยที่ผู้ใช้เลือกกรอก — แสดงช่วงปลอดภัยด้วยหน่วยเดียวกัน
   if (d.fixedMg) {
     const fmg = d.fixedMg;
-    let fShow, u = drug.unit;
+    let fShow, u = iu;
     if (u === 'mL') fShow = ((fmg * drug.concVol) / drug.concMg).toFixed(2);
     else if (u === 'tab' || u === 'cap') fShow = (fmg / drug.concMg).toFixed(2);
     else { fShow = fmg; u = du; }
@@ -3595,11 +3681,11 @@ function renderSafeRangeHTML(drug, d, w, freq) {
   let minMg = isTotal ? d.minTotal : mn * w, maxMg = isTotal ? d.maxTotal : mx * w; // total per day if perDay, else per dose
   if (d.maxDose && !perDay) { minMg = Math.min(minMg, d.maxDose); maxMg = Math.min(maxMg, d.maxDose); }
   const conv = (mg) => {
-    if (drug.unit === 'mL') return ((mg * drug.concVol) / drug.concMg).toFixed(1);
-    if (drug.unit === 'tab' || drug.unit === 'cap') return (mg / drug.concMg).toFixed(1);
+    if (iu === 'mL') return ((mg * drug.concVol) / drug.concMg).toFixed(1);
+    if (iu === 'tab' || iu === 'cap') return (mg / drug.concMg).toFixed(1);
     return mg.toFixed(1);
   };
-  let u = drug.unit;
+  let u = iu;
   if (u !== 'mL' && u !== 'tab' && u !== 'cap') u = du;
   const rangeLabel = perDay ? du + '/kg/day' : du + '/kg/dose';
   // safeRangeText: override สำหรับยาที่สั่งเป็นปริมาตร/หน่วยอื่น (เช่น Lactulose ที่จริงคือ g/kg/day)
@@ -3836,7 +3922,14 @@ function renderReverseDose() {
               oninput="updateRevResult('${id}', this.value, ${w}); updateDispense('${id}')">
             <button class="spin-btn" onclick="spinInput('${inputId}',0.5,'${id}',${w})">+</button>
           </div>
-          <span class="rev-unit">${drug.unit}</span>
+          ${(function(){
+            const uOpts = inputUnitOptions(drug);
+            const curU = getInputUnit(id, drug);
+            if (uOpts.length < 2) return `<span class="rev-unit">${drug.unit}</span>`;
+            return `<select class="rev-unit-select" id="rev-unit-${id}" data-prev="${curU}" onchange="onUnitChange('${id}', ${w})" title="เลือกหน่วยที่จะกรอก">
+              ${uOpts.map(o => `<option value="${o}"${o===curU?' selected':''}>${o}</option>`).join('')}
+            </select>`;
+          })()}
           <span class="rev-iv-label">×</span>
           <select class="rev-disp-select" id="disp-freq-${id}" onchange="updateSafeRange('${id}', ${w}); updateRevResult('${id}', document.getElementById('rev-input-${id}').value, ${w}); updateDispense('${id}')" style="min-width:110px;font-size:0.78rem;">
             ${ivOptions.map(o => `<option value="${o.value}"${existingFreq===String(o.value)?' selected':''}>${o.label}</option>`).join('')}
@@ -4132,10 +4225,17 @@ function updateDispense(drugId) {
   const el = document.getElementById('disp-result-' + drugId);
   if (!el || !amount || !days) { if (el) el.innerHTML = ''; return; }
 
-  const totalAmount = amount * freq * days;
+  const iu = getInputUnit(drugId, drug);
+  const totalInput = amount * freq * days;
+  // จ่ายยาเป็นหน่วยของรูปแบบยาเสมอ (mL/tab/cap) ถึงแม้จะกรอกเป็น mg/mcg
+  const totalAmount = (iu === drug.unit || !drug.concMg)
+    ? totalInput
+    : doseToAmount(drug, amountToDose(drug, totalInput, iu), drug.unit);
   let resultHtml = `<div class="rev-disp-result">`;
   resultHtml += `ต้องจ่าย: <strong>${totalAmount.toFixed(1)} ${drug.unit}</strong>`;
-  if (drug.unit === 'mL') {
+  if (iu !== drug.unit) resultHtml += ` <span class="bottles">(รวม ${fmtAmount(totalInput)} ${iu})</span>`;
+  // จำนวนขวดใช้กับยาน้ำกินเท่านั้น — ยาฉีดไม่ได้จ่ายเป็นขวด 60 mL
+  if (drug.unit === 'mL' && !isInjectable(drug)) {
     const bottles = Math.ceil(totalAmount / 60);
     resultHtml += ` <span class="bottles">(= ${bottles} ขวด 60mL)</span>`;
   }
@@ -4182,8 +4282,15 @@ function onGlobalEndChange() {
 function spinInput(inputId, delta, drugId, w) {
   const el = document.getElementById(inputId);
   if (!el) return;
+  // ขนาดก้าวตามหน่วยที่กรอกอยู่ — mL/tab ก้าวละ 0.5 ส่วน mg/mcg ก้าว 0.5 จะช้าเกินไป
+  const drug = drugRegistry.find(d => d.id === drugId);
+  let step = 0.5;
+  if (drug) {
+    const iu = getInputUnit(drugId, drug);
+    if (iu !== 'mL' && iu !== 'tab' && iu !== 'cap') step = (drug.doseUnit === 'mcg') ? 5 : 10;
+  }
   let val = parseFloat(el.value) || 0;
-  val = Math.max(0, val + delta);
+  val = Math.max(0, val + Math.sign(delta) * step);
   el.value = val % 1 === 0 ? val : val.toFixed(1);
   el.dispatchEvent(new Event('input'));
 }
