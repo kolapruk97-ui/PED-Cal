@@ -554,6 +554,8 @@ body {
 .rev-input { width:100px; padding:8px; border:2px solid var(--border); border-radius:8px; background:var(--section-bg); color:var(--text); font-size:1rem; text-align:center; }
 .rev-input:focus { border-color:#ffa726; outline:none; }
 .rev-unit { font-size:0.85rem; color:var(--text-muted); }
+.rev-ref-qsnich { font-size:0.6rem; font-weight:600; color:#ffffff; letter-spacing:0.3px; margin-left:4px; }
+.row-ref-qsnich { font-size:0.55rem; font-weight:600; color:#ffffff; letter-spacing:0.3px; }
 .rev-unit-select { padding:6px 4px; border:1px solid var(--border); border-radius:6px; background:var(--section-bg); color:var(--text); font-size:0.85rem; font-weight:600; }
 .rev-unit-select:focus { border-color:#ffa726; outline:none; }
 .rev-result { padding:8px 12px; border-radius:8px; font-size:0.85rem; }
@@ -1188,7 +1190,23 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 
   <h3>V.6</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
-  <ul><li><span style="color:#ffa726;">[2026/09/27]</span> <strong>Ibuprofen ตาม QSNICH</strong> (เพิ่มรูปอ้างอิงแล้ว) — เดิมมีแค่ 5-10 mk/dose + MAX 40 mk/day ตอนนี้เพิ่ม <strong>MAX 400 mg/dose และ 1,200 mg/day</strong>, ระบุว่าใช้ในอายุ <strong>≥6 เดือน</strong>, และแยก 4 indication ใน Reverse:<br>• ลดไข้/แก้ปวด 5-10 mk/dose q6-8hr (&gt;12 ปี 200 mg q4-6hr)<br>• <strong>ขนาดตามอายุ (fixed dosing)</strong> 6-11 เดือน 50mg | 12-23 เดือน 75mg | 2-3 ปี 100mg | 4-5 ปี 150mg | 6-8 ปี 200mg | 9-10 ปี 250mg | 11 ปี 300mg (ทุก 6-8 ชม. ไม่เกินวันละ 4 ครั้ง)<br>• JIA 30-40 mk/day แบ่ง 3-4 ครั้ง (MAX 800 mg/dose, 2,400 mg/day)<br>• PDA closure (GA &lt;34 wk, BW &lt;1,500 g): 10 mk แล้ว 5 mk ที่ 24 และ 48 ชม.<br>เพิ่มการปรับขนาดในไตบกพร่อง (eGFR 30-&lt;60 พิจารณาหยุดชั่วคราว | &lt;30 หลีกเลี่ยง), ขนาดผู้ใหญ่ และ alias Brufen/Nurofen · ตาราง Dose แสดงขนาดตามอายุของผู้ป่วยในช่อง Approx และขึ้นสีแดงเมื่อคำนวณได้เกิน 400 mg/dose</li>
+  <ul><li><span style="color:#ffa726;">[2026/10/30]</span> <strong>Acyclovir susp แก้ความแรงเป็น 20 mg/mL (20 mL)</strong> ตามรูป QSNICH (ยาเตรียมเฉพาะราย) — เดิม 200 mg/5 mL (= 40 mg/mL) ทำให้ปริมาตร mL ที่คำนวณได้เหลือครึ่งเดียวของที่ควรให้ · ผู้ใช้ยืนยันว่า รพ. ใช้ 20 mg/mL</li>
+    <li><span style="color:#ffa726;">[2026/10/30]</span> <strong>แก้บั๊ก daily vs ต่อ dose ใน Reverse</strong> — ยาที่ตัวยาเป็น mg/kg/<strong>day</strong> (Cipro, Metronidazole, Clindamycin, Cloxacillin, Cefazolin, Ceftriaxone, Amoxicillin, Phenobarbital maint, Phenytoin maint, Omeprazole) เดิมบังคับให้ <em>ทุก</em> indication เป็นต่อวัน ทำให้ indication ที่ QSNICH ให้เป็น <strong>ต่อ dose</strong> (เช่น Cipro UTI 10-20 mk/dose, Metronidazole C. diff / H. pylori, Neonate, Endocarditis/Surgical px, Phenobarbital sedative) คำนวณช่วงปลอดภัยต่ำไป 2-4 เท่า → เพิ่ม <code>isDailyCtx()</code> ให้ <code>daily</code> ของ indication มีผลเหนือตัวยา และระบุ <code>daily:false</code> ใน indication ต่อ dose ทั้งหมด</li>
+    <li><span style="color:#ffa726;">[2026/10/30]</span> <strong>เติม indication ที่ขาดตามรูป QSNICH 13 ตัว</strong>: <strong>Acyclovir</strong> (IV 9 / oral 8 indication: HSV orolabial, genital first/recurrent, mucocutaneous, suppression, encephalitis, retinal necrosis, disseminated, VZV, zoster + ขนาดยาไต oral/IV/IHD/PD/CRRT) · <strong>PGS</strong> (คำนวณใน Reverse ได้แล้ว หน่วย units: mild-mod, pneumonia, severe/CNS, neonate bacteremia/meningitis, GBS meningitis, congenital syphilis; renal เปลี่ยนเป็นตาม QSNICH) · <strong>Amoxicillin</strong> (8 indication; แก้ Rhinosinusitis เป็น 45 / 80-90 mk/day q12hr MAX 2 g/dose และ Tonsillopharyngitis เป็น 3-18 ปี 50 mk/day — ค่าเดิมไม่ตรงรูป) · <strong>Amox/Clav</strong> (indication syr/ES/tab/IV + aspirate pneumonia + renal) · <strong>Metronidazole</strong> (+Tetanus, Trichomoniasis, Bacterial vaginosis, PD exit-site / peritonitis, STD px, C. diff severe IV, colorectal px; เปลี่ยนชื่อ "Amoebic/IBD" → UC/pouchitis + Crohn; ตาราง ATB: oral 15-50 mk/day, IV MAX 4 g/day แทน 1.5 g) · <strong>Salbutamol</strong> (neb: neonate/children/adolescent, continuous, hyperkalemia; oral ตามอายุ; MDI ใน note) · <strong>Midazolam</strong> (+oral ก่อนหัตถการ, sedation ขณะใช้เครื่องช่วยหายใจ, neonatal anticonvulsant) · <strong>Methylprednisolone</strong> (+Pneumocystis pneumonia) · <strong>Ceftriaxone</strong> (+S. pneumoniae invasive CNS / non-CNS) · <strong>Montelukast</strong> (indication แยก allergic rhinitis / asthma maint / exacerbation 2-5 ปี / urticaria) · <strong>Paracetamol</strong> (+suppo 125, 250 mg พร้อมขนาด rectal และ peri-op; แก้ note ตาราง MAX 90 → 75 mk/day) · <strong>Ciprofloxacin</strong> (+Neonate / severe 10-60 mk/day; ตาราง 20-40 → 20-30 mk/day) · <strong>Cloxacillin</strong> (+ตาราง neonate age-directed; ตาราง ATB IV 50-100 → 100-200 mk/day MAX 2 g/dose) · หน่วย <code>supp</code> แปลงตามความแรงเหมือน tab · <em>ยังไม่แก้</em>: ความแรง Acyclovir susp (แอป 200 mg/5 mL vs QSNICH 20 mg/mL) รอยืนยัน</li>
+    <li><span style="color:#ffa726;">[2026/10/30]</span> Acetylcysteine — เลิกใช้ชื่อย่อ <strong>NAC</strong> ใช้ชื่อ Acetylcysteine อย่างเดียว: ลบ NAC ออกจาก alias, คำค้น, ชื่อการค้าในแถว inj และหมายเหตุ ("NAC IV/PO" → "Acetylcysteine IV/PO")</li>
+    <li><span style="color:#ffa726;">[2026/10/30]</span> <strong>+Acetylcysteine inj 300 mg/3 mL</strong> (ตามรูป QSNICH) — indication ใน Reverse: <strong>Paracetamol OD 21-hr</strong> 3 ขั้น (LD 150 mk MAX 15 g drip 60 นาที → 50 mk MAX 5 g drip 4 ชม. → 100 mk MAX 10 g drip 16 ชม.) และ <strong>Liver support</strong> ใน non-paracetamol ALF เฉพาะ BW   <ul><li>lt;40 kg (LD 150 mk ใน D5W 250 mL drip 30 นาที → MD 150 mk ใน D5W 250 mL drip 24 ชม.) · BW ≥40 kg ไม่แสดงช่วงขนาด เพราะ QSNICH ไม่ได้ระบุ · แถวในตาราง Dose แสดงขนาด LD · ค้นหาด้วย NAC ได้</li>
+    <li><span style="color:#ffa726;">[2026/10/30]</span> Acetylcysteine — <strong>Reverse แสดงช่วงขนาดยาได้แล้ว</strong> (เดิม minD/maxD = 0 จึงไม่ขึ้น dose): เพิ่ม indication <strong>Mucolytic (PO) 50-100 mg/dose tid-qid</strong> ตาม QSNICH (ขนาดรวมไม่อิงน้ำหนัก) ทั้ง Sachet 100 / Sachet 200 / Tab 600 mg พร้อมสถานะ OK/เกิน max · แก้บั๊กหน่วย <strong>sac</strong> ที่ถูกนับเป็น mg (กรอก 1 sac = 1 mg) → ตอนนี้แปลงตามความแรงซองเหมือน tab/cap และมีตัวเลือกหน่วย mg</li>
+    <li><span style="color:#ffa726;">[2026/10/30]</span> Acetylcysteine ชนิดกิน — แสดงตาม QSNICH ล้วน: <strong>50-100 mg/dose วันละ 3-4 ครั้ง ทุกอายุ</strong> · ลบหมายเหตุขนาด 200 mg ในเด็กโต (ข้อมูลเดิม ไม่มีใน QSNICH) · Interval ในตาราง bid/tid/qid → <strong>tid-qid</strong> และค่าเริ่มต้นใน Reverse bid-qid → <strong>tid-qid</strong> ให้ตรง "วันละ 3-4 ครั้ง"</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> Acetylcysteine — แก้ขนาดพ่นให้ตรงรูป QSNICH: <strong>10% solution — Infants 2-4 mL | Children-Adolescents 6-10 mL วันละ 3-4 ครั้ง</strong> (ทั่วไป 2-20 mL ทุก 2-6 ชม.) พ่น bronchodilator ก่อน 10-15 นาที — เดิมเขียน "10-15% 1-10 mL tid-qid" ซึ่งไม่ตรงกับรูป</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> <strong>Audit ข้อมูลเทียบรูป QSNICH ทุกใบ</strong> — แก้ที่พบ:<br>• 🔴 <strong>Chloral hydrate</strong>: note เขียน "25-50 mk q6-8hr" แต่รูประบุ 25-50 mk/<strong>day</strong> แบ่งทุก 6-8 ชม. (ต่างกัน 3-4 เท่า) แก้แล้ว พร้อมแยก pre-EEG 25-50 mk/dose กับ nonpainful procedure 50-75 mk/dose และ total max ของแต่ละแบบ<br>• 🟠 <strong>Acetylcysteine</strong>: "&gt;6 ปี 200 mg" ไม่มีในรูป (รูประบุ 50-100 mg/dose วันละ 3-4 ครั้ง ทุกอายุ) · เติม MAX ของ NAC IV (15/5/10 g) · ติดป้ายว่า NAC PO ไม่มีใน QSNICH<br>• 🟠 <strong>Salbutamol NEB</strong>: "&lt;20 kg ½ nebule (1.25 mg)" ขัดกับรูปที่ระบุ Min 2.5 mg/dose — ติดป้ายว่าเป็นข้อมูลเดิมในแอป และเติม MAX 10 mg/dose + fixed dose hyperkalemia (&lt;25 kg 2.5 mg | ≥25 kg 5 mg)<br>• 🟡 <strong>CPM / Oxymetazoline</strong>: คำว่า "ห้ามใช้ &lt;2 ปี" ไม่มีในรูป (รูปเพียงเริ่มระบุขนาดที่ 2 ปี) — แก้เป็น "QSNICH ระบุขนาดตั้งแต่ 2 ปีขึ้นไป" (CPM รูปฉีดใช้ได้ตั้งแต่ 1 เดือน)<br>• 🟡 <strong>Carbocysteine lysine</strong> (Fluifort): ถอดป้าย Ref QSNICH เพราะขนาดของ lysine salt ไม่มีในรูป Carbocysteine</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> <strong>+ยาใหม่ 5 รายการตาม QSNICH</strong> — <strong>Diclofenac</strong> tab 25 mg (JIA 2-3 mk/day แบ่ง 2-4 ครั้ง, MAX 150 mg/day) · <strong>Celecoxib</strong> cap 200 mg (JIA ≥2 ปี — 10-25 kg 50 mg bid | &gt;25 kg 100 mg bid) · <strong>Loperamide</strong> tab 2 mg (acute diarrhea ตามอายุ/น้ำหนัก พร้อมเพดานต่อวัน 3/4/6/8 mg + chronic diarrhea) · <strong>Methylprednisolone</strong> inj 40 และ 500 mg (acute asthma, status asthmaticus, anaphylaxis, pulse therapy, lupus nephritis) · <strong>Milk of Magnesia</strong> เข้า Reverse ได้แล้ว (susp 400 mg/5 mL — 80-240 mg/kg/day = 1-3 mL/kg/day, MAX 60 mL/day และขนาดตามอายุ) — เดิมมีแค่แถวในตาราง Dose</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> <strong>ยาปฏิชีวนะและยาอื่นๆ ตาม QSNICH</strong> (รูปใหม่ 11 รายการ) — ใส่ indication + เพดานต่อครั้ง/ต่อวัน + การปรับขนาดในไตบกพร่อง:<br><strong>Cloxacillin IV</strong> 100-200 mk/day (เดิม 50-100) MAX 2,000 mg/dose + endocarditis 200-300 + neonate · <strong>Dicloxacillin</strong> mild 12-25 | skin/soft tissue 25-50 | severe 100 mk/day (MAX 250-500 mg/dose) · <strong>Cefazolin</strong> 25-150 mk/day + endocarditis px 50 mk + neonate PMA · <strong>Ceftriaxone</strong> แยก mild/pneumonia/severe-meningitis/UTI/neonate + ข้อห้ามใช้ในทารกคลอดก่อนกำหนด/hyperbilirubinemia/ได้ calcium IV · <strong>Clindamycin</strong> oral 10-40, IV mild 20 / severe 40 mk/day + surgical &amp; endocarditis px · <strong>Metronidazole</strong> oral 15-50, IV 22.5-40 mk/day + C. difficile, H. pylori, intra-abdominal, appendicitis · <strong>Ciprofloxacin</strong> 20-30 mk/day + UTI/Pseudomonas/dysentery/meningococcal px · <strong>Cefdinir</strong> MAX 600 mg/day · <strong>Cefixime</strong> MAX 400 mg/day + ไม่รับรองในเด็ก &lt;6 เดือน · <strong>Norfloxacin</strong> MAX 400 mg/dose (≥6 เดือน) · <strong>Omeprazole</strong> แยก GERD / erosive esophagitis (ตามน้ำหนัก 2.5-20 mg) / H. pylori (20-40 mg bid) / IV</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> <strong>Fix สำคัญ: Paracetamol เพดานต่อวันคือ 75 mk/day ไม่ใช่ 90</strong> ตาม QSNICH — แก้ค่า maxDayMk ทุก prep (เดิม 90 mk/day) และเพิ่มข้อมูลครบ: ไม่เกิน 5 ครั้ง/24 ชม. และ 4,000 mg/day · ขนาดใน neonate ตาม GA (MAX 40-75 mk/day) · IV แยกตามอายุ (&lt;2 ปี MAX 60 mk/day | ≥2 ปี 75 mk/day, ≥50 kg 1,000 mg q6hr) · PDA closure · การปรับในไตบกพร่อง</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> Reverse: รองรับช่วงขนาดยาที่แบ่งตาม<strong>น้ำหนักล้วน</strong> (ไม่มีเกณฑ์อายุ) — เดิมแถบที่มีแต่ minKg/maxKg จะ match ทุกคน ใช้กับ Omeprazole (erosive esophagitis, H. pylori), Celecoxib และ Loperamide</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> <strong>Cetirizine ตาม QSNICH</strong> (เพิ่มรูปอ้างอิงแล้ว) — เดิมคิดเป็น 0.25-0.5 mk/dose ซึ่งไม่ตรงกับ ref ที่ให้เป็นขนาดคงที่ตามอายุ:<br>6-&lt;12 เดือน 2.5 mg วันละ 1 ครั้ง | 12-23 เดือน 2.5 mg qd ปรับเป็น bid ได้ | 2-5 ปี 2.5 mg qd → bid หรือ 5 mg qd (<strong>MAX 5 mg/day</strong>) | ≥6 ปี 5-10 mg วันละ 1 ครั้ง<br>ระบุว่าใช้ในอายุ <strong>≥6 เดือน</strong> (เดิมตารางเขียน 6mo-2yr 2.5mg | 2-6yr 5mg | &gt;6yr 10mg) · เพิ่มการปรับขนาดในไตบกพร่อง (GFR 10-29 ใช้ 50% | &lt;10 ไม่แนะนำ | HD/PD 50%) · prep เป็น syr 5 mg/5 mL ขวด 60 mL · alias Zyrtec · ขึ้นป้าย Ref QSNICH ทั้ง 3 แท็บแล้ว</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> ป้าย <strong>Ref QSNICH</strong> (ตัวอักษรสีขาว) ขึ้นในแท็บ <strong>Dose และ ATB</strong> ด้วยแล้ว — แสดงใต้ชื่อยา ยาหนึ่งตัวขึ้นครั้งเดียวต่อแท็บ ไม่ซ้ำทุก prep (Dose 48 ป้าย, ATB 11 ป้าย) · ใช้รายชื่อชุดเดียวกับแท็บ Reverse (<code>qsnichRefIds</code>)</li>
+    <li><span style="color:#ffa726;">[2026/10/28]</span> Reverse: การ์ดยาที่มีรูปอ้างอิงจาก QSNICH จะขึ้นคำว่า <strong>Ref QSNICH</strong> (ตัวอักษรสีขาว) ต่อท้ายประเภทยา เช่น "Ondansetron IV <em>Antiemetic</em> Ref QSNICH" — ครอบคลุม 85 จาก 174 รายการ (35 รูปในโฟลเดอร์ QSNICH/) ยาที่ยังไม่มีรูปอ้างอิงจะไม่ขึ้นป้าย · รายชื่อเก็บไว้ที่ <code>qsnichRefIds</code> เติม id เมื่อเพิ่มรูปใหม่</li>
+    <li><span style="color:#ffa726;">[2026/09/27]</span> <strong>Ibuprofen ตาม QSNICH</strong> (เพิ่มรูปอ้างอิงแล้ว) — เดิมมีแค่ 5-10 mk/dose + MAX 40 mk/day ตอนนี้เพิ่ม <strong>MAX 400 mg/dose และ 1,200 mg/day</strong>, ระบุว่าใช้ในอายุ <strong>≥6 เดือน</strong>, และแยก 4 indication ใน Reverse:<br>• ลดไข้/แก้ปวด 5-10 mk/dose q6-8hr (&gt;12 ปี 200 mg q4-6hr)<br>• <strong>ขนาดตามอายุ (fixed dosing)</strong> 6-11 เดือน 50mg | 12-23 เดือน 75mg | 2-3 ปี 100mg | 4-5 ปี 150mg | 6-8 ปี 200mg | 9-10 ปี 250mg | 11 ปี 300mg (ทุก 6-8 ชม. ไม่เกินวันละ 4 ครั้ง)<br>• JIA 30-40 mk/day แบ่ง 3-4 ครั้ง (MAX 800 mg/dose, 2,400 mg/day)<br>• PDA closure (GA &lt;34 wk, BW &lt;1,500 g): 10 mk แล้ว 5 mk ที่ 24 และ 48 ชม.<br>เพิ่มการปรับขนาดในไตบกพร่อง (eGFR 30-&lt;60 พิจารณาหยุดชั่วคราว | &lt;30 หลีกเลี่ยง), ขนาดผู้ใหญ่ และ alias Brufen/Nurofen · ตาราง Dose แสดงขนาดตามอายุของผู้ป่วยในช่อง Approx และขึ้นสีแดงเมื่อคำนวณได้เกิน 400 mg/dose</li>
     <li><span style="color:#ffa726;">[2026/09/27]</span> Fix: ยอด "ต้องจ่าย" ของยาฉีดไม่ขึ้น "(= 1 ขวด 60mL)" แล้ว — จำนวนขวดใช้เฉพาะยาน้ำกิน</li>
     <li><span style="color:#ffa726;">[2026/09/27]</span> Reverse: ตั้งหน่วยเริ่มต้นให้ตรงกับที่สั่งจริง — <strong>ยาฉีดเริ่มที่ mg (Fentanyl = mcg)</strong> เช่น Ondansetron IV, Metoclopramide IV, Omeprazole IV, Ranitidine IV, Dimenhydrinate IV, Buscopan inj, Diazepam IV, Levetiracetam load, Midazolam IV/IM, Morphine inj, Ketamine IV/IM, Clindamycin IV, Metronidazole IV · <strong>ยาน้ำกิน/พ่น/หยอด เริ่มที่ mL</strong> และยาเม็ดเริ่มที่ tab/cap เหมือนเดิม (ยาพ่นอย่าง Ipratropium+Albuterol ที่ฉลากเขียน vial ก็ยังเป็น mL) · สลับหน่วยเองได้ทุกตัวเหมือนเดิม</li>
     <li><span style="color:#ffa726;">[2026/09/27]</span> <strong>Reverse: เลือกหน่วยที่จะกรอกได้แล้ว</strong> — ช่อง "ครั้งละ" เปลี่ยนจากหน่วยตายตัวเป็น dropdown (mL ⇄ mg, tab/cap ⇄ mg, Fentanyl mL ⇄ mcg) สำหรับยาที่รู้ความเข้มข้น ส่วนยาที่กรอกเป็น mg/vial/MU อยู่แล้วยังคงเดิม<br>สลับหน่วยแล้ว<strong>ตัวเลขจะแปลงให้อัตโนมัติ</strong> (เช่น 6 mL ↔ 144 mg) ขนาดยาที่สั่งจึงไม่เปลี่ยน · ช่วงปลอดภัย Min/Max แสดงด้วยหน่วยเดียวกับที่เลือก · ปุ่ม +/− ก้าวตามหน่วย (mL/tab 0.5 · mg 10 · mcg 5) · ยอด "ต้องจ่าย" ยังเป็นหน่วยของรูปแบบยาเสมอ (mL/tab) และวงเล็บบอกยอดรวมในหน่วยที่กรอก</li>
@@ -2041,7 +2059,8 @@ function makeRowHtml(row) {
   const prepText = row[1].replace(/<[^>]*>/g, '').trim();
   const drugId = findDrugId(drugName, prepText);
   const chk = drugId ? `<input type="checkbox" class="drug-chk" data-drug-id="${drugId}" ${selectedDrugs.has(drugId)?'checked':''} onchange="toggleDrugSelect(this)">` : '';
-  return '<tr><td style="padding:2px;text-align:center">' + chk + '</td>' + row.map(c=>`<td>${c}</td>`).join('') + '</tr>';
+  const cells = row.slice(); cells[0] = withQsnichTag(cells[0], drugId, drugName);
+  return '<tr><td style="padding:2px;text-align:center">' + chk + '</td>' + cells.map(c=>`<td>${c}</td>`).join('') + '</tr>';
 }
 
 function makeManualTableHead() {
@@ -2058,6 +2077,16 @@ function findDrugId(name, prep) {
   return d ? d.id : null;
 }
 
+// แปะป้าย "Ref QSNICH" ที่เซลล์ชื่อยา — ยาหนึ่งตัวแสดงครั้งเดียวต่อการ render ตาราง 1 แท็บ
+// (ยาที่มีหลาย prep หรือถูกแยกหลายบล็อกอย่าง Domperidone N/V + GERD จะไม่ขึ้นป้ายซ้ำ)
+let _taggedRefNames = new Set();
+function resetQsnichTags() { _taggedRefNames = new Set(); }
+function withQsnichTag(nameCell, drugId, drugName) {
+  if (!drugId || !qsnichRefIds.has(drugId) || _taggedRefNames.has(drugName)) return nameCell;
+  _taggedRefNames.add(drugName);
+  return nameCell + '<br><span class="row-ref-qsnich">Ref QSNICH</span>';
+}
+
 function makeTable(headers, rows) {
   const isDose = headers === doseHeaders;
   const cg = isDose ? doseColgroup : '';
@@ -2069,7 +2098,8 @@ function makeTable(headers, rows) {
     const prepText = row[1].replace(/<[^>]*>/g, '').trim();
     const drugId = findDrugId(drugName, prepText);
     const chk = drugId ? `<input type="checkbox" class="drug-chk" data-drug-id="${drugId}" ${selectedDrugs.has(drugId)?'checked':''} onchange="toggleDrugSelect(this)">` : '';
-    return `<tr>${isDose ? `<td style="padding:2px;text-align:center" onclick="if(event.target.classList.contains('drug-chk'))return;var c=this.querySelector('.drug-chk');if(c){c.checked=!c.checked;toggleDrugSelect(c);}">${chk}</td>` : ''}` + row.map(c => `<td>${c}</td>`).join('') + '</tr>';
+    const cells = row.slice(); cells[0] = withQsnichTag(cells[0], drugId, drugName);
+    return `<tr>${isDose ? `<td style="padding:2px;text-align:center" onclick="if(event.target.classList.contains('drug-chk'))return;var c=this.querySelector('.drug-chk');if(c){c.checked=!c.checked;toggleDrugSelect(c);}">${chk}</td>` : ''}` + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
   }).join('');
   return h + '</tbody></table>';
 }
@@ -2109,6 +2139,183 @@ const lactuInds = [
    byAge:[{minMo:0, maxMo:11, minTotal:2.5*(10000/15), maxTotal:10*(10000/15), note:'Infant (&lt;1 ปี): 2.5-10 mL/day แบ่ง 3-4 ครั้ง'},
           {minMo:12, maxMo:9999, minTotal:40*(10000/15), maxTotal:90*(10000/15), note:'Child (&ge;1 ปี): 40-90 mL/day แบ่ง 3-4 ครั้ง'}],
    note:'Portal systemic encephalopathy — ปรับขนาดจนถ่ายอุจจาระวันละ 2-3 ครั้ง<br>Adult: acute 30-45 mL ทุก 1-2 ชม. จนถ่าย | chronic 30-45 mL วันละ 3-4 ครั้ง<br>Rectal (adult): 300 mL + น้ำ/NSS 700 mL สวนเก็บไว้ 30-60 นาที ซ้ำได้ q4-6hr'}
+];
+// Cetirizine — QSNICH (ขนาดคงที่ตามช่วงอายุ ไม่ได้คิดตามน้ำหนัก)
+const cetNote = 'QSNICH ระบุขนาดตั้งแต่อายุ 6 เดือนขึ้นไป<br>ไตบกพร่อง: GFR ≥30 ขนาดปกติ | GFR 10-29 ใช้ 50% | GFR &lt;10 ไม่แนะนำให้ใช้ | HD/PD ใช้ 50%<br>รูปแบบ: syr 5 mg/5 mL (ขวด 60 mL), tab 10 mg';
+const cetInds = [
+  {label:'ลมพิษเรื้อรัง / ภูมิแพ้จมูก', iv:'q 24 hr',
+   note:'QSNICH ระบุขนาดตั้งแต่อายุ 6 เดือนขึ้นไป (chronic urticaria และ allergic rhinitis; perennial)',
+   byAge:[{minMo:6, maxMo:11, fixedMg:2.5, maxDay:2.5, iv:'q 24 hr', note:'6 ถึง &lt;12 เดือน: 2.5 mg วันละ 1 ครั้ง'},
+          {minMo:12, maxMo:23, fixedMg:2.5, maxDay:5, iv:'q 12-24 hr', note:'12-23 เดือน: เริ่ม 2.5 mg วันละ 1 ครั้ง ปรับขนาดเป็น 2.5 mg วันละ 2 ครั้งได้'},
+          {minMo:24, maxMo:71, fixedMg:2.5, maxDay:5, iv:'q 12-24 hr', note:'2-5 ปี: เริ่ม 2.5 mg วันละ 1 ครั้ง อาจเพิ่มเป็น 2.5 mg วันละ 2 ครั้ง หรือ 5 mg วันละ 1 ครั้ง (MAX 5 mg/day)'},
+          {minMo:72, maxMo:9999, minTotal:5, maxTotal:10, iv:'q 24 hr', note:'≥6 ปี-Adolescents: 5-10 mg วันละ 1 ครั้ง'}]}
+];
+// Paracetamol — QSNICH (เพดานต่อวันคือ 75 mk/day ไม่ใช่ 90)
+const paraNote = 'Fever/pain (oral): 10-15 mk/dose ทุก 4-6 ชม. ไม่เกิน 5 ครั้งใน 24 ชม. — MAX 75 mk/day และ 4,000 mg/day<br>Neonate: GA 28-32 wk 10-12 mk q6-8hr (MAX 40 mk/d) | GA 33-37 wk หรือ term &lt;10 วัน 10-15 mk q6hr (MAX 60 mk/d) | term ≥10 วัน 10-15 mk q4-6hr (MAX 75 mk/d)<br>IV: &lt;2 ปี 15 mk q6hr (MAX 60 mk/d) | ≥2 ปี &lt;50 kg 15 mk q6hr (MAX 75 mk/d, 3,750 mg/d) | ≥50 kg 1,000 mg q6hr (MAX 4,000 mg/d)<br>PDA closure (GA ≤34 wk): 15 mk q6hr นาน 3 วัน<br>ไตบกพร่อง: CrCl &lt;10 ให้ทุก 8 ชม. | IHD/PD ทุก 8 ชม.';
+const paraInds = [
+  {label:'ลดไข้/แก้ปวด (oral)', minD:10, maxD:15, maxDayMk:75, iv:'q 4-6 hr',
+   byAge:[{minMo:0, maxMo:0, minD:10, maxD:15, maxDayMk:60, note:'Neonate: GA 33-37 wk หรือ term &lt;10 วัน 10-15 mk ทุก 6 ชม. (MAX 60 mk/day) | GA 28-32 wk 10-12 mk ทุก 6-8 ชม. (MAX 40 mk/day) | term ≥10 วัน 10-15 mk ทุก 4-6 ชม. (MAX 75 mk/day)'},
+          {minMo:1, maxMo:9999, minD:10, maxD:15, maxDayMk:75, note:'Infants, Children &amp; Adolescents: 10-15 mk/dose ทุก 4-6 ชม. ไม่เกิน 5 ครั้ง/24 ชม. (MAX 75 mk/day และ 4,000 mg/day)'}]},
+  {label:'IV', minD:10, maxD:15, maxDayMk:75, iv:'q 6 hr',
+   byAge:[{minMo:0, maxMo:0, minD:10, maxD:20, maxDayMk:40, note:'Neonate: load 20 mk แล้วตาม PMA — 28-32 wk 10 mk q12hr (MAX 22.5 mk/d) | 33-36 wk 10 mk q8hr (MAX 40 mk/d) | ≥37 wk 10 mk q6hr (MAX 40 mk/d)'},
+          {minMo:1, maxMo:23, minD:15, maxD:15, maxDayMk:60, note:'Infants &amp; Children &lt;2 ปี: 15 mk/dose ทุก 6 ชม. (MAX 60 mk/day)'},
+          {minMo:24, maxMo:9999, minD:15, maxD:15, maxDayMk:75, maxDose:1000, note:'≥2 ปี &lt;50 kg: 15 mk/dose ทุก 6 ชม. (MAX 75 mk/day, 3,750 mg/day) | ≥50 kg: 1,000 mg ทุก 6 ชม. (MAX 4,000 mg/day)'}]},
+  {label:'PDA closure (GA ≤34 wk)', minD:15, maxD:15, iv:'q 6 hr', note:'GA ≤34 สัปดาห์: 15 mk/dose ทุก 6 ชม. นาน 3 วัน (บางการศึกษาให้ 2-7 วัน)'}
+];
+// Dicloxacillin — QSNICH
+const dicloxNote = 'Mild-moderate: 12-25 mk/day แบ่งทุก 6 ชม. (MAX 250 mg/dose)<br>Severe (step-down bone/joint): 100 mk/day แบ่งทุก 6 ชม. (MAX 500 mg/dose)<br>Skin &amp; soft tissue (MSSA): 25-50 mk/day แบ่งทุก 6 ชม. (MAX 500 mg/dose)<br>Adults: 125-500 mg ทุก 6 ชม.<br>รูปแบบ: syr 62.5 mg/5 mL (60 mL), cap 250 mg';
+const dicloxInds = [
+  {label:'Mild-moderate', minD:12, maxD:25, daily:true, maxDose:250, iv:'q 6 hr', note:'12-25 mk/day แบ่งทุก 6 ชม. (MAX 250 mg/dose)'},
+  {label:'Skin/soft tissue (MSSA)', minD:25, maxD:50, daily:true, maxDose:500, iv:'q 6 hr', note:'25-50 mk/day แบ่งทุก 6 ชม. (MAX 500 mg/dose)'},
+  {label:'Severe (bone/joint step-down)', minD:100, maxD:100, daily:true, maxDose:500, iv:'q 6 hr', note:'100 mk/day แบ่งทุก 6 ชม. (MAX 500 mg/dose)'}
+];
+// Cloxacillin IV — QSNICH
+const cloxIvNote = 'Children-Adolescents (IV drip): 100-200 mk/day แบ่งทุก 6 ชม. (MAX 2,000 mg/dose)<br>Endocarditis (MSSA): 200-300 mk/day แบ่งทุก 4-6 ชม. (MAX 2,000 mg/dose)<br>Acute osteoarticular: 100-200 mk/day แบ่งทุก 4-6 ชม. (MAX 12 g/day)<br>Neonate: 25-50 mk/dose — BW &lt;2 kg: ≤7 วัน q12hr, 8-28 วัน q8hr | BW ≥2 kg: ≤7 วัน q8hr, 8-28 วัน q6hr<br>Neonate (age-directed): &lt;7 วัน q12hr | 7-&lt;21 วัน q8hr | 21-28 วัน q6-8hr<br>⚠️ เจือจางด้วย NSS/D5W 50-100 mL (10-20 mg/mL) drip 30-60 นาที — ฉีดเร็วอาจทำให้ชักและผื่นแดง';
+const cloxIvInds = [
+  {label:'ทั่วไป (IV drip)', minD:100, maxD:200, daily:true, maxDose:2000, iv:'q 6 hr', note:'Infants, Children, Adolescents: 100-200 mk/day แบ่งทุก 6 ชม. (MAX 2,000 mg/dose)'},
+  {label:'Endocarditis (MSSA)', minD:200, maxD:300, daily:true, maxDose:2000, iv:'q 4-6 hr', note:'200-300 mk/day แบ่งทุก 4-6 ชม. (MAX 2,000 mg/dose) — native valve 4-6 สัปดาห์, prosthetic ≥6 สัปดาห์'},
+  {label:'Acute osteoarticular', minD:100, maxD:200, daily:true, maxDose:2000, iv:'q 4-6 hr', note:'100-200 mk/day แบ่งทุก 4-6 ชม. (MAX 12 g/day) — bacterial arthritis ≥10-14 วัน, osteomyelitis ≥21-28 วัน'},
+  {daily:false, label:'Neonate', minD:25, maxD:50, maxDose:2000, iv:'q 6-8 hr', note:'25-50 mk/dose — Weight-directed: BW &lt;2 kg อายุ ≤7 วัน ทุก 12 ชม., 8-28 วัน ทุก 8 ชม. | BW ≥2 kg ≤7 วัน ทุก 8 ชม., 8-28 วัน ทุก 6 ชม.<br>Age-directed: &lt;7 วัน ทุก 12 ชม. | 7-&lt;21 วัน ทุก 8 ชม. | 21-28 วัน ทุก 6-8 ชม.'}
+];
+// Cefazolin — QSNICH
+const cefazNote = 'Mild-moderate: 25-100 mk/day แบ่งทุก 8 ชม. (MAX 6 g/day)<br>Severe (bone/joint): 100-150 mk/day แบ่งทุก 6-8 ชม. (MAX 12 g/day)<br>Endocarditis px (ในผู้แพ้ penicillin): 50 mk ก่อนหัตถการ 30-60 นาที (MAX 1 g/dose)<br>Neonate: 25 mk/dose — PMA ≤29 wk q12hr (&gt;28 วัน q8hr) | 30-36 wk q12hr (&gt;14 วัน q8hr) | 37-44 wk q12hr (&gt;7 วัน q8hr) | ≥45 wk q6hr<br>ไตบกพร่อง: CrCl 40-70 ให้ 60% q12hr | 20-40 ให้ 25% q12hr | 5-20 ให้ 10% q24hr';
+const cefazInds = [
+  {label:'Mild-moderate', minD:25, maxD:100, daily:true, iv:'q 8 hr', note:'25-100 mk/day แบ่งทุก 8 ชม. (MAX 6 g/day)'},
+  {label:'Severe (bone/joint)', minD:100, maxD:150, daily:true, iv:'q 6-8 hr', note:'100-150 mk/day แบ่งทุก 6-8 ชม. (MAX 12 g/day)'},
+  {daily:false, label:'Endocarditis px', minD:50, maxD:50, maxDose:1000, iv:'single', note:'ผู้แพ้ penicillin: 50 mk ก่อนทำหัตถการ 30-60 นาที (MAX 1 g/dose)'},
+  {daily:false, label:'Neonate', minD:25, maxD:25, iv:'q 8-12 hr', note:'25 mk/dose — ระยะห่างตาม PMA: ≤29 wk q12hr (&gt;28 วัน q8hr) | 30-36 wk q12hr (&gt;14 วัน q8hr) | 37-44 wk q12hr (&gt;7 วัน q8hr) | ≥45 wk q6hr'}
+];
+// Ceftriaxone — QSNICH
+const ceftriNote = '⚠️ ห้ามใช้ในทารกแรกเกิดที่คลอดก่อนกำหนด, มี hyperbilirubinemia หรือได้รับสารน้ำที่มีแคลเซียม (รวม parenteral nutrition)<br>Neonate: sepsis 50 mk q24hr | meningitis load 100 mk แล้ว 80-100 mk q24hr<br>S. pneumoniae invasive: CNS 100 mk/day | non-CNS 50-75 mk/day แบ่งทุก 12-24 ชม. (MAX 2 g/dose, 4 g/day)<br>Adults: 1-2 g ทุก 12-24 ชม.';
+const ceftriInds = [
+  {label:'Mild-moderate', minD:50, maxD:75, daily:true, maxDose:2000, iv:'q 24 hr', note:'50-75 mk/dose วันละครั้ง (MAX 2 g/day)'},
+  {label:'Pneumonia', minD:50, maxD:100, daily:true, iv:'q 12-24 hr', note:'50-100 mk/day แบ่งทุก 12-24 ชม.'},
+  {label:'Severe / Meningitis', minD:100, maxD:100, daily:true, maxDose:2000, iv:'q 12-24 hr', note:'100 mk/day แบ่งทุก 12 หรือ 24 ชม. (MAX 4 g/day)<br>S. pneumoniae CNS: 100 mk/day (MAX 2 g/dose, 4 g/day)'},
+  {label:'S. pneumoniae invasive (CNS)', minD:100, maxD:100, daily:true, iv:'q 12-24 hr', note:'CNS infection: 100 mk/day แบ่งทุก 12-24 ชม. (MAX 2 g/dose, 4 g/day)'},
+  {label:'S. pneumoniae invasive (non-CNS)', minD:50, maxD:75, daily:true, iv:'q 12-24 hr', note:'Non-CNS infection: 50-75 mk/day แบ่งทุก 12-24 ชม. (MAX 2 g/dose, 4 g/day)'},
+  {daily:false, label:'UTI', minD:50, maxD:50, maxDose:2000, iv:'q 24 hr', note:'50 mk/dose วันละครั้ง (MAX 2 g/dose)'},
+  {label:'Neonate', minD:50, maxD:100, daily:true, iv:'q 24 hr', note:'Sepsis 50 mk ทุก 24 ชม. | Meningitis: load 100 mk แล้ว 80-100 mk ทุก 24 ชม. — ดูข้อห้ามใช้ด้านบน'}
+];
+// Clindamycin — QSNICH
+const clindaNote = 'Oral (Infants &amp; Children): 10-40 mk/day แบ่งทุก 6-8 ชม. (MAX 1.8 g/day)<br>IM/IV: mild-moderate 20 mk/day | severe 40 mk/day แบ่งทุก 6-8 ชม. (MAX 4.8 g/day)<br>Endocarditis px (แพ้ penicillin): 20 mk ก่อนหัตถการ 30-60 นาที (MAX 600 mg/dose)<br>Surgical px (แพ้ beta-lactam): 10 mk/dose ก่อน 60 นาที และซ้ำถ้าผ่าตัดนานเกิน 6 ชม. (MAX 900 mg/dose)<br>Neonate: 5-7.5 mk/dose — PMA ≤29 wk q12hr (&gt;28 วัน q8hr) | 30-36 wk q12hr (&gt;14 วัน q8hr) | 37-44 wk q12hr (&gt;7 วัน q8hr) | ≥45 wk q6hr<br>Adolescents/Adults: oral 600-1,800 mg/day แบ่ง 2-4 ครั้ง (MAX 2.4 g/day) | IM/IV 600-2,700 mg/day (MAX 4.8 g/day)';
+const clindaOralInds = [
+  {label:'Oral ทั่วไป', minD:10, maxD:40, daily:true, iv:'q 6-8 hr', note:'Infants &amp; Children: 10-40 mk/day แบ่งทุก 6-8 ชม. (MAX 1.8 g/day)'},
+  {daily:false, label:'Endocarditis px', minD:20, maxD:20, maxDose:600, iv:'single', note:'แพ้ penicillin: 20 mk ก่อนทำหัตถการ 30-60 นาที (MAX 600 mg/dose)'}
+];
+const clindaIvInds = [
+  {label:'Mild-moderate (IV/IM)', minD:20, maxD:20, daily:true, iv:'q 6-8 hr', note:'20 mk/day แบ่งทุก 6-8 ชม.'},
+  {label:'Severe (IV/IM)', minD:40, maxD:40, daily:true, iv:'q 6-8 hr', note:'40 mk/day แบ่งทุก 6-8 ชม. (MAX 4.8 g/day)'},
+  {daily:false, label:'Surgical px', minD:10, maxD:10, maxDose:900, iv:'single', note:'แพ้ beta-lactam: 10 mk/dose ก่อนผ่าตัด 60 นาที (MAX 900 mg/dose) — ซ้ำถ้าผ่าตัดนานเกิน 6 ชม.'},
+  {daily:false, label:'Neonate', minD:5, maxD:7.5, iv:'q 8-12 hr', note:'5-7.5 mk/dose — PMA ≤29 wk q12hr (&gt;28 วัน q8hr) | 30-36 wk q12hr (&gt;14 วัน q8hr) | 37-44 wk q12hr (&gt;7 วัน q8hr) | ≥45 wk q6hr'}
+];
+// Metronidazole — QSNICH
+const metroNote = 'Oral ทั่วไป: 15-50 mk/day แบ่งวันละ 3 ครั้ง (MAX 2,250 mg/day)<br>IV ทั่วไป: 22.5-40 mk/day แบ่งวันละ 3-4 ครั้ง (MAX 4 g/day)<br>Neonate: load 15 mk แล้ว maintenance ตาม PMA — 24-25 wk 7.5 mk q24hr | 26-27 wk 10 mk q24hr | 28-33 wk 7.5 mk q12hr | 34-40 wk 7.5 mk q8hr | &gt;40 wk 7.5 mk q6hr<br>Tetanus: 30 mk/day แบ่งวันละ 4 ครั้ง นาน 7-10 วัน (MAX 4 g/day) | Trichomoniasis: &lt;45 kg 45 mk/day ÷3 นาน 7 วัน (MAX 2 g/day), ≥45 kg 2 g ครั้งเดียว หรือ 500 mg bid นาน 7 วัน | Bacterial vaginosis (&gt;45 kg): 500 mg bid นาน 7 วัน<br>PD: exit-site/tunnel infection 10 mk/dose tid (MAX 500 mg/dose) | peritonitis px IV 10 mk (MAX 1 g) ร่วมกับ cefazolin, treatment oral 10 mk/dose tid (MAX 1,200 mg/day)<br>STD px หลังถูกล่วงละเมิดทางเพศ (Adolescents): 2,000 mg ครั้งเดียว<br>ไตบกพร่อง: GFR &lt;10 → 4 mk/dose ทุก 6 ชม. | IHD/PD เหมือนกัน | CRRT ไม่ปรับ<br>ตับบกพร่องรุนแรง (Child-Pugh C): ลดขนาดยาลง 50%';
+const metroOralInds = [
+  {label:'ทั่วไป (oral)', minD:15, maxD:50, daily:true, maxDose:750, iv:'q 8 hr', note:'15-50 mk/day แบ่งวันละ 3 ครั้ง (MAX 2,250 mg/day)'},
+  {daily:false, label:'C. difficile (non-severe)', minD:7.5, maxD:7.5, maxDose:500, iv:'q 6-8 hr', note:'Children: 7.5 mk/dose (MAX 500 mg/dose) วันละ 3-4 ครั้ง นาน 10 วัน | Infants mild-moderate 7.5 mk/dose ทุก 6 ชม. นาน 10 วัน'},
+  {daily:false, label:'H. pylori', minD:10, maxD:15, maxDose:500, iv:'q 12 hr', note:'10-15 mk/dose วันละ 2 ครั้ง (MAX 500 mg/dose) นาน 14 วัน ร่วมกับ Amoxicillin และ PPI'},
+  {label:'Ulcerative colitis / pouchitis', minD:20, maxD:30, daily:true, maxDose:500, iv:'q 8 hr', note:'Ulcerative colitis, pouchitis, persistent: 20-30 mk/day แบ่งวันละ 3 ครั้ง (MAX 500 mg/dose) นาน 14 วัน อาจให้ร่วมกับ ciprofloxacin หรือ oral budesonide'},
+  {daily:false, label:'Crohn perianal (induction)', minD:7.5, maxD:7.5, maxDose:500, iv:'q 8 hr', note:'Crohn disease, perianal: 7.5 mk/dose (MAX 500 mg/dose) วันละ 3 ครั้ง นาน 6 สัปดาห์ อาจให้ร่วมกับ ciprofloxacin'},
+  {label:'Tetanus', minD:30, maxD:30, daily:true, iv:'q 6 hr', note:'30 mk/day แบ่งวันละ 4 ครั้ง นาน 7-10 วัน (MAX 4 g/day)'},
+  {daily:false, label:'PD catheter exit-site/tunnel', minD:10, maxD:10, maxDose:500, iv:'q 8 hr', note:'Catheter (peritoneal dialysis) exit-site หรือ tunnel infection: 10 mk/dose วันละ 3 ครั้ง (MAX 500 mg/dose)'},
+  {daily:false, label:'Peritonitis (PD) treatment', minD:10, maxD:10, iv:'q 8 hr', note:'10 mk/dose แบ่งให้วันละ 3 ครั้ง (MAX 1,200 mg/day)'},
+  {label:'Trichomoniasis', iv:'q 8 hr', note:'Children &lt;45 kg: 45 mk/day แบ่งวันละ 3 ครั้ง นาน 7 วัน (MAX 2 g/day) | ≥45 kg &amp; Adolescents: 2,000 mg ครั้งเดียว หรือ 500 mg วันละ 2 ครั้ง นาน 7 วัน',
+   byAge:[{maxKg:44.99, minD:45, maxD:45, daily:true, iv:'q 8 hr', note:'Children &lt;45 kg: 45 mk/day แบ่งวันละ 3 ครั้ง นาน 7 วัน (MAX 2 g/day)'},
+          {daily:false, minKg:45, minTotal:500, maxTotal:2000, iv:'single', note:'Children ≥45 kg &amp; Adolescents: 2,000 mg ครั้งเดียว หรือ 500 mg วันละ 2 ครั้ง นาน 7 วัน'}]},
+  {label:'Bacterial vaginosis', iv:'q 12 hr', note:'QSNICH ระบุขนาดเฉพาะ Children &gt;45 kg &amp; Adolescents',
+   byAge:[{minKg:45.01, fixedMg:500, note:'Children &gt;45 kg &amp; Adolescents: 500 mg วันละ 2 ครั้ง นาน 7 วัน'}]},
+  {label:'STD px หลังถูกล่วงละเมิดทางเพศ', fixedMg:2000, iv:'single', note:'Adolescents: 2,000 mg ครั้งเดียว ร่วมกับ azithromycin และ ceftriaxone'},
+  {daily:false, label:'Surgical px colorectal (oral)', minD:15, maxD:15, maxDose:1000, iv:'q 4 hr', note:'Children &amp; Adolescents: 15 mk/dose (MAX 1 g/dose) ทุก 3-4 ชม. รวม 3 ครั้ง ร่วมกับยาปฏิชีวนะที่เหมาะสม'}
+];
+const metroIvInds = [
+  {label:'ทั่วไป (IV)', minD:22.5, maxD:40, daily:true, iv:'q 6-8 hr', note:'22.5-40 mk/day แบ่งวันละ 3-4 ครั้ง (MAX 4 g/day)'},
+  {label:'Intra-abdominal', minD:30, maxD:40, daily:true, maxDose:500, iv:'q 8 hr', note:'30-40 mk/day แบ่งวันละ 3 ครั้ง (MAX 500 mg/dose)'},
+  {label:'Appendicitis (perforated)', minD:30, maxD:30, daily:true, maxDose:1500, iv:'q 8 hr', note:'Divided: 30 mk/day แบ่งวันละ 3 ครั้ง | OD: 30 mk/dose วันละ 1 ครั้ง (MAX 1,500 mg/dose) ร่วมกับ Ceftriaxone'},
+  {daily:false, label:'Surgical px', minD:15, maxD:15, maxDose:500, iv:'single', note:'Children &amp; Adolescents: 15 mk/dose ก่อนทำหัตถการ 30-60 นาที (MAX 500 mg)<br>Neonates: &lt;1.2 kg 7.5 mk ครั้งเดียว | ≥1.2 kg 15 mk ครั้งเดียว 60 นาทีก่อนทำหัตถการ'},
+  {label:'Tetanus', minD:30, maxD:30, daily:true, iv:'q 6 hr', note:'30 mk/day แบ่งวันละ 4 ครั้ง นาน 7-10 วัน (MAX 4 g/day)'},
+  {daily:false, label:'C. difficile (severe)', minD:10, maxD:10, maxDose:500, iv:'q 8 hr', note:'Severe/fulminant, initial: 10 mk/dose ทุก 8 ชม. นาน 10 วัน (MAX 500 mg/dose) ร่วมกับ oral หรือ rectal vancomycin | Infants mild-moderate 7.5 mk/dose ทุก 6 ชม.'},
+  {daily:false, label:'Peritonitis (PD) px', minD:10, maxD:10, maxDose:1000, iv:'single', note:'Prophylaxis: 10 mk/dose (MAX 1 g/dose) ร่วมกับ cefazolin ก่อนทำหัตถการ'},
+  {daily:false, label:'Neonate', minD:7.5, maxD:15, iv:'q 8-12 hr', note:'Load 15 mk แล้ว maintenance ตาม PMA: 24-25 wk 7.5 mk q24hr | 26-27 wk 10 mk q24hr | 28-33 wk 7.5 mk q12hr | 34-40 wk 7.5 mk q8hr | &gt;40 wk 7.5 mk q6hr'}
+];
+// Ciprofloxacin — QSNICH
+const ciproNote = 'ข้อมูลการใช้ในเด็กยังจำกัด<br>ทั่วไป (Children): 20-30 mk/day แบ่งทุก 12 ชม. (MAX oral 1.5 g/day, IV 800 mg/day)<br>Neonate: GA ≤37 wk 10 mk/dose q12hr | GA &gt;37 wk 15 mk/dose q12hr | Severe infection 10-60 mk/day (อาจต้องการขนาดสูงและให้ถี่ขึ้น)<br>ไตบกพร่อง: CrCl 10-29 → 10-15 mk/dose ทุก 18 ชม. | CrCl &lt;10 → ทุก 24 ชม. | HD/PD ทุก 24 ชม. ให้หลังล้างไต<br>⚠️ ลดขนาด theophylline เมื่อใช้ร่วมกัน และระวังการรับพร้อมยา/อาหารที่มี Fe, Al, Mg, Ca';
+const ciproInds = [
+  {label:'ทั่วไป (oral)', minD:20, maxD:30, daily:true, maxDose:750, iv:'q 12 hr', note:'Children: 20-30 mk/day แบ่งทุก 12 ชม. (MAX oral 1.5 g/day)'},
+  {daily:false, label:'UTI ซับซ้อน / Pyelonephritis', minD:10, maxD:20, maxDose:750, iv:'q 12 hr', note:'≥1 ปี (oral): 10-20 mk/dose ทุก 12 ชม. นาน 10-21 วัน (MAX 750 mg/dose)<br>IV: 6-10 mk/dose ทุก 8 ชม. (MAX 400 mg/dose)'},
+  {daily:false, label:'Pseudomonas', minD:20, maxD:20, maxDose:500, iv:'q 12 hr', note:'≥1 ปี (oral): 20 mk/dose ทุก 12 ชม. (MAX 500 mg/dose) | IV: 10 mk/dose ทุก 8 ชม. (MAX 400 mg/dose)'},
+  {daily:false, label:'Dysentery (Shigella/Salmonella)', minD:15, maxD:15, maxDose:500, iv:'q 12 hr', note:'≥6 เดือน: 15 mk/dose วันละ 2 ครั้ง นาน 3 วัน (MAX 500 mg/dose)'},
+  {daily:false, label:'Meningococcal px', minD:20, maxD:20, maxDose:500, iv:'single', note:'Infants &amp; Children: 20 mk ครั้งเดียว (MAX 500 mg/dose) | Adults 500 mg ครั้งเดียว'},
+  {daily:false, label:'Neonate', minD:10, maxD:15, iv:'q 12 hr', note:'GA ≤37 wk 10 mk/dose ทุก 12 ชม. | GA &gt;37 wk 15 mk/dose ทุก 12 ชม. | Severe infection 10-60 mk/day อาจต้องการขนาดสูงและให้ถี่ขึ้น'}
+];
+// Cefdinir / Cefixime / Norfloxacin — QSNICH
+const cefdinNote = 'General dosing: 14 mk/day แบ่งทุก 12-24 ชม. (MAX 600 mg/day)<br>&gt;12 ปี-ผู้ใหญ่: SSTI/CAP 300 mg ทุก 12 ชม. นาน 10 วัน | Acute maxillary sinusitis 600 mg วันละครั้ง นาน 10 วัน หรือ 300 mg q12hr | Bronchitis/pharyngitis/tonsillitis 600 mg วันละครั้ง นาน 10 วัน หรือ 300 mg q12hr นาน 5-10 วัน<br>ไตบกพร่อง: CrCl &lt;30 → 7 mk/dose วันละ 1 ครั้ง (MAX 300 mg/day)<br>รูปแบบ: dry syr 125 mg/5 mL (30 mL)';
+const cefixNote = 'General dosing: 8 mk/day แบ่งทุก 12-24 ชม. (MAX 400 mg/day) — ผู้ใหญ่ 400 mg/day<br>Rhinosinusitis (acute bacterial): 4 mk/dose ทุก 12 ชม. ให้ร่วมกับ clindamycin<br>⚠️ ยังไม่รับรองการใช้ในเด็กอายุ &lt;6 เดือน<br>ไตบกพร่อง: mild-moderate ไม่ต้องปรับ | severe (GFR ≤10-20) หรือ anuric ลดขนาด 50%<br>รูปแบบ: dry syr 100 mg/5 mL (30 mL)';
+const norfloxNote = 'ข้อมูลการใช้ในเด็กยังจำกัด<br>อายุ &gt;6 เดือน-18 ปี: 7.5-10 mk/dose ทุก 12 ชม. (MAX 400 mg/dose)<br>รูปแบบ: tab 200 mg';
+// Omeprazole — QSNICH
+const omepNote = 'กินก่อนอาหารอย่างน้อย 30 นาที<br>Erosive esophagitis (ตามน้ำหนัก): 3-&lt;5 kg 2.5 mg | 5-&lt;10 kg 5 mg | 10-&lt;20 kg 10 mg | ≥20 kg 20 mg — วันละ 1 ครั้ง<br>GERD (oral): Neonates 0.5-1.5 mk/dose วันละ 1 ครั้ง | Infants-Adolescents 0.7-4 mk/day วันละ 1 ครั้ง (MAX 40 mg/day) — critical 1.5-2 mk/dose ทุก 6-8 ชม.<br>H. pylori: 15-&lt;25 kg 20 mg bid | 25-&lt;34 kg 30 mg bid | ≥34 kg 40 mg bid นาน 14 วัน<br>IV (BNF): 1 เดือน-11 ปี 0.5 mk/dose (MAX 20 mg) ทุก 24 ชม. อาจเพิ่มถึง 2 mk/dose (MAX 40 mg) | 12-17 ปี 40 mg ทุก 24 ชม.';
+const omepInds = [
+  {label:'GERD (oral)', minD:0.7, maxD:4, daily:true, maxDose:40, iv:'q 24 hr',
+   byAge:[{minMo:0, maxMo:0, minD:0.5, maxD:1.5, maxDose:40, note:'Neonates: 0.5-1.5 mk/dose วันละ 1 ครั้ง'},
+          {minMo:1, maxMo:9999, minD:0.7, maxD:4, daily:true, maxDose:40, note:'Infants, Children &amp; Adolescents: 0.7-4 mk/day วันละ 1 ครั้ง (MAX 40 mg/day) นาน 4-8 สัปดาห์ | critical 1.5-2 mk/dose ทุก 6-8 ชม.'}]},
+  {label:'Erosive esophagitis (ตามน้ำหนัก)', iv:'q 24 hr', note:'คิดขนาดตามน้ำหนักตัว — 3-&lt;5 kg 2.5 mg | 5-&lt;10 kg 5 mg | 10-&lt;20 kg 10 mg | ≥20 kg 20 mg วันละ 1 ครั้ง',
+   byAge:[{minKg:3, maxKg:4.99, fixedMg:2.5, note:'3 ถึง &lt;5 kg: 2.5 mg วันละ 1 ครั้ง'},
+          {minKg:5, maxKg:9.99, fixedMg:5, note:'5 ถึง &lt;10 kg: 5 mg วันละ 1 ครั้ง'},
+          {minKg:10, maxKg:19.99, fixedMg:10, note:'10 ถึง &lt;20 kg: 10 mg วันละ 1 ครั้ง'},
+          {minKg:20, maxKg:9999, fixedMg:20, note:'≥20 kg: 20 mg วันละ 1 ครั้ง'}]},
+  {label:'H. pylori (ตามน้ำหนัก)', iv:'q 12 hr', note:'ให้ร่วมกับยาปฏิชีวนะ 2 ชนิด นาน 14 วัน',
+   byAge:[{minKg:15, maxKg:24.99, fixedMg:20, note:'15 ถึง &lt;25 kg: 20 mg วันละ 2 ครั้ง'},
+          {minKg:25, maxKg:33.99, fixedMg:30, note:'25 ถึง &lt;34 kg: 30 mg วันละ 2 ครั้ง'},
+          {minKg:34, maxKg:9999, fixedMg:40, note:'≥34 kg: 40 mg วันละ 2 ครั้ง'}]},
+  {daily:false, label:'IV (BNF)', minD:0.5, maxD:2, maxDose:40, iv:'q 24 hr', note:'1 เดือน-11 ปี: 0.5 mk/dose (MAX 20 mg) ทุก 24 ชม. อาจเพิ่มถึง 2 mk/dose (MAX 40 mg) | 12-17 ปี: 40 mg ทุก 24 ชม.'}
+];
+// Diclofenac / Celecoxib / Loperamide / Methylprednisolone / Milk of Magnesia — QSNICH
+const nacInd = [{label:'Mucolytic (PO)', minTotal:50, maxTotal:100, iv:'tid-qid', note:'Mucolytic (QSNICH): 50-100 mg/dose วันละ 3-4 ครั้ง ทุกอายุ'}];
+const nacInjNote = 'Acetaminophen poisoning — IV 21-hr regimen (รวม 300 mk): LD 150 mk (MAX 15 g) IV drip 60 นาที → 50 mk (MAX 5 g) IV drip 4 ชม. → 100 mk (MAX 10 g) IV drip 16 ชม.<br>Liver support ใน non-paracetamol induced acute liver failure (BW &lt;40 kg): LD 150 mk เจือจางด้วย D5W 250 mL IV drip 30 นาที → MD 150 mk เจือจางด้วย D5W 250 mL IV drip 24 ชม. (10.4 mL/hr)';
+const nacLiverGap = 'QSNICH ระบุขนาด liver support เฉพาะ BW &lt;40 kg';
+const nacInjInd = [
+  {label:'Paracetamol OD 1/3 (LD)', minD:150, maxD:150, maxDose:15000, iv:'single', note:'IV 21-hr ขั้นที่ 1: 150 mk (MAX 15 g) IV drip ใน 60 นาที'},
+  {label:'Paracetamol OD 2/3', minD:50, maxD:50, maxDose:5000, iv:'single', note:'IV 21-hr ขั้นที่ 2: 50 mk (MAX 5 g) IV drip ใน 4 ชม.'},
+  {label:'Paracetamol OD 3/3', minD:100, maxD:100, maxDose:10000, iv:'single', note:'IV 21-hr ขั้นที่ 3: 100 mk (MAX 10 g) IV drip ใน 16 ชม.'},
+  {label:'Liver support (LD)', iv:'single', note:nacLiverGap, byAge:[
+    {maxKg:39.99, minD:150, maxD:150, note:'BW &lt;40 kg: LD 150 mk เจือจางด้วย D5W 250 mL IV drip ใน 30 นาที'}]},
+  {label:'Liver support (MD)', iv:'single', note:nacLiverGap, byAge:[
+    {maxKg:39.99, minD:150, maxD:150, note:'BW &lt;40 kg: MD 150 mk เจือจางด้วย D5W 250 mL IV drip ใน 24 ชม. (10.4 mL/hr)'}]},
+];
+const diclofenacNote = 'Juvenile idiopathic arthritis (children/adolescents): 2-3 mk/day แบ่งวันละ 2-4 ครั้ง (MAX 150 mg/day)<br>Adult: osteoarthritis/pain 50 mg วันละ 2-3 ครั้ง | rheumatoid arthritis 50 mg วันละ 3-4 ครั้ง<br>Topical gel 1.16%: ทาบริเวณที่เป็น 2-4 กรัม วันละ 3-4 ครั้ง นานประมาณ 7 วัน<br>ไตบกพร่อง (เด็ก): eGFR 30-&lt;60 อาจพิจารณาหยุดยาชั่วคราว | eGFR &lt;30 หลีกเลี่ยงการใช้';
+const celecoxibNote = 'JIA (Children ≥2 ปี-Adolescents): 10-25 kg 50 mg วันละ 2 ครั้ง | &gt;25 kg 100 mg วันละ 2 ครั้ง<br>Adult: ankylosing spondylitis 200 mg วันละครั้ง หรือ 100 mg วันละ 2 ครั้ง (เพิ่มได้ถึง 400 mg/day) | osteoarthritis 200 mg/day | RA 100-200 mg วันละ 2 ครั้ง<br>ไตบกพร่อง: CrCl 35-60 ขนาดปกติ | severe/advanced renal disease ไม่แนะนำ<br>ตับบกพร่อง: Child-Pugh B ลด 50% | Child-Pugh C ไม่แนะนำ<br>Poor CYP2C9 metabolizers: ลดขนาด 50%';
+const celecoxibInds = [
+  {label:'JIA (≥2 ปี)', iv:'q 12 hr', note:'QSNICH ระบุขนาดสำหรับ JIA ในเด็กอายุ ≥2 ปี และน้ำหนัก ≥10 kg',
+   byAge:[{minKg:10, maxKg:25, fixedMg:50, note:'10 ถึง 25 kg: 50 mg วันละ 2 ครั้ง'},
+          {minKg:25.01, maxKg:9999, fixedMg:100, note:'&gt;25 kg: 100 mg วันละ 2 ครั้ง'}]}
+];
+const loperamideNote = 'Acute diarrhea (Children) — ขนาดตามอายุ/น้ำหนัก:<br>2-5 ปี (13-&lt;21 kg): เริ่ม 1 mg ตามด้วย 1 mg/dose ทุกครั้งที่ถ่ายเหลว (MAX 3 mg/day)<br>6-8 ปี (21-&lt;27 kg): เริ่ม 2 mg ตามด้วย 1 mg/dose (MAX 4 mg/day)<br>9-11 ปี (27.1-43 kg): เริ่ม 2 mg ตามด้วย 1 mg/dose (MAX 6 mg/day)<br>&gt;12 ปี: เริ่ม 4 mg ตามด้วย 2 mg/dose (MAX 8 mg/day)<br>Chronic diarrhea (short-bowel หรือสาเหตุอื่นที่ไม่ใช่การติดเชื้อ): Infants ≥2 เดือน &amp; Children 0.08-0.24 mk/day แบ่งวันละ 2-3 ครั้ง (MAX 2 mg/dose)';
+const loperamideInds = [
+  {label:'Acute diarrhea', iv:'prn', note:'QSNICH ระบุขนาดตั้งแต่อายุ 2 ปี (หรือ 13 kg) ขึ้นไป',
+   byAge:[{minMo:24, maxMo:71, minKg:13, maxKg:20.99, fixedMg:1, maxDay:3, note:'2-5 ปี (13-&lt;21 kg): เริ่ม 1 mg แล้ว 1 mg ทุกครั้งที่ถ่ายเหลว (MAX 3 mg/day)'},
+          {minMo:72, maxMo:107, minKg:21, maxKg:26.99, fixedMg:1, maxDay:4, note:'6-8 ปี (21-&lt;27 kg): เริ่ม 2 mg แล้ว 1 mg ทุกครั้งที่ถ่ายเหลว (MAX 4 mg/day)'},
+          {minMo:108, maxMo:143, minKg:27.1, maxKg:43, fixedMg:1, maxDay:6, note:'9-11 ปี (27.1-43 kg): เริ่ม 2 mg แล้ว 1 mg ทุกครั้งที่ถ่ายเหลว (MAX 6 mg/day)'},
+          {minMo:144, maxMo:9999, fixedMg:2, maxDay:8, note:'&gt;12 ปี &amp; Adolescents: เริ่ม 4 mg แล้ว 2 mg/dose (MAX 8 mg/day)'}]},
+  {label:'Chronic diarrhea', minD:0.08, maxD:0.24, daily:true, maxDose:2, iv:'q 8-12 hr', note:'Infants ≥2 เดือน &amp; Children: 0.08-0.24 mk/day แบ่งวันละ 2-3 ครั้ง (MAX 2 mg/dose)'}
+];
+const methylpredNote = 'Anti-inflammatory/immunosuppressive (IV, IM): 0.11-1.6 mk/day แบ่งวันละ 3-4 ครั้ง<br>Pneumocystis pneumonia (IV): Infants &amp; Children วันที่ 1-7 1 mk q6hr → 8-9 1 mk bid → 10-11 0.5 mk bid → 12-16 1 mk qd | Adolescents วันที่ 1-5 30 mg bid → 6-10 30 mg qd → 11-21 15 mg qd<br>Anaphylaxis: 1-2 mk/dose ทุก 6 ชม. (MAX 50 mg/dose) | Adults 50-100 mg ทุก 6 ชม.<br>Acute asthma exacerbation (IV): 1 mk/dose ทุก 6 ชม. นาน 3-5 วัน (MAX 60 mg/dose)<br>Status asthmaticus (IV): เริ่ม 2 mk/dose ต่อด้วย 0.5-1 mk/dose ทุก 6 ชม.<br>&quot;Pulse&quot; therapy: 15-30 mk/dose วันละ 1 ครั้ง นาน 3 วัน (MAX 1 g/dose)<br>Lupus nephritis (IV): Children 30 mk/dose วันละ 1 ครั้ง นาน 3 วัน (MAX 1 g/dose)<br>Asthma maintenance (oral): &lt;12 ปี 0.25-2 mk/day (MAX 60 mg/day) วันละครั้งตอนเช้าหรือวันเว้นวัน | &gt;12 ปี 7.5-60 mg/day';
+const methylpredInds = [
+  {label:'Acute asthma (IV)', minD:1, maxD:1, maxDose:60, iv:'q 6 hr', note:'Children: 1 mk/dose ทุก 6 ชม. นาน 3-5 วัน (MAX 60 mg/dose)'},
+  {label:'Status asthmaticus (IV)', minD:0.5, maxD:2, maxDose:60, iv:'q 6 hr', note:'เริ่ม 2 mk/dose ต่อด้วย 0.5-1 mk/dose ทุก 6 ชม.'},
+  {label:'Anaphylaxis (IV/IM)', minD:1, maxD:2, maxDose:50, iv:'q 6 hr', note:'Infants, Children &amp; Adolescents: 1-2 mk/dose ทุก 6 ชม. (MAX 50 mg/dose)'},
+  {label:'Anti-inflammatory', minD:0.11, maxD:1.6, daily:true, iv:'q 6-8 hr', note:'0.11-1.6 mk/day แบ่งวันละ 3-4 ครั้ง'},
+  {label:'Pulse therapy', minD:15, maxD:30, maxDose:1000, iv:'q 24 hr', note:'15-30 mk/dose วันละ 1 ครั้ง นาน 3 วัน (MAX 1 g/dose)'},
+  {label:'Lupus nephritis', minD:30, maxD:30, maxDose:1000, iv:'q 24 hr', note:'Children: 30 mk/dose วันละ 1 ครั้ง นาน 3 วัน (MAX 1 g/dose)'},
+  {label:'Pneumocystis pneumonia', iv:'q 6 hr',
+   byAge:[{minMo:0, maxMo:143, minD:0.5, maxD:1, iv:'q 6 hr', note:'Infants &amp; Children: วันที่ 1-7 1 mk/dose ทุก 6 ชม. | วันที่ 8-9 1 mk/dose วันละ 2 ครั้ง | วันที่ 10-11 0.5 mk/dose วันละ 2 ครั้ง | วันที่ 12-16 1 mk/dose วันละ 1 ครั้ง'},
+          {minMo:144, maxMo:9999, minTotal:15, maxTotal:30, iv:'q 12 hr', note:'Adolescents: วันที่ 1-5 30 mg วันละ 2 ครั้ง | วันที่ 6-10 30 mg วันละ 1 ครั้ง | วันที่ 11-21 15 mg วันละ 1 ครั้ง'}]}
+];
+const momNote = 'ตามน้ำหนัก: 80-240 mg/kg/day (1-3 mL/kg/day) แบ่งวันละ 1-2 ครั้ง — MAX 4,800 mg/day (60 mL/day)<br>ตามอายุ (NASPGHAN): 2-&lt;6 ปี 5-15 mL/day (MAX 15 mL/day) | 6-&lt;12 ปี 15-30 mL/day (MAX 30 mL/day) | ≥12 ปี 15-60 mL/day (MAX 60 mL/day) — แบ่งวันละ 1-2 ครั้ง<br>⚠️ ระวังในผู้ป่วยไตบกพร่อง (แมกนีเซียมสะสม) — CrCl &lt;25 ควรตรวจระดับ Mg ในเลือด';
+const momInds = [
+  {label:'ท้องผูก (ตามน้ำหนัก)', minD:80, maxD:240, daily:true, iv:'q 12-24 hr', safeRangeText:'80–240 mg/kg/day (1–3 mL/kg/day)', note:'80-240 mg/kg/day (1-3 mL/kg/day) แบ่งวันละ 1-2 ครั้ง — MAX 4,800 mg/day (60 mL/day)'},
+  {label:'ท้องผูก (ตามอายุ)', daily:true, iv:'q 12-24 hr', note:'NASPGHAN — QSNICH ระบุขนาดตามอายุตั้งแต่ 2 ปีขึ้นไป',
+   byAge:[{minMo:24, maxMo:71, minTotal:400, maxTotal:1200, note:'2-&lt;6 ปี: 5-15 mL/day (MAX 15 mL/day = 1,200 mg/day)'},
+          {minMo:72, maxMo:143, minTotal:1200, maxTotal:2400, note:'6-&lt;12 ปี: 15-30 mL/day (MAX 30 mL/day = 2,400 mg/day)'},
+          {minMo:144, maxMo:9999, minTotal:1200, maxTotal:4800, note:'≥12 ปี: 15-60 mL/day (MAX 60 mL/day = 4,800 mg/day)'}]}
 ];
 // Ibuprofen — QSNICH
 const ibuNote = 'ใช้ในอายุ ≥6 เดือนขึ้นไป (Antipyretic/Analgesic)<br>ไตบกพร่อง (เด็ก): eGFR 30-&lt;60 อาจพิจารณาหยุดยาชั่วคราวในผู้มีความเสี่ยงไตวายเฉียบพลัน | eGFR &lt;30 หลีกเลี่ยงการใช้<br>Adult: inflammatory 400-800 mg วันละ 3-4 ครั้ง (MAX 3.2 g/day) | pain/fever 200-400 mg ทุก 4-6 ชม. (MAX 1.2 g/day)';
@@ -2161,8 +2368,8 @@ const phenoMaintInds = [
     {minMo:60, maxMo:144, minD:4, maxD:6, note:'5-12 ปี: 4-6 mk/day แบ่งวันละ 1-2 ครั้ง'},
     {minMo:145, maxMo:9999, minD:1, maxD:3, note:'&gt;12 ปี: 1-3 mk/day แบ่งวันละ 1-2 ครั้ง'}
   ]},
-  {label:'Sedative (oral)', minD:2, maxD:2, maxDose:40, iv:'tid', note:'Oral 2 mk/dose วันละ 3 ครั้ง (MAX 40 mg/dose)'},
-  {label:'Hypnotic', minD:2, maxD:3, iv:'qd', note:'IM/Oral 2-3 mk/dose ก่อนนอน'},
+  {daily:false, label:'Sedative (oral)', minD:2, maxD:2, maxDose:40, iv:'tid', note:'Oral 2 mk/dose วันละ 3 ครั้ง (MAX 40 mg/dose)'},
+  {daily:false, label:'Hypnotic', minD:2, maxD:3, iv:'qd', note:'IM/Oral 2-3 mk/dose ก่อนนอน'},
   {label:'Hyperbilirubinemia', minD:3, maxD:8, daily:true, iv:'q 8-12 hr', note:'Oral 3-8 mk/day แบ่งวันละ 2-3 ครั้ง (MAX 12 mk/day)'}
 ];
 // Levetiracetam maintenance — QSNICH แบ่งตามข้อบ่งใช้และอายุ
@@ -2191,40 +2398,226 @@ const phenytMaintInds = [
     {minMo:84, maxMo:119, minD:7, maxD:8, note:'7-9 ปี: 7-8 mk/day'},
     {minMo:120, maxMo:9999, minD:6, maxD:7, note:'10-16 ปี: 6-7 mk/day'}
   ]},
-  {label:'Oral focal/generalized', minD:2.5, maxD:5, iv:'q 12 hr', note:'1-11 ปี: เริ่ม 1.5-2.5 mk วันละ 2 ครั้ง ปรับเป็น 2.5-5 mk/dose วันละ 2 ครั้ง (MAX 7.5 mk/dose และไม่เกิน 300 mg/day)<br>12-17 ปี: เริ่ม 75-150 mg วันละ 2 ครั้ง ปรับเป็น 150-200 mg วันละ 2 ครั้ง (MAX 300 mg วันละ 2 ครั้ง)<br>รูปแบบออกฤทธิ์สั้น/เคี้ยว แบ่งทุก 8 ชม. | sustained release ทุก 12-24 ชม.'},
+  {daily:false, label:'Oral focal/generalized', minD:2.5, maxD:5, iv:'q 12 hr', note:'1-11 ปี: เริ่ม 1.5-2.5 mk วันละ 2 ครั้ง ปรับเป็น 2.5-5 mk/dose วันละ 2 ครั้ง (MAX 7.5 mk/dose และไม่เกิน 300 mg/day)<br>12-17 ปี: เริ่ม 75-150 mg วันละ 2 ครั้ง ปรับเป็น 150-200 mg วันละ 2 ครั้ง (MAX 300 mg วันละ 2 ครั้ง)<br>รูปแบบออกฤทธิ์สั้น/เคี้ยว แบ่งทุก 8 ชม. | sustained release ทุก 12-24 ชม.'},
   {label:'Seizure px (TBI)', minD:6, maxD:6, daily:true, iv:'q 8 hr', note:'หลัง load 18 mk: 6 mk/day แบ่งทุก 8 ชม. นาน 48 ชม.'}
 ];
 const phenytNote = 'Therapeutic level (total phenytoin) 10-20 mcg/mL (infant &amp; children) | 8-15 mcg/mL (neonate)<br>⚠️ ไม่ควรให้ทาง IM เนื่องจากดูดซึมทางกล้ามเนื้อไม่ดี';
+
+// ===== QSNICH indication fill-in (2026-10-30) =====
+// Acyclovir — QSNICH (รูป 1-4)
+const acyNote = 'Neonates HSV (IV 20 mk/dose): BW &lt;1 kg PNA ≤14 วัน q12hr, 15-28 วัน q8hr | BW 1-2 kg PNA ≤7 วัน q12hr, 8-28 วัน q8hr | BW &gt;2 kg q8hr — CNS/disseminated ≥21 วัน, skin/mucous 14 วัน<br>Higher doses 15-20 mk/dose q8hr ใน disseminated/CNS infection เพิ่มความเสี่ยง neurotoxicity และ nephrotoxicity — พิจารณาเมื่อ benefit&gt;risk<br>ไตบกพร่อง (IV): CrCl 25-50 ขนาดปกติ q12hr | 10-&lt;25 q24hr | &lt;10 ลด 50% q24hr | IHD 5 mk q24hr หลังฟอก | PD 5 mk q24hr | CRRT 10 mk q12hr<br>ไตบกพร่อง (Oral ≥6 เดือน): 200 mg 5x/d → CrCl &lt;10 200 mg q12hr | 400 mg q12hr → &lt;10 200 mg q12hr | 800 mg 5x/d → CrCl 10-25 800 mg q8hr, &lt;10 800 mg q12hr<br>⚠️ ให้น้ำเพียงพอ และให้ IV นานอย่างน้อย 1 ชม. ป้องกัน crystalluria | หลังเจือจางห้ามแช่ตู้เย็น (ตกตะกอน)';
+const acyOralInds = [
+  {label:'HSV orolabial', minD:20, maxD:20, maxDose:800, iv:'qid', note:'Without HIV: 20 mk/dose (MAX 800 mg/dose) วันละ 4 ครั้ง นาน 5-7 วัน (MAX 3,200 mg/day) | 5-times-daily: ≤6 ปี 15 mk/dose (MAX 200 mg/dose) วันละ 5 ครั้ง นาน 5-7 วัน<br>With HIV (mild): Infants, Children 20 mk/dose (MAX 400 mg/dose) วันละ 4 ครั้ง นาน 7-10 วัน | Adolescents 400 mg วันละ 3 ครั้ง นาน 5-10 วัน'},
+  {label:'Genital HSV (first, mild-moderate)', minD:40, maxD:80, daily:true, iv:'tid-qid', note:'Children: 40-80 mk/day แบ่งวันละ 3-4 ครั้ง นาน 7-10 วัน (MAX 1,200 mg/day)<br>Adolescents &amp; Adults: 200 mg วันละ 5 ครั้ง หรือ 400 mg วันละ 3 ครั้ง นาน 7-10 วัน'},
+  {label:'Genital HSV (recurrent)', iv:'tid', note:'ให้ภายในวันแรกที่พบผื่น',
+   byAge:[{minMo:0, maxMo:143, minD:20, maxD:20, maxDose:400, iv:'tid', note:'&lt;12 ปี: 20 mk/dose (MAX 400 mg/dose) วันละ 3 ครั้ง นาน 5 วัน'},
+          {minMo:144, maxMo:9999, fixedMg:800, iv:'bid', note:'≥12 ปี-Adolescents without HIV: 800 mg วันละ 2 ครั้ง นาน 5 วัน | with HIV: 400 mg วันละ 2 ครั้ง นาน 5-10 วัน'}]},
+  {label:'HSV mucocutaneous', minD:20, maxD:20, maxDose:800, iv:'qid', note:'Immunocompetent: 20 mk/dose (MAX 800 mg/dose) วันละ 4 ครั้ง นาน 5-7 วัน<br>Immunocompromised (หลัง IV เมื่อผื่นดีขึ้น): Children ≥2 ปี &amp; Adolescents 1,000 mg/day แบ่งวันละ 3-5 ครั้ง นาน 7-14 วัน'},
+  {label:'HSV suppression (chronic)', minD:20, maxD:20, maxDose:400, iv:'bid-tid', note:'Immunocompetent: 20 mk/dose (MAX 400 mg/dose) วันละ 2-3 ครั้ง นาน 6-12 เดือน ประเมินเป็นระยะ<br>With HIV: Infants, Children 20 mk/dose (MAX 800 mg/dose) วันละ 2 ครั้ง | Adolescents 400 mg วันละ 2 ครั้ง — ประเมินทุกปี'},
+  {label:'Varicella (chickenpox)', iv:'qid', note:'QSNICH ระบุขนาด oral ใน immunocompetent ตั้งแต่ 2 ปี — เริ่มภายใน 24 ชม. แรกที่มีผื่น',
+   byAge:[{minMo:24, maxMo:9999, minD:20, maxD:20, maxDose:800, note:'Immunocompetent ≥2 ปี &amp; Adolescents: 20 mk/dose วันละ 4 ครั้ง นาน 5 วัน (MAX 3,200 mg/day)<br>HIV mild: Infants &amp; Children 20 mk/dose วันละ 4 ครั้ง นาน 7-10 วัน (MAX 800 mg/dose) | Adolescents 800 mg วันละ 5 ครั้ง นาน 5-7 วัน'}]},
+  {label:'Herpes zoster', iv:'qid',
+   byAge:[{minMo:0, maxMo:143, minD:20, maxD:20, maxDose:800, note:'&lt;12 ปี: 20 mk/dose (MAX 800 mg/dose) วันละ 4 ครั้ง นาน 5 วัน | HIV mild: 20 mk/dose วันละ 4 ครั้ง นาน 7-10 วัน'},
+          {minMo:144, maxMo:9999, fixedMg:800, iv:'q 4 hr (max 5x/d)', note:'≥12 ปี &amp; Adolescents: 800 mg ทุก 4 ชม. (วันละ 5 ครั้ง) นาน 5-7 วัน | HIV mild: 800 mg วันละ 5 ครั้ง นาน 7-10 วัน'}]},
+  {label:'Acute retinal necrosis (oral ต่อ)', minD:20, maxD:20, iv:'qid', note:'HIV: หลัง IV 10-14 วัน ต่อด้วย 20 mk/dose วันละ 4 ครั้ง นาน 4-6 สัปดาห์'}
+];
+const acyIvInds = [
+  {label:'Neonatal HSV', minD:20, maxD:20, iv:'q 8 hr', note:'IV 20 mk/dose — BW &lt;1 kg: PNA ≤14 วัน q12hr, 15-28 วัน q8hr | BW 1-2 kg: PNA ≤7 วัน q12hr, 8-28 วัน q8hr | BW &gt;2 kg: q8hr<br>CNS/disseminated ≥21 วัน | skin/mucous membrane 14 วัน'},
+  {label:'HSV encephalitis', iv:'q 8 hr', note:'QSNICH ระบุขนาดตั้งแต่อายุ 4 เดือน (ทารกแรกเกิดใช้ Neonatal HSV)',
+   byAge:[{minMo:4, maxMo:143, minD:10, maxD:15, note:'4 เดือน-&lt;12 ปี: Non-HIV 10-15 mk/dose q8hr นาน 21 วัน | HIV-exposed 10 mk/dose q8hr นาน 21 วัน (อาจเพิ่มถึง 20 mk/dose)'},
+          {minMo:144, maxMo:9999, minD:10, maxD:10, note:'≥12 ปี-Adolescents: 10 mk/dose q8hr นาน 21 วัน'}]},
+  {label:'Genital HSV (severe)', minD:5, maxD:5, iv:'q 8 hr', note:'Adolescents &amp; Adults: 5 mk/dose q8hr นาน 5-7 วัน ต่อด้วยยากินรวมอย่างน้อย 10 วัน'},
+  {label:'HSV orolabial (severe)', minD:5, maxD:10, iv:'q 8 hr', note:'Without HIV: 5-10 mk/dose q8hr นาน 7 วัน | HIV moderate-severe: Infants, Children 5-10 mk/dose q8hr | Adolescents 5 mk/dose q8hr'},
+  {label:'HSV mucocutaneous', minD:5, maxD:10, iv:'q 8 hr', note:'Immunocompetent: 5 mk/dose q8hr<br>Immunocompromised: Infants, Children 10 mk/dose q8hr นาน 7-14 วัน | Adolescents 5-10 mk/dose q8hr — ผื่นดีขึ้นเปลี่ยนเป็นยากิน'},
+  {label:'Acute retinal necrosis', minD:10, maxD:15, iv:'q 8 hr', note:'HIV: Infants, Children 10-15 mk/dose q8hr นาน 10-14 วัน แล้วต่อด้วยยากิน 20 mk/dose วันละ 4 ครั้ง นาน 4-6 สัปดาห์'},
+  {label:'Disseminated HSV (immunocompromised)', minD:10, maxD:15, iv:'q 8 hr', note:'Without HIV: 10 mk/dose q8hr นาน 7-14 วัน | HIV: Infants, Children 10-15 mk/dose q8hr นาน 21 วัน | Adolescents 10 mk/dose q8hr นาน 21 วัน'},
+  {label:'Varicella (chickenpox)', minD:10, maxD:15, iv:'q 8 hr', note:'Immunocompetent: 10 mk/dose หรือ 500 mg/m²/dose q8hr นาน 7-14 วัน (บางท่าน 15-20 mk ในติดเชื้อรุนแรง/CNS)<br>Immunocompromised non-HIV: Infants 10 mk/dose q8hr | Children &amp; Adolescents 500 mg/m²/dose q8hr นาน 7-10 วัน<br>HIV severe: Infants 10 mk | Children 10 mk หรือ 500 mg/m² | Adolescents 10-15 mk/dose q8hr นาน 7-10 วัน'},
+  {label:'Herpes zoster', minD:10, maxD:15, iv:'q 8 hr', note:'Immunocompetent: Infants 10 mk/dose q8hr | Children &amp; Adolescents 500 mg/m²/dose q8hr (บางท่าน 10 mk/dose) นาน 7-10 วัน<br>Immunocompromised non-HIV: 10 mk/dose q8hr นาน 7-10 วัน<br>HIV severe: Infants 10 mk | Children 10 mk หรือ 500 mg/m² | Adolescents 10-15 mk/dose q8hr จนรอยโรคดีขึ้นแล้วเปลี่ยนเป็นยากิน รวม 10-14 วัน'}
+];
+// Penicillin G sodium — QSNICH (หน่วยเป็น units)
+const penGNote = 'Infants ≥1 เดือน &amp; Children: Mild-moderate 100,000-150,000 u/kg/day แบ่งทุก 6 ชม. (MAX 8 MU/day) | Pneumonia 200,000-250,000 u/kg/day แบ่งทุก 4-6 ชม. | Severe 200,000-300,000 u/kg/day แบ่งทุก 4-6 ชม. (MAX 24 MU/day) — ขนาดสูงสำหรับ CNS infection<br>Neonates: Bacteremia 25,000-50,000 u/kg/dose | Meningitis 75,000-100,000 u/kg/dose — interval ตาม PMA: ≤29 wk 0-28 วัน q12hr, &gt;28 วัน q8hr | 30-36 wk 0-14 วัน q12hr, &gt;14 วัน q8hr | 37-44 wk 0-7 วัน q12hr, &gt;7 วัน q8hr | ≥45 wk q6hr<br>GBS meningitis: ≤7 วัน 250,000-450,000 u/kg/day แบ่งทุก 8 ชม. | ≥8 วัน 450,000-500,000 u/kg/day แบ่งทุก 6 ชม.<br>Congenital syphilis: 50,000 u/kg/dose ทุก 12 ชม. ใน 7 วันแรก แล้วทุก 8 ชม. รวม 10 วัน<br>Adults: 12-24 MU/day แบ่งทุก 4-6 ชม.<br>ไตบกพร่อง: CrCl &lt;10 ให้ขนาดปกติ แล้วตามด้วย 50% ของขนาดปกติ ทุก 8-10 ชม.<br>รูปแบบ: inj 5 MU (1,667 units = 1 mg)';
+const penGInds = [
+  {label:'Mild-moderate (≥1 เดือน)', minD:100000, maxD:150000, daily:true, iv:'q 6 hr', safeRangeText:'100,000–150,000 units/kg/day', note:'100,000-150,000 u/kg/day แบ่งทุก 6 ชม. (MAX 8 MU/day)'},
+  {label:'Pneumonia', minD:200000, maxD:250000, daily:true, iv:'q 4-6 hr', safeRangeText:'200,000–250,000 units/kg/day', note:'200,000-250,000 u/kg/day แบ่งทุก 4-6 ชม.'},
+  {label:'Severe / CNS', minD:200000, maxD:300000, daily:true, iv:'q 4-6 hr', safeRangeText:'200,000–300,000 units/kg/day', note:'200,000-300,000 u/kg/day แบ่งทุก 4-6 ชม. (MAX 24 MU/day) — ขนาดสูงสำหรับ CNS infection'},
+  {label:'Neonate bacteremia', minD:25000, maxD:50000, iv:'q 8-12 hr', safeRangeText:'25,000–50,000 units/kg/dose', note:'25,000-50,000 u/kg/dose — interval ตาม PMA (ดู Note)'},
+  {label:'Neonate meningitis', minD:75000, maxD:100000, iv:'q 8-12 hr', safeRangeText:'75,000–100,000 units/kg/dose', note:'75,000-100,000 u/kg/dose — interval ตาม PMA (ดู Note)'},
+  {label:'GBS meningitis (neonate)', minD:250000, maxD:500000, daily:true, iv:'q 6-8 hr', safeRangeText:'250,000–500,000 units/kg/day', note:'อายุ ≤7 วัน: 250,000-450,000 u/kg/day แบ่งทุก 8 ชม. | ≥8 วัน: 450,000-500,000 u/kg/day แบ่งทุก 6 ชม.'},
+  {label:'Congenital syphilis', minD:50000, maxD:50000, iv:'q 8-12 hr', safeRangeText:'50,000 units/kg/dose', note:'50,000 u/kg/dose ทุก 12 ชม. ใน 7 วันแรกของชีวิต จากนั้นทุก 8 ชม. รวม 10 วัน'}
+];
+// Amoxicillin — QSNICH
+const amoxNote = 'Mild-moderate: 1-3 เดือน 25-50 mk/day แบ่งทุก 8 ชม. หรือ 30 mk/day แบ่งวันละ 2 ครั้ง | &gt;3 เดือน-Children 25-50 mk/day แบ่งทุก 8 ชม. (MAX 500 mg/dose) หรือ 25-45 mk/day แบ่งทุก 12 ชม. (MAX 875 mg/dose)<br>Severe: 80-100 mk/day แบ่งทุก 8 ชม. (MAX 500 mg/dose)<br>AOM: 80-90 mk/day แบ่งทุก 12 ชม.<br>CAP (≥3 เดือน): 90-100 mk/day แบ่งทุก 8-12 ชม. (MAX 4 g/day)<br>Rhinosinusitis (≥2 ปี): low 45 mk/day | high 80-90 mk/day แบ่งทุก 12 ชม. (MAX 2 g/dose)<br>Tonsillopharyngitis (GAS, 3-18 ปี): 50 mk วันละครั้ง หรือ 25 mk วันละ 2 ครั้ง นาน 10 วัน (MAX 1 g/day)<br>Endocarditis px: 50 mk ก่อนหัตถการ 30-60 นาที (MAX 2 g/dose)<br>UTI px (≤2 เดือน): 10-15 mk วันละครั้ง<br>Adults: 500 mg-1 g ทุก 8-12 ชม. | Endocarditis px 2 g | GAS pharyngitis 500 mg bid หรือ 1 g qd นาน 10 วัน';
+const amoxInds = [
+  {label:'Mild-moderate', daily:true, iv:'q 8 hr', note:'QSNICH ระบุขนาดตั้งแต่อายุ 1 เดือน',
+   byAge:[{minMo:1, maxMo:3, minD:25, maxD:50, note:'1-3 เดือน: 25-50 mk/day แบ่งทุก 8 ชม. หรือ 30 mk/day แบ่งวันละ 2 ครั้ง'},
+          {minMo:4, maxMo:9999, minD:25, maxD:50, note:'&gt;3 เดือน: 25-50 mk/day แบ่งทุก 8 ชม. (MAX 500 mg/dose) หรือ 25-45 mk/day แบ่งทุก 12 ชม. (MAX 875 mg/dose)'}]},
+  {label:'Severe', minD:80, maxD:100, daily:true, iv:'q 8 hr', note:'80-100 mk/day แบ่งทุก 8 ชม. (MAX 500 mg/dose)'},
+  {label:'AOM', minD:80, maxD:90, daily:true, iv:'q 12 hr', note:'80-90 mk/day แบ่งทุก 12 ชม.'},
+  {label:'CAP (≥3 เดือน)', minD:90, maxD:100, daily:true, iv:'q 8-12 hr', note:'Infants ≥3 เดือน, Children &amp; Adolescents: 90-100 mk/day แบ่งทุก 8-12 ชม. (MAX 4 g/day)'},
+  {label:'Rhinosinusitis (≥2 ปี)', minD:45, maxD:90, daily:true, iv:'q 12 hr', note:'Low dose 45 mk/day | High dose 80-90 mk/day แบ่งทุก 12 ชม. (MAX 2 g/dose)'},
+  {label:'Tonsillopharyngitis (GAS)', minD:50, maxD:50, daily:true, iv:'q 12-24 hr', note:'3-18 ปี: 50 mk วันละ 1 ครั้ง หรือ 25 mk วันละ 2 ครั้ง นาน 10 วัน (MAX 1 g/day)'},
+  {daily:false, label:'Endocarditis px', minD:50, maxD:50, iv:'single', note:'50 mk ก่อนทำหัตถการ 30-60 นาที (MAX 2 g/dose)'},
+  {label:'UTI px (≤2 เดือน)', iv:'q 24 hr', note:'QSNICH ระบุขนาด UTI prophylaxis เฉพาะอายุ ≤2 เดือน',
+   byAge:[{minMo:0, maxMo:2, minD:10, maxD:15, daily:true, note:'Infants ≤2 เดือน: 10-15 mk วันละ 1 ครั้ง'}]}
+];
+// Amoxicillin + Clavulanic — QSNICH
+const augmRenalNote = 'ไตบกพร่อง (Oral): CrCl &lt;30 ไม่ใช้ 875 mg หรือ extended tablet | 10-30 ให้ 250-500 mg ทุก 12 ชม. | &lt;10 ให้ 250-500 mg ทุก 24 ชม.<br>ไตบกพร่อง (IV): เด็ก CrCl 10-30 30 mk วันละ 2 ครั้ง | &lt;10 30 mk ทุก 24 ชม. — ผู้ใหญ่ ครั้งแรก 1.2 g ตามด้วย 0.6 g วันละ 2 ครั้ง (10-30) หรือทุก 24 ชม. (&lt;10)';
+const augmSyrInds = [
+  {label:'General (q12hr)', minD:25, maxD:45, daily:true, iv:'q 12 hr', note:'3 เดือน-16 ปี &amp; &lt;40 kg (สูตร 7:1): 25-45 mk/day แบ่งทุก 12 ชม. (คำนวณจาก Amoxicillin)'},
+  {label:'General (q8hr)', minD:20, maxD:40, daily:true, iv:'q 8 hr', note:'20-40 mk/day แบ่งทุก 8 ชม. (คำนวณจาก Amoxicillin)'}
+];
+const augmEsInds = [
+  {label:'AOM / Sinusitis', minD:90, maxD:90, daily:true, iv:'q 12 hr', note:'สูตร 14:1: 90 mk/day แบ่งทุก 12 ชม.'},
+  {label:'CAP', minD:80, maxD:100, daily:true, iv:'q 12 hr', note:'สูตร 14:1: 80-100 mk/day แบ่งทุก 12 ชม.'}
+];
+const augmTabInds = [
+  {label:'General (&gt;40 kg)', daily:true, minTotal:750, maxTotal:1500, iv:'q 8 hr', note:'Children &gt;40 kg, Adolescent &amp; Adult: 250-500 mg ทุก 8 ชม. ตามความรุนแรง'},
+  {label:'Acute bacterial sinusitis', fixedMg:2000, iv:'q 12 hr', note:'2 g ทุก 12 ชม. นาน 10 วัน'},
+  {label:'Bite wound / Skin abscess', fixedMg:875, iv:'q 12 hr', note:'875 mg ทุก 12 ชม.'},
+  {label:'Aspirate pneumonia', fixedMg:875, iv:'q 12 hr', note:'875 mg ทุก 12 ชม.'},
+  {label:'CAP', fixedMg:2000, iv:'q 12 hr', note:'2 g ทุก 12 ชม. นาน 7-10 วัน (1 g extended only)'}
+];
+const augmIvInds = [
+  {label:'&lt;3 เดือน, BW &lt;4 kg', minD:60, maxD:60, daily:true, iv:'q 12 hr', note:'30 mk/dose ทุก 12 ชม. (= 60 mk/day) — คำนวณขนาดรวม Amox+Clav'},
+  {label:'&lt;3 เดือน, BW &gt;4 kg', minD:90, maxD:90, daily:true, iv:'q 8 hr', note:'30 mk/dose ทุก 8 ชม. (= 90 mk/day) — คำนวณขนาดรวม Amox+Clav'},
+  {label:'3 เดือน-12 ปี', minD:90, maxD:120, daily:true, iv:'q 6-8 hr', note:'30 mk/dose ทุก 6-8 ชม. (= 90-120 mk/day) — คำนวณขนาดรวม Amox+Clav'},
+  {label:'≥40 kg &amp; Adult', fixedMg:1200, iv:'q 8 hr', note:'1.2 g IV ทุก 8 ชม. — กรณีติดเชื้อรุนแรงให้ทุก 4-6 ชม.'}
+];
+// Salbutamol — QSNICH
+const salbNebNote = 'Bronchodilator (neb): Neonates 1.25-2.5 mg/dose ทุก 8 ชม. | Infants &amp; Children 0.15 mk/dose (Min 2.5 mg/dose) ทุก 20 นาที 3 ครั้ง แล้ว 0.15-0.3 mk/dose ทุก 1-4 ชม. (MAX 10 mg/dose) | Adolescents 2.5-5 mg/dose ทุก 20 นาที 3 ครั้ง แล้ว 2.5-10 mg/dose ทุก 1-4 ชม.<br>Continuous neb: Infants &amp; Children 0.3-0.5 mk/hr | Adolescents 10-15 mg/hr<br>MDI: Neonates 1-2 puff ผ่าน mechanical ventilator ทุก 6 ชม. | GINA 2020: &lt;5 ปี 2-6 puff/dose ผ่านกระบอกพ่นยา | &gt;6 ปี-adult 4-10 puff/dose<br>Exercise-induced bronchospasm (MDI ก่อนออกกำลังกาย 5-20 นาที): &lt;5 ปี 1-2 puff | &gt;5 ปี 2 puff<br>Hyperkalemia: Neonates 0.4 mg ผสม NSS 2 mL ทุก 2 ชม. | Weight-based 0.3-0.5 mk rapid หรือ continuous neb | Fixed (≥5 ปี-Adolescents) &lt;25 kg 2.5 mg, ≥25 kg 5 mg นาน 10 นาที ซ้ำในอีก 2 ชม.';
+const salbNebInds = [
+  {label:'Bronchodilator (neb)', iv:'prn',
+   byAge:[{minMo:0, maxMo:0, minTotal:1.25, maxTotal:2.5, iv:'q 8 hr', note:'Neonates: 1.25-2.5 mg/dose ทุก 8 ชม.'},
+          {minMo:1, maxMo:179, minD:0.15, maxD:0.3, maxDose:10, note:'Infants &amp; Children: 0.15 mk/dose (Min 2.5 mg/dose) ทุก 20 นาที 3 ครั้ง จากนั้น 0.15-0.3 mk/dose ทุก 1-4 ชม. (MAX 10 mg/dose)'},
+          {minMo:180, maxMo:9999, minTotal:2.5, maxTotal:10, note:'Adolescents: 2.5-5 mg/dose ทุก 20 นาที 3 ครั้ง จากนั้น 2.5-10 mg/dose ทุก 1-4 ชม.'}]},
+  {label:'Continuous neb', iv:'cont/hr',
+   byAge:[{minMo:0, maxMo:179, minD:0.3, maxD:0.5, note:'Infants &amp; Children: 0.3-0.5 mk/hr'},
+          {minMo:180, maxMo:9999, minTotal:10, maxTotal:15, note:'Adolescents: 10-15 mg/hr'}]},
+  {label:'Hyperkalemia', iv:'prn',
+   byAge:[{minMo:0, maxMo:0, fixedMg:0.4, note:'Neonates: 0.4 mg ผสม NSS 2 mL ทุก 2 ชม.'},
+          {minMo:1, maxMo:9999, minD:0.3, maxD:0.5, note:'Weight-based: 0.3-0.5 mk/dose rapid หรือ continuous neb | Fixed (≥5 ปี-Adolescents): &lt;25 kg 2.5 mg, ≥25 kg 5 mg นาน 10 นาที ซ้ำในอีก 2 ชม.'}]}
+];
+const salbOralInds = [
+  {label:'Bronchodilator (oral)', iv:'tid-qid', note:'QSNICH ระบุขนาด oral ตั้งแต่อายุ 2 ปี',
+   byAge:[{minMo:24, maxMo:71, minD:0.1, maxD:0.2, iv:'tid', note:'2-6 ปี: 0.1-0.2 mk/dose วันละ 3 ครั้ง (MAX 12 mg/day)'},
+          {minMo:72, maxMo:179, fixedMg:2, maxDay:24, note:'6-14 ปี: 2 mg/dose วันละ 3-4 ครั้ง (MAX 24 mg/day)'},
+          {minMo:180, maxMo:9999, minTotal:2, maxTotal:4, note:'Adolescents: 2-4 mg/dose วันละ 3-4 ครั้ง (MAX 32 mg/day)'}]}
+];
+// Montelukast — QSNICH
+const montelNote = 'Allergic rhinitis (perennial): ≥6 เดือน-&lt;6 ปี 4 mg | ≥6-&lt;15 ปี 5 mg | ≥15 ปี 10 mg วันละครั้ง<br>Asthma maintenance: 1-5 ปี 4 mg | 6-14 ปี 5 mg | ≥15 ปี 10 mg วันละครั้ง<br>Asthma acute exacerbation (adjunct, ข้อมูลมีจำกัด): 2-5 ปี 4 mg วันละครั้ง<br>Urticaria (NSAID-induced): ≥15 ปี 10 mg วันละครั้ง<br>รับประทานตอนเย็น';
+const montelInds = [
+  {label:'Allergic rhinitis', iv:'q 24 hr', note:'QSNICH ระบุขนาดตั้งแต่อายุ 6 เดือน',
+   byAge:[{minMo:6, maxMo:71, fixedMg:4, note:'≥6 เดือน-&lt;6 ปี: 4 mg วันละ 1 ครั้ง'},
+          {minMo:72, maxMo:179, fixedMg:5, note:'≥6-&lt;15 ปี: 5 mg วันละ 1 ครั้ง'},
+          {minMo:180, maxMo:9999, fixedMg:10, note:'≥15 ปี: 10 mg วันละ 1 ครั้ง'}]},
+  {label:'Asthma maintenance', iv:'q 24 hr', note:'QSNICH ระบุขนาดตั้งแต่อายุ 1 ปี',
+   byAge:[{minMo:12, maxMo:71, fixedMg:4, note:'1-5 ปี: 4 mg วันละ 1 ครั้ง'},
+          {minMo:72, maxMo:179, fixedMg:5, note:'6-14 ปี: 5 mg วันละ 1 ครั้ง'},
+          {minMo:180, maxMo:9999, fixedMg:10, note:'≥15 ปี: 10 mg วันละ 1 ครั้ง'}]},
+  {label:'Asthma exacerbation (adjunct)', iv:'q 24 hr', note:'QSNICH ระบุขนาดเฉพาะอายุ 2-5 ปี (ข้อมูลมีจำกัด)',
+   byAge:[{minMo:24, maxMo:71, fixedMg:4, note:'2-5 ปี: 4 mg วันละ 1 ครั้ง (ข้อมูลมีจำกัด)'}]},
+  {label:'Urticaria (NSAID-induced)', iv:'q 24 hr', note:'QSNICH ระบุขนาดเฉพาะอายุ ≥15 ปี',
+   byAge:[{minMo:180, maxMo:9999, fixedMg:10, note:'Adolescents ≥15 ปี: 10 mg วันละ 1 ครั้ง'}]}
+];
+// Paracetamol suppository (rectal) — QSNICH
+const paraRectalNote = 'Rectal — Neonate: GA 28-32 wk 20 mk/dose ทุก 12 ชม. (MAX 40 mk/day) | GA 33-37 wk หรือ term &lt;10 วัน: load 30 mk ต่อด้วย 15 mk/dose ทุก 8 ชม. (MAX 60 mk/day) | term &gt;10 วัน: load 30 mk ต่อด้วย 20 mk/dose ทุก 6-8 ชม. ไม่เกิน 5 ครั้ง/24 ชม. (MAX 75 mk/day)<br>Infants &amp; Children &lt;12 ปี: 10-20 mk/dose ทุก 4-6 ชม. ไม่เกิน 5 ครั้ง/24 ชม. (MAX 75 mk/day)<br>Peri-/postoperative (Children-Adolescents): load 40 mk หลังผ่าตัด แล้ว 20-25 mk/dose ทุก 6 ชม. นาน 1-2 วัน (MAX 100 mk/day) ไม่ควรใช้ติดต่อนานเกิน 5 วัน<br>ไตบกพร่อง (≥2 ปี): CrCl &lt;10 ให้ทุก 8 ชม. | IHD/PD ทุก 8 ชม. | CRRT ขนาดปกติ — ตับบกพร่อง: ใช้ด้วยความระมัดระวัง';
+const paraRectalInds = [
+  {label:'ลดไข้/แก้ปวด (rectal)', iv:'q 4-6 hr', note:'QSNICH ระบุขนาดทางทวารหนักสำหรับไข้/ปวด ถึงอายุ &lt;12 ปี',
+   byAge:[{minMo:0, maxMo:0, minD:15, maxD:20, maxDayMk:75, iv:'q 6-8 hr', note:'Neonate: GA 28-32 wk 20 mk q12hr (MAX 40 mk/day) | GA 33-37 wk หรือ term &lt;10 วัน load 30 mk → 15 mk q8hr (MAX 60 mk/day) | term &gt;10 วัน load 30 mk → 20 mk q6-8hr (MAX 75 mk/day)'},
+          {minMo:1, maxMo:143, minD:10, maxD:20, maxDayMk:75, note:'Infants &amp; Children &lt;12 ปี: 10-20 mk/dose ทุก 4-6 ชม. ไม่เกิน 5 ครั้ง/24 ชม. (MAX 75 mk/day)'}]},
+  {label:'Peri-/postoperative (rectal)', minD:20, maxD:25, maxDayMk:100, iv:'q 6 hr', note:'Children-Adolescents: load 40 mk หลังผ่าตัด แล้ว 20-25 mk/dose ทุก 6 ชม. นาน 1-2 วัน (MAX 100 mk/day) ไม่ควรใช้ติดต่อนานเกิน 5 วัน'}
+];
+
+// ===== ยาที่มีรูปอ้างอิงจาก QSNICH (โฟลเดอร์ QSNICH/) =====
+// ใช้แสดงป้าย "Ref QSNICH" ในการ์ด Reverse — เพิ่มรูปใหม่เมื่อไหร่ ให้เติม id ของยานั้นที่นี่
+const qsnichRefIds = new Set([
+  'para-supp-125','para-supp-250',                                // Paracetamol suppo
+  'acetyl-100','acetyl-200','acetyl-600','acetyl-inj',            // Acetylcysteine
+  'acy-iv','acy-tab-200','acy-tab-400','acy-tab-800','acy-susp',  // Acyclovir 1-4
+  'alum','alum-tab',                                              // Aluminium hydroxide
+  'augm-syr','augm-es','augm-tab','augm-iv-06','augm-iv-12',      // Amoxicillin + Clavulanic
+  'amox-syr-125','amox-syr-250','amox-cap',                       // Amoxicilline
+  'benz-penG',                                                    // Benzathine penicilin G
+  'cpm-syr','cpm-tab','cpm-iv',                                   // CPM
+  'carbo-syr-250','carbo-syr-100','carbo-tab',                    // Carbocysteine (carbo-lys ไม่รวม — lysine salt ไม่มีในรูป)
+  'cet-syr','cet-tab',                                            // Cetirizine
+  'diclofenac-tab',                                               // Diclofenac
+  'diclox-syr','diclox-cap-250','diclox-cap-500',                 // Dicloxacillin
+  'loperamide-tab',                                               // Loperamide
+  'metro-iv','metro-syr','metro-tab-200','metro-tab-400','metro-tab-500', // Metronidazole
+  'cefaz',                                                        // Cefazolin
+  'cefdin-syr','cefdin-cap',                                      // Cefdinir
+  'cefix-syr','cefix-cap',                                        // Cefixime
+  'ceftri-500','ceftri-1000',                                     // Ceftriaxone
+  'celecoxib-cap',                                                // Celecoxib
+  'cipro-tab-250','cipro-tab-500',                                // Ciprofloxacin
+  'clinda-iv','clinda-cap-150','clinda-cap-300',                  // Clindamycin
+  'clox-iv',                                                      // Cloxacillin
+  'mom-susp',                                                     // Milk of Magnesia
+  'methylpred-40','methylpred-500',                               // Methylprednisolone
+  'norflox-tab-100','norflox-tab-200','norflox-tab-400',          // Norfloxacin
+  'omep-iv','omep-tab',                                           // Omeprazole
+  'para-syr-120','para-syr-250','para-kit','para-tab-325','para-tab-500', // Paracetamol
+  'chloral-250','chloral-500',                                    // Chloral hydrate
+  'dexa-iv','dexa-tab',                                           // Dexamethasone
+  'diaz-iv','diaz-pr-2','diaz-pr-5',                              // Diazepam
+  'dom-syr','dom-tab',                                            // Domperidone
+  'fentanyl',                                                     // Fentanyl citrate
+  'gg-syr','gg-syr-100','gg-tab-100',                             // GG
+  'hydro-iv',                                                     // Hydrocortisone
+  'buscopan-syr','buscopan-tab','buscopan-inj',                   // Hyoscine-N-butylbromide
+  'ibu-syr','ibu-tab-200','ibu-tab-400',                          // Ibuprofen
+  'lactu-syr','lactu-syr-100','lactu-syr-30',                     // Lactulose
+  'leve-load','leve-maint-250','leve-maint-500',                  // Levetiracetam
+  'metocl-iv','metocl-syr','metocl-tab',                          // Metoclopramide
+  'midaz','midaz-iv','midaz-im',                                  // Midazolam
+  'montel','montel-10','montel2',                                 // Montelukast
+  'morphine-inj','morphine-syr','morphine-tab-sr','morphine-cap-sr', // Morphine sulfate
+  'onda-iv','onda-tab',                                           // Ondansetron
+  'oxy-drop','oxy-spray',                                         // Oxymetazoline
+  'penG',                                                         // Penicilin G sodium (PGS)
+  'pheno-load','pheno-maint-30','pheno-maint-60',                 // Phenobarbital
+  'phenyt-load','phenyt-maint',                                   // Phenytoin Sodium
+  'pred-tab','pred-susp',                                         // Prednisolone
+  'salb-syr','salb-tab','salb-sol','salb-neb',                    // Salbutamol
+  'sime-drop','sime-tab',                                         // Simethicone
+  'valp-load','valp-maint'                                        // Valproate
+]);
+function hasQsnichRef(drug) { return !!drug && qsnichRefIds.has(drug.id); }
 
 // ===== Drug Registry for Reverse Dose =====
 const drugRegistry = [
   // === DOSE TAB ===
   // Antipyretic
-  {id:'para-syr-120', name:'Paracetamol syrup', prep:'120 mg/5 mL', concMg:120, concVol:5, unit:'mL', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
-  {id:'para-syr-250', name:'Paracetamol syrup', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
-  {id:'para-kit', name:'Paracetamol kit syr', prep:'60 mg/0.6 mL', concMg:60, concVol:0.6, unit:'mL', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d'},
-  {id:'para-tab-325', name:'Paracetamol tab', prep:'325 mg/tab', concMg:325, concVol:1, unit:'tab', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
-  {id:'para-tab-500', name:'Paracetamol tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:15, maxDayMk:90, cat:'Antipyretic', note:'PRN q4-6hr MAX 90 mk/d (kid) หรือ 4 g/d (adult)'},
+  {id:'para-syr-120', name:'Paracetamol syrup', prep:'120 mg/5 mL', concMg:120, concVol:5, unit:'mL', minD:10, maxD:15, maxDayMk:75, cat:'Antipyretic', alias:'Acetaminophen,Tempra,Sara', note:paraNote, indications:paraInds},
+  {id:'para-syr-250', name:'Paracetamol syrup', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:10, maxD:15, maxDayMk:75, cat:'Antipyretic', alias:'Acetaminophen,Tempra,Sara', note:paraNote, indications:paraInds},
+  {id:'para-kit', name:'Paracetamol kit syr', prep:'60 mg/0.6 mL', concMg:60, concVol:0.6, unit:'mL', minD:10, maxD:15, maxDayMk:75, cat:'Antipyretic', alias:'Acetaminophen,Tempra,Sara', note:paraNote, indications:paraInds},
+  {id:'para-tab-325', name:'Paracetamol tab', prep:'325 mg/tab', concMg:325, concVol:1, unit:'tab', minD:10, maxD:15, maxDayMk:75, cat:'Antipyretic', alias:'Acetaminophen,Tempra,Sara', note:paraNote, indications:paraInds},
+  {id:'para-tab-500', name:'Paracetamol tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:15, maxDayMk:75, cat:'Antipyretic', alias:'Acetaminophen,Tempra,Sara', note:paraNote, indications:paraInds},
+  {id:'para-supp-125', name:'Paracetamol suppo', prep:'125 mg/supp', concMg:125, concVol:1, unit:'supp', minD:10, maxD:20, maxDayMk:75, cat:'Antipyretic', alias:'Acetaminophen,suppository,เหน็บ', note:paraRectalNote, indications:paraRectalInds},
+  {id:'para-supp-250', name:'Paracetamol suppo', prep:'250 mg/supp', concMg:250, concVol:1, unit:'supp', minD:10, maxD:20, maxDayMk:75, cat:'Antipyretic', alias:'Acetaminophen,suppository,เหน็บ', note:paraRectalNote, indications:paraRectalInds},
   {id:'ibu-syr', name:'Ibuprofen syrup', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:5, maxD:10, maxDose:400, maxDayMk:40, cat:'Antipyretic', alias:'Brufen,Nurofen', note:ibuNote, indications:ibuInds},
   {id:'ibu-tab-200', name:'Ibuprofen tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:5, maxD:10, maxDose:400, maxDayMk:40, cat:'Antipyretic', alias:'Brufen,Nurofen', note:ibuNote, indications:ibuInds},
   {id:'ibu-tab-400', name:'Ibuprofen tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:5, maxD:10, maxDose:400, maxDayMk:40, cat:'Antipyretic', alias:'Brufen,Nurofen', note:ibuNote, indications:ibuInds},
+  {id:'diclofenac-tab', name:'Diclofenac tab', prep:'25 mg/tab', concMg:25, concVol:1, unit:'tab', minD:2, maxD:3, daily:true, maxDose:150, cat:'Antipyretic', alias:'Voltaren', note:diclofenacNote},
+  {id:'celecoxib-cap', name:'Celecoxib cap', prep:'200 mg/cap', concMg:200, concVol:1, unit:'cap', minD:0, maxD:0, cat:'Antipyretic', alias:'Celebrex', note:celecoxibNote, indications:celecoxibInds},
   // Antihistamine
-  {id:'cet-syr', name:'Cetirizine syr', prep:'5 mg/5 mL', concMg:5, concVol:5, unit:'mL', minD:0.25, maxD:0.5, cat:'Antihistamine'},
-  {id:'cet-tab', name:'Cetirizine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0.25, maxD:0.5, cat:'Antihistamine'},
+  {id:'cet-syr', name:'Cetirizine syr', prep:'5 mg/5 mL (60 mL)', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Antihistamine', alias:'Zyrtec', note:cetNote, indications:cetInds},
+  {id:'cet-tab', name:'Cetirizine tab', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Antihistamine', alias:'Zyrtec', note:cetNote, indications:cetInds},
   {id:'cpm-syr', name:'CPM syrup', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.3, maxD:0.5, daily:true, cat:'Antihistamine', alias:'Chlorpheniramine,CPM',
     autoByAge:true, indications:[
       {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:1, maxDay:6, iv:'q 4-6 hr', note:'1mg q4-6hr MAX6mg/d'},
       {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:2, maxDay:12, iv:'q 4-6 hr', note:'2mg q4-6hr MAX12mg/d'},
       {label:'>12yr', minMo:144, maxMo:999, fixedMg:4, maxDay:24, iv:'q 4-6 hr', note:'4mg q4-6hr MAX24mg/d'}
     ],
-    note:'ห้ามใช้ <2yr'},
+    note:'QSNICH ระบุขนาด oral ตั้งแต่อายุ 2 ปีขึ้นไป (ไม่ได้ระบุว่าห้ามใช้) — รูปแบบฉีด IM/IV ใช้ได้ตั้งแต่ 1 เดือน'},
   {id:'cpm-tab', name:'CPM tablet', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0.3, maxD:0.5, daily:true, cat:'Antihistamine', alias:'Chlorpheniramine,CPM',
     autoByAge:true, indications:[
       {label:'2-<6yr', minMo:24, maxMo:71, fixedMg:1, maxDay:6, iv:'q 4-6 hr', note:'1mg q4-6hr MAX6mg/d (¼ tab)'},
       {label:'6-<12yr', minMo:72, maxMo:143, fixedMg:2, maxDay:12, iv:'q 4-6 hr', note:'2mg q4-6hr MAX12mg/d (½ tab)'},
       {label:'>12yr', minMo:144, maxMo:999, fixedMg:4, maxDay:24, iv:'q 4-6 hr', note:'4mg q4-6hr MAX24mg/d (1 tab)'}
     ],
-    note:'ห้ามใช้ <2yr'},
+    note:'QSNICH ระบุขนาด oral ตั้งแต่อายุ 2 ปีขึ้นไป (ไม่ได้ระบุว่าห้ามใช้) — รูปแบบฉีด IM/IV ใช้ได้ตั้งแต่ 1 เดือน'},
   {id:'cpm-iv', name:'CPM IV', prep:'10 mg/mL', concMg:1, concVol:1, unit:'mg', minD:0.25, maxD:0.25, cat:'Antihistamine', alias:'Chlorpheniramine,CPM',
     autoByAge:true, indications:[
       {label:'1-5mo', minMo:0, maxMo:5, minD:0.25, maxD:0.25, iv:'qid', note:'0.25mk/dose MAX2.5mg qid'},
@@ -2248,9 +2641,9 @@ const drugRegistry = [
   {id:'pseudo-syr', name:'Pseudoephedrine', prep:'30 mg/5 mL', concMg:30, concVol:5, unit:'mL', minD:1, maxD:1, cat:'Decongestant'},
   {id:'pseudo-tab', name:'Pseudoephedrine', prep:'60 mg/tab', concMg:60, concVol:1, unit:'tab', minD:1, maxD:1, cat:'Decongestant'},
   // Asthma
-  {id:'salb-syr', name:'Salbutamol syr', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.2, cat:'Asthma', note:'2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d<br>Adolescent:2-4mg tid-qid MAX32mg/d'},
-  {id:'salb-tab', name:'Salbutamol tab', prep:'2 mg/tab', concMg:2, concVol:1, unit:'tab', minD:0.1, maxD:0.2, cat:'Asthma'},
-  {id:'salb-sol', name:'Salbutamol NEB', prep:'Solution 5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.15, maxD:0.15, cat:'Asthma', note:'0.15mk/dose min2.5mg<br>Continuous:0.3-0.5mk/hr<br>Exercise px:<5yr 1-2puff |>5yr 2puff<br>Hyperkalemia:NB 0.4mg neb | WB 0.3-0.5mk rapid neb'},
+  {id:'salb-syr', name:'Salbutamol syr', prep:'2 mg/5 mL', concMg:2, concVol:5, unit:'mL', minD:0.1, maxD:0.2, cat:'Asthma', note:'2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d<br>Adolescent:2-4mg tid-qid MAX32mg/d', indications:salbOralInds},
+  {id:'salb-tab', name:'Salbutamol tab', prep:'2 mg/tab', concMg:2, concVol:1, unit:'tab', minD:0.1, maxD:0.2, cat:'Asthma', indications:salbOralInds},
+  {id:'salb-sol', name:'Salbutamol NEB', prep:'Solution 5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.15, maxD:0.15, cat:'Asthma', note:salbNebNote, indications:salbNebInds},
   {id:'terb', name:'Terbutaline', prep:'0.5 mg/mL', concMg:0.5, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Asthma'},
   // Adrenaline
   {id:'adr-neb', name:'Adrenaline NEB', prep:'1:1,000', concMg:1, concVol:1, unit:'mL', minD:0.05, maxD:0.5, cat:'Adrenaline', alias:'Epinephrine'},
@@ -2273,8 +2666,8 @@ const drugRegistry = [
   {id:'dimen-iv', name:'Dimenhydrinate IV', prep:'50 mg/amp', concMg:50, concVol:1, unit:'mL', minD:1, maxD:1, cat:'Antiemetic'},
   {id:'dimen-tab', name:'Dimenhydrinate tab', prep:'50 mg/tab', concMg:50, concVol:1, unit:'tab', minD:1, maxD:1, cat:'Antiemetic'},
   // Antacid
-  {id:'omep-iv', name:'Omeprazole IV', prep:'40 mg/amp', concMg:40, concVol:1, unit:'mL', minD:0.5, maxD:2, cat:'Antacid'},
-  {id:'omep-tab', name:'Omeprazole tab', prep:'20 mg/tab', concMg:20, concVol:1, unit:'tab', minD:0.5, maxD:2, cat:'Antacid'},
+  {id:'omep-iv', name:'Omeprazole IV', prep:'40 mg/vial', concMg:40, concVol:1, unit:'mL', minD:0.5, maxD:2, maxDose:40, cat:'Antacid', alias:'Losec,Miracid', note:omepNote, indications:omepInds},
+  {id:'omep-tab', name:'Omeprazole cap', prep:'20 mg/cap', concMg:20, concVol:1, unit:'cap', minD:0.7, maxD:4, daily:true, maxDose:40, cat:'Antacid', alias:'Losec,Miracid', note:omepNote, indications:omepInds},
   {id:'rani-iv', name:'Ranitidine IV', prep:'50 mg/amp', concMg:50, concVol:1, unit:'mL', minD:1, maxD:2, cat:'Antacid'},
   {id:'rani-tab', name:'Ranitidine tab', prep:'150 mg/tab', concMg:150, concVol:1, unit:'tab', minD:1, maxD:2, cat:'Antacid'},
   {id:'famo-tab', name:'Famotidine tab', prep:'20 mg/tab', concMg:20, concVol:1, unit:'tab', minD:0.5, maxD:0.5, cat:'Antacid'},
@@ -2329,6 +2722,8 @@ const drugRegistry = [
   {id:'lactu-syr', name:'Lactulose', prep:'syr 10 g/15 mL (66.7%)', concMg:10000, concVol:15, unit:'mL', minD:1000, maxD:2000, daily:true, cat:'Laxatives', alias:lactuAlias, note:lactuNote, indications:lactuInds},
   {id:'lactu-syr-100', name:'Lactulose', prep:'20 g/30 mL (ขวด 100 mL)', concMg:20000, concVol:30, unit:'mL', minD:1000, maxD:2000, daily:true, cat:'Laxatives', alias:lactuAlias, note:lactuNote, indications:lactuInds},
   {id:'lactu-syr-30', name:'Lactulose', prep:'20 g/30 mL (ขวด 30 mL)', concMg:20000, concVol:30, unit:'mL', minD:1000, maxD:2000, daily:true, cat:'Laxatives', alias:lactuAlias, note:lactuNote, indications:lactuInds},
+  {id:'mom-susp', name:'Milk of Magnesia', prep:'400 mg/5 mL (60, 240 mL)', concMg:400, concVol:5, unit:'mL', minD:80, maxD:240, daily:true, cat:'Laxatives', alias:'MOM,Magnesium hydroxide', note:momNote, indications:momInds},
+  {id:'loperamide-tab', name:'Loperamide tab', prep:'2 mg/tab', concMg:2, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Laxatives', alias:'Sbob,Mantil,Imodium', note:loperamideNote, indications:loperamideInds},
   // Steroid
   {id:'hydro-iv', name:'Hydrocortisone', prep:'100 mg/vial', concMg:1, concVol:1, unit:'mg', minD:1, maxD:5, cat:'Steroid', alias:'Solu-Cortef',
     indications:[
@@ -2368,6 +2763,8 @@ const drugRegistry = [
       {label:'Chorioamnionitis/CLD', minD:0.5, maxD:0.5, iv:'q 12 hr', note:'NB ELBW:0.5mk/dose q12hr x12d<br>จากนั้น 0.25mk/dose q12hr x3d'},
       {label:'Thyroid storm', fixedMg:300, iv:'q 8 hr', note:'Adult:เริ่ม 300mg/dose<br>จากนั้น 100mg/dose q8hr'}
     ]},
+  {id:'methylpred-40', name:'Methylprednisolone', prep:'40 mg/vial', concMg:40, concVol:1, unit:'mg', minD:1, maxD:2, cat:'Steroid', alias:'Solumedrol,M-prednisolone', note:methylpredNote, indications:methylpredInds},
+  {id:'methylpred-500', name:'Methylprednisolone', prep:'500 mg/vial', concMg:500, concVol:1, unit:'mg', minD:1, maxD:2, cat:'Steroid', alias:'Solumedrol,M-prednisolone', note:methylpredNote, indications:methylpredInds},
   {id:'dexa-iv', name:'Dexamethasone', prep:'4 mg/mL (inj)', concMg:1, concVol:1, unit:'mg', minD:0.15, maxD:0.6, cat:'Steroid', alias:'Dexa',
     indications:[
       {label:'Croup', minD:0.6, maxD:0.6, maxDose:16, iv:'single', note:'0.6mk single dose MAX16mg'},
@@ -2440,8 +2837,8 @@ const drugRegistry = [
   {id:'leve-maint-250', name:'Levetiracetam maint', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:10, maxD:30, cat:'Anti-epileptic', alias:'Keppra,Lecetam', note:leveRenalNote, indications:leveMaintInds},
   {id:'leve-maint-500', name:'Levetiracetam maint', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:30, cat:'Anti-epileptic', alias:'Keppra,Lecetam', note:leveRenalNote, indications:leveMaintInds},
   // Procedural sedation
-  {id:'chloral-250', name:'Chloral hydrate', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation', note:'QSNICH: 25-50 mk q6-8hr MAX 500 mg/dose<br>Pre-EEG/procedure: 25-50 mk (อาจซ้ำใน 30 นาที, total MAX 100-120 mk)<br>Hypnotic: 50 mk MAX 1 g (Infants) / 2 g (Children)<br>NB: 25-75 mk/dose ระวังพิษสะสม<br>Adult Sedation: 250 mg tid | Hypnotic: 500-1000 mg hs (MAX 2 g/24hr)<br>Renal CrCl<50: หลีกเลี่ยง'},
-  {id:'chloral-500', name:'Chloral hydrate', prep:'500 mg/5 mL', concMg:500, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation', note:'QSNICH: 25-50 mk q6-8hr MAX 500 mg/dose<br>Pre-EEG/procedure: 25-50 mk (อาจซ้ำใน 30 นาที, total MAX 100-120 mk)<br>Hypnotic: 50 mk MAX 1 g (Infants) / 2 g (Children)<br>NB: 25-75 mk/dose ระวังพิษสะสม<br>Adult Sedation: 250 mg tid | Hypnotic: 500-1000 mg hs (MAX 2 g/24hr)<br>Renal CrCl<50: หลีกเลี่ยง'},
+  {id:'chloral-250', name:'Chloral hydrate', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation', note:'Sedation/anxiety: 25-50 mk/<b>day</b> แบ่งให้ทุก 6-8 ชม. (MAX 500 mg/dose)<br>ก่อนตรวจ EEG (30-60 นาที): 25-50 mk/dose อาจซ้ำใน 30 นาที (total MAX 100 mk หรือ 1 g ใน infants, 2 g ใน children)<br>Sedation หัตถการที่ไม่เจ็บ: 50-75 mk/dose ก่อน 30-60 นาที (total MAX 120 mk หรือ 1 g/2 g)<br>Hypnotic: 50 mk (MAX 1 g/day ใน Infants, 2 g/day ใน Children)<br>NB: 25-75 mk/dose ระวังพิษสะสม<br>Adult Sedation: 250 mg tid | Hypnotic: 500-1000 mg hs (MAX 2 g/24hr)<br>Renal CrCl<50: หลีกเลี่ยง'},
+  {id:'chloral-500', name:'Chloral hydrate', prep:'500 mg/5 mL', concMg:500, concVol:5, unit:'mL', minD:25, maxD:75, cat:'Sedation', note:'Sedation/anxiety: 25-50 mk/<b>day</b> แบ่งให้ทุก 6-8 ชม. (MAX 500 mg/dose)<br>ก่อนตรวจ EEG (30-60 นาที): 25-50 mk/dose อาจซ้ำใน 30 นาที (total MAX 100 mk หรือ 1 g ใน infants, 2 g ใน children)<br>Sedation หัตถการที่ไม่เจ็บ: 50-75 mk/dose ก่อน 30-60 นาที (total MAX 120 mk หรือ 1 g/2 g)<br>Hypnotic: 50 mk (MAX 1 g/day ใน Infants, 2 g/day ใน Children)<br>NB: 25-75 mk/dose ระวังพิษสะสม<br>Adult Sedation: 250 mg tid | Hypnotic: 500-1000 mg hs (MAX 2 g/24hr)<br>Renal CrCl<50: หลีกเลี่ยง'},
   {id:'midaz-iv', name:'Midazolam IV', prep:'5 mg/mL', concMg:5, concVol:1, unit:'mL', minD:0.05, maxD:0.2, cat:'Sedation', alias:'Dormicum',
     indications:[
       {label:'Sedation (Conscious) IV', minD:0.05, maxD:0.1, iv:'titrate',
@@ -2460,7 +2857,10 @@ const drugRegistry = [
           {minMo:144, maxMo:9999, minD:0.025, maxD:0.05, maxDose:10, note:'12-16 ปี: ใช้เหมือน Adult (MAX total 10 mg)<br>Adult: titrate 0.5-4 mg, total 2.5-5 mg ใน 2 นาที'}
         ]
       },
-      {label:'Acute seizure Buccal', minD:0.2, maxD:0.5, iv:'single', maxDose:10, note:'Buccal route (Infants ≥3 mo, Children, Adolescents): 0.2-0.5 mk MAX 10 mg/dose'}
+      {label:'Acute seizure Buccal', minD:0.2, maxD:0.5, iv:'single', maxDose:10, note:'Buccal route (Infants ≥3 mo, Children, Adolescents): 0.2-0.5 mk MAX 10 mg/dose'},
+      {label:'Pre-procedure Oral', minD:0.25, maxD:0.5, iv:'single', maxDose:20, note:'Sedation, anxiolysis, amnesia ก่อนหัตถการหรือก่อน induction (Infants &gt;2 เดือน &amp; Children): Oral 0.25-0.5 mk ครั้งเดียว ขนาดปกติ 0.5 mk (MAX 20 mg/dose)'},
+      {label:'Sedation ขณะใช้เครื่องช่วยหายใจ', minD:0.05, maxD:0.2, iv:'loading + cont', note:'Infants-Children-Adolescents: loading 0.05-0.2 mk ให้ช้าๆ นานกว่า 2-3 นาที ต่อด้วย continuous IV 0.06-0.12 mk/hr (1-2 mcg/kg/min) จนได้ผล ขนาดปกติ 0.4-6 mcg/kg/min<br>Adults: loading 0.01-0.05 mk (~0.5-4 mg) ซ้ำได้ใน 10-15 นาที แล้วเริ่ม continuous 0.02-0.1 mk/hr (1-7 mg/hr)'},
+      {label:'Neonatal seizure (anticonvulsant)', minD:0.15, maxD:0.15, iv:'loading + cont', note:'Neonates: loading 0.15 mk → maintenance infusion 0.06-0.4 mk/hr (1-7 mcg/kg/min)'}
     ],
     note:'⚠️ Benzodiazepine — Resp depression, สำรอง Flumazenil<br>รูปแบบ: 5 mg/1 mL หรือ 15 mg/3 mL (Dormicum)'
   },
@@ -2531,15 +2931,15 @@ const drugRegistry = [
   {id:'clox-syr', name:'Cloxacillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:12.5, maxD:25, cat:'Penicillins'},
   {id:'clox-cap-250', name:'Cloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:12.5, maxD:25, cat:'Penicillins'},
   {id:'clox-cap-500', name:'Cloxacillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:12.5, maxD:25, cat:'Penicillins'},
-  {id:'diclox-syr', name:'Dicloxacillin syr', prep:'62.5 mg/5 mL', concMg:62.5, concVol:5, unit:'mL', minD:3.1, maxD:12.5, cat:'Penicillins'},
-  {id:'diclox-cap-250', name:'Dicloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:3.1, maxD:12.5, cat:'Penicillins'},
-  {id:'diclox-cap-500', name:'Dicloxacillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:3.1, maxD:12.5, cat:'Penicillins'},
-  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:25, maxD:100, daily:true, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:100, daily:true, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:25, maxD:100, daily:true, cat:'Penicillins', note:'Mild(>3mo):25-50mk/d q8hr MAX500mg/dose<br>Severe:80-100mk/d q8hr<br>AOM:80-90mk/d q12hr<br>Pneumonia:90-100mk/d q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'},
-  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:25, maxD:45, daily:true, cat:'Penicillins', alias:'Augmentin,Ranclav,Clavulanic', note:'7:1 General:25-45mk/d q12hr or 20-40mk/d q8hr<br>MAX 4gm Amox/day'},
-  {id:'augm-es', name:'Amox/Clav ES syr', prep:'600/42.9 mg/5 mL', concMg:600, concVol:5, unit:'mL', minD:80, maxD:100, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'14:1 AOM/Sinusitis:90mk/d q12hr<br>CAP:80-100mk/d q12hr<br>MAX 4gm Amox/day'},
-  {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:25, maxD:45, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'≥40kg:250-500mg q8hr<br>Sinusitis:2g q12hr x10d<br>Bite/Abscess:875mg q12hr<br>CAP:2g q12hr(extended)'},
+  {id:'diclox-syr', name:'Dicloxacillin syr', prep:'62.5 mg/5 mL (60 mL)', concMg:62.5, concVol:5, unit:'mL', minD:12, maxD:50, daily:true, maxDose:500, cat:'Penicillins', note:dicloxNote, indications:dicloxInds},
+  {id:'diclox-cap-250', name:'Dicloxacillin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:12, maxD:50, daily:true, maxDose:500, cat:'Penicillins', note:dicloxNote, indications:dicloxInds},
+  {id:'diclox-cap-500', name:'Dicloxacillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:12, maxD:50, daily:true, maxDose:500, cat:'Penicillins', note:dicloxNote, indications:dicloxInds},
+  {id:'amox-syr-125', name:'Amoxicillin syr', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:25, maxD:100, daily:true, cat:'Penicillins', note:amoxNote, indications:amoxInds},
+  {id:'amox-syr-250', name:'Amoxicillin syr', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:25, maxD:100, daily:true, cat:'Penicillins', note:amoxNote, indications:amoxInds},
+  {id:'amox-cap', name:'Amoxicillin cap', prep:'500 mg/cap', concMg:500, concVol:1, unit:'cap', minD:25, maxD:100, daily:true, cat:'Penicillins', note:amoxNote, indications:amoxInds},
+  {id:'augm-syr', name:'Amox/Clav syr', prep:'400/57 mg/5 mL', concMg:400, concVol:5, unit:'mL', minD:25, maxD:45, daily:true, cat:'Penicillins', alias:'Augmentin,Ranclav,Clavulanic', note:'7:1 General: 25-45 mk/day q12hr หรือ 20-40 mk/day q8hr (3 เดือน-16 ปี &amp; &lt;40 kg)<br>' + augmRenalNote, indications:augmSyrInds},
+  {id:'augm-es', name:'Amox/Clav ES syr', prep:'600/42.9 mg/5 mL', concMg:600, concVol:5, unit:'mL', minD:80, maxD:100, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'14:1 AOM/Sinusitis: 90 mk/day q12hr | CAP: 80-100 mk/day q12hr<br>' + augmRenalNote, indications:augmEsInds},
+  {id:'augm-tab', name:'Amox/Clav tab', prep:'875/125 mg/tab', concMg:875, concVol:1, unit:'tab', minD:25, maxD:45, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'&gt;40 kg: 250-500 mg q8hr | Sinusitis 2 g q12hr x10d | Bite wound/Skin abscess 875 mg q12hr | Aspirate pneumonia 875 mg q12hr | CAP 2 g q12hr x7-10d (1 g extended only)<br>' + augmRenalNote, indications:augmTabInds},
   // Cephalosporins
   {id:'cephal-syr', name:'Cephalexin syr (1st)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:25, maxD:100, daily:true, cat:'Cephalosporins'},
   {id:'cephal-cap-250', name:'Cephalexin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:25, maxD:100, daily:true, cat:'Cephalosporins'},
@@ -2547,10 +2947,10 @@ const drugRegistry = [
   {id:'cefacl-syr-125', name:'Cefaclor syr (2nd)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:20, maxD:40, daily:true, cat:'Cephalosporins'},
   {id:'cefacl-syr-250', name:'Cefaclor syr (2nd)', prep:'250 mg/5 mL', concMg:250, concVol:5, unit:'mL', minD:20, maxD:40, daily:true, cat:'Cephalosporins'},
   {id:'cefacl-tab', name:'Cefaclor tab', prep:'375 mg/tab', concMg:375, concVol:1, unit:'tab', minD:20, maxD:40, daily:true, cat:'Cephalosporins'},
-  {id:'cefdin-syr', name:'Cefdinir syr (3rd)', prep:'125 mg/5 mL', concMg:125, concVol:5, unit:'mL', minD:14, maxD:14, daily:true, cat:'Cephalosporins'},
-  {id:'cefdin-cap', name:'Cefdinir cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'cap', minD:14, maxD:14, daily:true, cat:'Cephalosporins'},
-  {id:'cefix-syr', name:'Cefixime syr (3rd)', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:8, maxD:8, daily:true, cat:'Cephalosporins'},
-  {id:'cefix-cap', name:'Cefixime cap', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:8, maxD:8, daily:true, cat:'Cephalosporins'},
+  {id:'cefdin-syr', name:'Cefdinir syr (3rd)', prep:'125 mg/5 mL (30 mL)', concMg:125, concVol:5, unit:'mL', minD:14, maxD:14, daily:true, maxDose:600, cat:'Cephalosporins', alias:'Omnicef', note:cefdinNote},
+  {id:'cefdin-cap', name:'Cefdinir cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'cap', minD:14, maxD:14, daily:true, maxDose:600, cat:'Cephalosporins', alias:'Omnicef', note:cefdinNote},
+  {id:'cefix-syr', name:'Cefixime syr (3rd)', prep:'100 mg/5 mL (30 mL)', concMg:100, concVol:5, unit:'mL', minD:8, maxD:8, daily:true, maxDose:400, cat:'Cephalosporins', alias:'Cefspan', note:cefixNote},
+  {id:'cefix-cap', name:'Cefixime cap', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:8, maxD:8, daily:true, maxDose:400, cat:'Cephalosporins', alias:'Cefspan', note:cefixNote},
   // Macrolides
   {id:'eryth-syr', name:'Erythromycin syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:30, maxD:50, daily:true, cat:'Macrolides'},
   {id:'eryth-cap', name:'Erythromycin cap', prep:'250 mg/cap', concMg:250, concVol:1, unit:'cap', minD:30, maxD:50, daily:true, cat:'Macrolides'},
@@ -2560,34 +2960,34 @@ const drugRegistry = [
   {id:'clari-tab-250', name:'Clarithromycin tab', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:7.5, maxD:7.5, cat:'Macrolides'},
   {id:'clari-tab-500', name:'Clarithromycin tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:7.5, maxD:7.5, cat:'Macrolides'},
   // Lincosamides
-  {id:'clinda-iv', name:'Clindamycin IV', prep:'600 mg/vial', concMg:600, concVol:1, unit:'mL', minD:25, maxD:40, daily:true, cat:'Lincosamides'},
-  {id:'clinda-cap-150', name:'Clindamycin cap', prep:'150 mg/cap', concMg:150, concVol:1, unit:'cap', minD:10, maxD:25, daily:true, cat:'Lincosamides'},
-  {id:'clinda-cap-300', name:'Clindamycin cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'cap', minD:10, maxD:25, daily:true, cat:'Lincosamides'},
+  {id:'clinda-iv', name:'Clindamycin IV', prep:'600 mg/vial (150 mg/mL)', concMg:150, concVol:1, unit:'mL', minD:20, maxD:40, daily:true, cat:'Lincosamides', note:clindaNote, indications:clindaIvInds},
+  {id:'clinda-cap-150', name:'Clindamycin cap', prep:'150 mg/cap', concMg:150, concVol:1, unit:'cap', minD:10, maxD:40, daily:true, cat:'Lincosamides', note:clindaNote, indications:clindaOralInds},
+  {id:'clinda-cap-300', name:'Clindamycin cap', prep:'300 mg/cap', concMg:300, concVol:1, unit:'cap', minD:10, maxD:40, daily:true, cat:'Lincosamides', note:clindaNote, indications:clindaOralInds},
   // Sulfonamides
   {id:'cotri-syr', name:'Co-trimoxazole syr', prep:'40/200 mg/5 mL', concMg:40, concVol:5, unit:'mL', minD:8, maxD:12, daily:true, cat:'Sulfonamides', alias:'Cotrimoxazole,TMP/SMX,Bactrim'},
   {id:'cotri-tab', name:'Co-trimoxazole tab', prep:'80/400 mg/tab', concMg:80, concVol:1, unit:'tab', minD:8, maxD:12, daily:true, cat:'Sulfonamides', alias:'Cotrimoxazole,TMP/SMX,Bactrim'},
   // Quinolones
-  {id:'cipro-tab-250', name:'Ciprofloxacin', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Quinolones'},
-  {id:'cipro-tab-500', name:'Ciprofloxacin', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:20, cat:'Quinolones'},
-  {id:'norflox-tab-100', name:'Norfloxacin', prep:'100 mg/tab', concMg:100, concVol:1, unit:'tab', minD:7.5, maxD:10, cat:'Quinolones'},
-  {id:'norflox-tab-200', name:'Norfloxacin', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:7.5, maxD:10, cat:'Quinolones'},
-  {id:'norflox-tab-400', name:'Norfloxacin', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:7.5, maxD:10, cat:'Quinolones'},
+  {id:'cipro-tab-250', name:'Ciprofloxacin', prep:'250 mg/tab', concMg:250, concVol:1, unit:'tab', minD:20, maxD:30, daily:true, maxDose:750, cat:'Quinolones', note:ciproNote, indications:ciproInds},
+  {id:'cipro-tab-500', name:'Ciprofloxacin', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:20, maxD:30, daily:true, maxDose:750, cat:'Quinolones', note:ciproNote, indications:ciproInds},
+  {id:'norflox-tab-100', name:'Norfloxacin', prep:'100 mg/tab', concMg:100, concVol:1, unit:'tab', minD:7.5, maxD:10, maxDose:400, cat:'Quinolones', note:norfloxNote},
+  {id:'norflox-tab-200', name:'Norfloxacin', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:7.5, maxD:10, maxDose:400, cat:'Quinolones', note:norfloxNote},
+  {id:'norflox-tab-400', name:'Norfloxacin', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:7.5, maxD:10, maxDose:400, cat:'Quinolones', note:norfloxNote},
   // Others
-  {id:'metro-iv', name:'Metronidazole IV', prep:'500 mg/100mL', concMg:500, concVol:100, unit:'mL', minD:7.5, maxD:13.3, cat:'Others'},
-  {id:'metro-syr', name:'Metronidazole syr', prep:'200 mg/5 mL', concMg:200, concVol:5, unit:'mL', minD:10, maxD:16.7, cat:'Others'},
-  {id:'metro-tab-200', name:'Metronidazole tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
-  {id:'metro-tab-400', name:'Metronidazole tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
-  {id:'metro-tab-500', name:'Metronidazole tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:10, maxD:16.7, cat:'Others'},
+  {id:'metro-iv', name:'Metronidazole IV', prep:'500 mg/100 mL (5 mg/mL)', concMg:5, concVol:1, unit:'mL', minD:22.5, maxD:40, daily:true, cat:'Others', note:metroNote, indications:metroIvInds},
+  {id:'metro-syr', name:'Metronidazole syr', prep:'200 mg/5 mL (60 mL)', concMg:200, concVol:5, unit:'mL', minD:15, maxD:50, daily:true, cat:'Others', note:metroNote, indications:metroOralInds},
+  {id:'metro-tab-200', name:'Metronidazole tab', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:15, maxD:50, daily:true, cat:'Others', note:metroNote, indications:metroOralInds},
+  {id:'metro-tab-400', name:'Metronidazole tab', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:15, maxD:50, daily:true, cat:'Others', note:metroNote, indications:metroOralInds},
+  {id:'metro-tab-500', name:'Metronidazole tab', prep:'500 mg/tab', concMg:500, concVol:1, unit:'tab', minD:15, maxD:50, daily:true, cat:'Others', note:metroNote, indications:metroOralInds},
   {id:'doxy-cap', name:'Doxycycline', prep:'100 mg/cap', concMg:100, concVol:1, unit:'cap', minD:2, maxD:5, daily:true, cat:'Others'},
   // Antivirals
   {id:'osel-30', name:'Oseltamivir', alias:'Tamiflu', prep:'30 mg/tab', concMg:30, concVol:1, unit:'tab', minD:4, maxD:8, daily:true, cat:'Antivirals'},
   {id:'osel-45', name:'Oseltamivir', alias:'Tamiflu', prep:'45 mg/tab', concMg:45, concVol:1, unit:'tab', minD:4, maxD:8, daily:true, cat:'Antivirals'},
   {id:'osel-75', name:'Oseltamivir', alias:'Tamiflu', prep:'75 mg/tab', concMg:75, concVol:1, unit:'tab', minD:4, maxD:8, daily:true, cat:'Antivirals'},
-  {id:'acy-iv', name:'Acyclovir IV', prep:'250 mg/vial', concMg:250, concVol:1, unit:'vial', minD:5, maxD:20, cat:'Antivirals', note:'NB HSV:20mk | HSV encepha:10-15mk q8hr x21d<br>VZV:10-15mk q8hr | Zoster:10mk q8hr<br>Renal:CrCl25-50 q12hr | 10-25 q24hr | <10 50%dose'},
-  {id:'acy-tab-200', name:'Acyclovir', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:40, maxD:80, daily:true, cat:'Antivirals', note:'Genital HSV:40-80mk/d÷3-4 x7-10d<br>VZV:20mk qid x5d MAX3200mg/d<br>Zoster:≥12yr 800mg 5x/d'},
-  {id:'acy-tab-400', name:'Acyclovir', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:40, maxD:80, daily:true, cat:'Antivirals'},
-  {id:'acy-tab-800', name:'Acyclovir', prep:'800 mg/tab', concMg:800, concVol:1, unit:'tab', minD:40, maxD:80, daily:true, cat:'Antivirals'},
-  {id:'acy-susp', name:'Acyclovir susp', prep:'200 mg/5 mL (susp)', concMg:40, concVol:1, unit:'mL', minD:40, maxD:80, daily:true, cat:'Antivirals', note:'ยาเตรียมเฉพาะราย'},
+  {id:'acy-iv', name:'Acyclovir IV', prep:'250 mg/vial', concMg:250, concVol:1, unit:'vial', minD:5, maxD:20, cat:'Antivirals', note:acyNote, indications:acyIvInds},
+  {id:'acy-tab-200', name:'Acyclovir', prep:'200 mg/tab', concMg:200, concVol:1, unit:'tab', minD:20, maxD:20, maxDose:800, cat:'Antivirals', note:acyNote, indications:acyOralInds},
+  {id:'acy-tab-400', name:'Acyclovir', prep:'400 mg/tab', concMg:400, concVol:1, unit:'tab', minD:20, maxD:20, maxDose:800, cat:'Antivirals', indications:acyOralInds},
+  {id:'acy-tab-800', name:'Acyclovir', prep:'800 mg/tab', concMg:800, concVol:1, unit:'tab', minD:20, maxD:20, maxDose:800, cat:'Antivirals', indications:acyOralInds},
+  {id:'acy-susp', name:'Acyclovir susp', prep:'20 mg/mL (20 mL)', concMg:20, concVol:1, unit:'mL', minD:20, maxD:20, maxDose:800, cat:'Antivirals', note:'ยาเตรียมเฉพาะราย', indications:acyOralInds},
   // === Remaining drugs ===
   // Mucolytic
   // Carbocysteine: 2-4yr:62.5-125mg bid-qid, 5-11yr:250mg tid, 12-17yr:1500-2250mg/d tid-qid
@@ -2595,14 +2995,14 @@ const drugRegistry = [
   {id:'carbo-syr-100', name:'Carbocysteine syr', prep:'100 mg/5 mL', concMg:100, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Mucolytic'},
   {id:'carbo-tab', name:'Carbocysteine tab', prep:'375 mg/tab', concMg:375, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Mucolytic', note:'12-17yr:4-6 tab/d tid-qid'},
   // Carbocysteine lysine: 2-5yr:2.5mL bid, 5-12yr:5mL bid, >12yr:20mL od
-  {id:'carbo-lys', name:'Carbocysteine lysine', prep:'90 mg/mL', concMg:90, concVol:1, unit:'mL', minD:0, maxD:0, cat:'Mucolytic'},
+  {id:'carbo-lys', name:'Carbocysteine lysine', prep:'90 mg/mL', concMg:90, concVol:1, unit:'mL', minD:0, maxD:0, cat:'Mucolytic', note:'ℹ ขนาดของ lysine salt (Fluifort) ไม่มีในรูป QSNICH ของ Carbocysteine — เป็นข้อมูลเดิมในแอป'},
   // Asthma
-  {id:'salb-neb', name:'Salbutamol NEB', prep:'Nebule 2.5mg/2.5mL', concMg:2.5, concVol:2.5, unit:'mL', minD:0.15, maxD:0.15, cat:'Asthma', note:'0.15 mk/dose min 2.5mg (=1 nebule)<br>&lt;20kg: ½ nebule (1.25mg) | &ge;20kg: 1 nebule (2.5mg)<br>Severe: q20min × 3 then prn<br>Continuous: 0.3-0.5 mk/hr<br>Hyperkalemia: NB 0.4mg neb | WB 0.3-0.5mk rapid neb'},
+  {id:'salb-neb', name:'Salbutamol NEB', prep:'Nebule 2.5mg/2.5mL', concMg:2.5, concVol:2.5, unit:'mL', minD:0.15, maxD:0.15, cat:'Asthma', note:'0.15 mk/dose min 2.5mg (=1 nebule)<br>MAX 10 mg/dose (ครั้งถัดไป 0.15-0.3 mk ทุก 1-4 ชม.) | Hyperkalemia fixed dose: &lt;25 kg 2.5 mg | ≥25 kg 5 mg<br>ℹ แบ่งครึ่ง nebule ในเด็ก &lt;20 kg เป็นข้อมูลเดิมในแอป — QSNICH ระบุ Min 2.5 mg/dose<br>Severe: q20min × 3 then prn<br>Continuous: 0.3-0.5 mk/hr<br>Hyperkalemia: NB 0.4mg neb | WB 0.3-0.5mk rapid neb', indications:salbNebInds},
   {id:'ipra-feno', name:'Ipratropium+Fenoterol', prep:'500 mcg/neb (4mL)', concMg:0.5, concVol:4, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
   {id:'ipra-albu', name:'Ipratropium+Albuterol', prep:'500 mcg/2.5mL/vial', concMg:0.5, concVol:2.5, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
   {id:'bude', name:'Budesonide', prep:'1 mg/2mL/respule', concMg:1, concVol:2, unit:'mL', minD:0, maxD:0, cat:'Asthma'},
-  {id:'montel', name:'Montelukast', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma', note:'6mo-<6yr:4mg | 6-<15yr:5mg | ≥15yr:10mg<br>รับประทานตอนเย็น<br>Urticaria(NSAID-induced):≥15yr 10mg'},
-  {id:'montel-10', name:'Montelukast', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma'},
+  {id:'montel', name:'Montelukast', prep:'4 mg/tab', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma', note:montelNote, indications:montelInds},
+  {id:'montel-10', name:'Montelukast', prep:'10 mg/tab', concMg:10, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma', indications:montelInds},
   // Adrenaline
   {id:'adr-ncpr', name:'Adrenaline NCPR', prep:'1:10,000', concMg:0.1, concVol:1, unit:'mL', minD:0.01, maxD:0.01, cat:'Adrenaline', alias:'Epinephrine'},
   // Antacid
@@ -2611,30 +3011,31 @@ const drugRegistry = [
   {id:'sime-drop', name:'Simethicone', prep:'Drop 40mg/0.6mL', concMg:40, concVol:0.6, unit:'mL', minD:0, maxD:0, cat:'Antacid', note:'<2yr:20mg qid MAX240mg/d<br><12yr:40mg qid MAX480mg/d<br>≥12yr:40-125mg qid MAX500mg/d'},
   {id:'sime-tab', name:'Simethicone', prep:'Tab 80mg/tab', concMg:80, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Antacid'},
   // Decongestant
-  {id:'oxy-drop', name:'Oxymetazoline', prep:'Drop 0.025%', concMg:0.25, concVol:1, unit:'drop', minD:0, maxD:0, cat:'Decongestant', note:'2-5yr:0.025% bid | ≥6yr:0.05% bid<br>ห้ามใช้ <2yr | ไม่ควรใช้ >3-5 วัน'},
+  {id:'oxy-drop', name:'Oxymetazoline', prep:'Drop 0.025%', concMg:0.25, concVol:1, unit:'drop', minD:0, maxD:0, cat:'Decongestant', note:'2-5yr:0.025% bid | ≥6yr:0.05% bid<br>QSNICH ระบุขนาดตั้งแต่ 2 ปี | ไม่ควรใช้ >3-5 วัน'},
   {id:'oxy-spray', name:'Oxymetazoline', prep:'Spray 0.05%', concMg:0.5, concVol:1, unit:'puff', minD:0, maxD:0, cat:'Decongestant', note:'≥6yr เท่านั้น bid'},
   {id:'phenyl', name:'Phenylephrine', prep:'5mg PE/5mL', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Decongestant'},
   // ATB IV/Vials
-  {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB:25-50k(Bact) 75-100k(Mening)<br>NB BW<2kg:0-28d q12 29-44d q8<br>NB BW≥2kg:0-7d q12 8-44d q8<br>Mild-mod:100-150k/d Severe:200-400k/d<br>Renal:CrCl>50 ปกติ|10-50 q8-12hr|<10 q12hr<br>MAX 24MU/day'},
+  {id:'penG', name:'Penicillin G', prep:'1,5 mU/vial', concMg:1, concVol:1, unit:'units', doseUnit:'units', minD:100000, maxD:150000, cat:'Penicillins', alias:'PGS', note:penGNote, indications:penGInds},
   {id:'benz-penG', name:'Benzathine Pen G', prep:'1.2 MU/vial', concMg:0, concVol:1, unit:'MU', minD:0, maxD:0, cat:'Penicillins', note:'NB Syphilis:50k u/kg IM x1<br>RF:≤27kg 600k q3-4wk | >27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/wk x3wk MAX2.4MU'},
-  {id:'clox-iv', name:'Cloxacillin IV', prep:'0.5,1 gm/amp', concMg:1000, concVol:1, unit:'gm', minD:12.5, maxD:25, cat:'Penicillins'},
-  {id:'augm-iv-06', name:'Amox/Clav IV', prep:'0.6 gm/vial', concMg:600, concVol:1, unit:'vial', minD:90, maxD:120, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'คำนวณ total Amox+Clav<br><3mo(<4kg):30mk q12hr | >4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg:1.2g q8hr Severe:q4-6hr'},
-  {id:'augm-iv-12', name:'Amox/Clav IV', prep:'1.2 gm/vial', concMg:1200, concVol:1, unit:'vial', minD:90, maxD:120, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic'},
+  {id:'clox-iv', name:'Cloxacillin IV', prep:'1 gm/vial', concMg:1000, concVol:1, unit:'gm', minD:100, maxD:200, daily:true, maxDose:2000, cat:'Penicillins', note:cloxIvNote, indications:cloxIvInds},
+  {id:'augm-iv-06', name:'Amox/Clav IV', prep:'0.6 gm/vial', concMg:600, concVol:1, unit:'vial', minD:90, maxD:120, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', note:'คำนวณขนาดรวม Amox+Clav<br>&lt;3 เดือน: BW &lt;4 kg 30 mk/dose q12hr | BW &gt;4 kg 30 mk/dose q8hr<br>3 เดือน-12 ปี: 30 mk/dose q6-8hr<br>≥40 kg &amp; Adult: 1.2 g q8hr (รุนแรง q4-6hr)<br>' + augmRenalNote, indications:augmIvInds},
+  {id:'augm-iv-12', name:'Amox/Clav IV', prep:'1.2 gm/vial', concMg:1200, concVol:1, unit:'vial', minD:90, maxD:120, daily:true, cat:'Penicillins', alias:'Augmentin,Cavumox,Clavulanic', indications:augmIvInds},
   {id:'ampi', name:'Ampicillin', prep:'500,1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:25, maxD:50, cat:'Penicillins'},
-  {id:'cefaz', name:'Cefazolin (1st)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:16.7, maxD:33.3, cat:'Cephalosporins'},
-  {id:'ceftri-500', name:'Ceftriaxone (3rd)', prep:'500 mg/vial', concMg:500, concVol:1, unit:'vial', minD:50, maxD:75, cat:'Cephalosporins'},
-  {id:'ceftri-1000', name:'Ceftriaxone (3rd)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'vial', minD:50, maxD:75, cat:'Cephalosporins'},
+  {id:'cefaz', name:'Cefazolin (1st)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'gm', minD:25, maxD:150, daily:true, cat:'Cephalosporins', note:cefazNote, indications:cefazInds},
+  {id:'ceftri-500', name:'Ceftriaxone (3rd)', prep:'500 mg/vial (IM)', concMg:500, concVol:1, unit:'vial', minD:50, maxD:100, daily:true, maxDose:2000, cat:'Cephalosporins', note:ceftriNote, indications:ceftriInds},
+  {id:'ceftri-1000', name:'Ceftriaxone (3rd)', prep:'1000 mg/vial (IV)', concMg:1000, concVol:1, unit:'vial', minD:50, maxD:100, daily:true, maxDose:2000, cat:'Cephalosporins', note:ceftriNote, indications:ceftriInds},
   {id:'cefotax-500', name:'Cefotaxime (3rd)', prep:'500 mg/vial', concMg:500, concVol:1, unit:'vial', minD:33.3, maxD:66.7, cat:'Cephalosporins'},
   {id:'cefotax-1000', name:'Cefotaxime (3rd)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'vial', minD:33.3, maxD:66.7, cat:'Cephalosporins'},
   {id:'ceftaz-500', name:'Ceftazidime (3rd)', prep:'500 mg/vial', concMg:500, concVol:1, unit:'vial', minD:33.3, maxD:50, cat:'Cephalosporins'},
   {id:'ceftaz-1000', name:'Ceftazidime (3rd)', prep:'1000 mg/vial', concMg:1000, concVol:1, unit:'vial', minD:33.3, maxD:50, cat:'Cephalosporins'},
   {id:'ceftaz-2000', name:'Ceftazidime (3rd)', prep:'2000 mg/vial', concMg:2000, concVol:1, unit:'vial', minD:33.3, maxD:50, cat:'Cephalosporins'},
   // Acetylcysteine
-  {id:'acetyl-100', name:'Acetylcysteine', prep:'Sachet 100mg', concMg:100, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic', alias:'NAC,Fluimucil', note:'Mucolytic:<6yr 50-100mg tid-qid | >6yr 200mg tid-qid<br>NAC IV:150mk/60min→50mk/4hr→100mk/16hr<br>NAC PO:140mk load→70mk q4hr x17doses'},
-  {id:'acetyl-200', name:'Acetylcysteine', prep:'Sachet 200mg', concMg:200, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic'},
-  {id:'acetyl-600', name:'Acetylcysteine', prep:'Tab 600mg', concMg:600, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Mucolytic'},
+  {id:'acetyl-100', name:'Acetylcysteine', prep:'Sachet 100mg', concMg:100, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic', indications:nacInd, alias:'Fluimucil', note:'Mucolytic (QSNICH): 50-100 mg/dose วันละ 3-4 ครั้ง ทุกอายุ<br>Acetylcysteine IV (21 hr): 150 mk drip 60 นาที (MAX 15 g) → 50 mk ใน 4 ชม. (MAX 5 g) → 100 mk ใน 16 ชม. (MAX 10 g)<br>ℹ Acetylcysteine PO 140 mk load → 70 mk q4hr × 17 ครั้ง — ไม่มีใน QSNICH'},
+  {id:'acetyl-200', name:'Acetylcysteine', prep:'Sachet 200mg', concMg:200, concVol:1, unit:'sac', minD:0, maxD:0, cat:'Mucolytic', indications:nacInd},
+  {id:'acetyl-600', name:'Acetylcysteine', prep:'Tab 600mg', concMg:600, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Mucolytic', indications:nacInd},
+  {id:'acetyl-inj', name:'Acetylcysteine inj', prep:'300 mg/3 mL', concMg:300, concVol:3, unit:'mL', minD:150, maxD:150, maxDose:15000, cat:'Mucolytic', alias:'Fluimucil', indications:nacInjInd, note:nacInjNote},
   {id:'phenyl2', name:'Phenylephrine', prep:'5mg PE + 2mg BPM/5mL', concMg:5, concVol:5, unit:'mL', minD:0, maxD:0, cat:'Decongestant'},
-  {id:'montel2', name:'Montelukast', prep:'Granule 4mg', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma'},
+  {id:'montel2', name:'Montelukast', prep:'Granule 4mg', concMg:4, concVol:1, unit:'tab', minD:0, maxD:0, cat:'Asthma', indications:montelInds},
 ];
 // Share indications: dexa-tab uses same indications as dexa-iv
 (function(){ const iv = drugRegistry.find(d=>d.id==='dexa-iv'); const tab = drugRegistry.find(d=>d.id==='dexa-tab'); if(iv&&tab) tab.indications = iv.indications; })();
@@ -2645,6 +3046,7 @@ const doseHeaders = ['Drug', 'Preparation', 'Dose', 'Approx', 'Min mg', 'Max mg'
 const doseColgroup = '<colgroup><col style="width:3%"><col style="width:13%"><col style="width:11%"><col style="width:9%"><col style="width:10%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:6%"><col style="width:7%"><col style="width:23%"></colgroup>';
 
 function renderDose(w, am) {
+  resetQsnichTags();
   const ageYr = (am || 0) / 12;
   let html = '';
 
@@ -2653,23 +3055,36 @@ function renderDose(w, am) {
   // Ibuprofen — QSNICH: ขนาดตามอายุ (fixed dosing) และเพดานต่อครั้ง/ต่อวัน
   const ibuFixedDose = (am||0)<6 ? 'ใช้ ≥6 เดือน' : (am||0)<12 ? '50 mg' : (am||0)<24 ? '75 mg' : ageYr<4 ? '100 mg' : ageYr<6 ? '150 mg' : ageYr<9 ? '200 mg' : ageYr<11 ? '250 mg' : ageYr<12 ? '300 mg' : '200 mg q4-6hr';
   const ibuRowNote = 'ใช้ในอายุ ≥6 เดือน — MAX 400 mg/dose, 40 mk/day หรือ 1,200 mg/day<br>Fixed dosing 6-11 เดือน 50mg | 12-23 เดือน 75mg | 2-3 ปี 100mg | 4-5 ปี 150mg | 6-8 ปี 200mg | 9-10 ปี 250mg | 11 ปี 300mg (ทุก 6-8 ชม. ไม่เกินวันละ 4 ครั้ง)<br>&gt;12 ปี: 200 mg ทุก 4-6 ชม.<br>JIA: 30-40 mk/day แบ่ง 3-4 ครั้ง (MAX 800 mg/dose, 2,400 mg/day)<br>ไตบกพร่อง: eGFR 30-&lt;60 พิจารณาหยุดชั่วคราว | &lt;30 หลีกเลี่ยง';
+  const celeDose = w < 10 ? 'ใช้ ≥10 kg' : (w <= 25 ? '50 mg bid' : '100 mg bid');
   html += makeTable(doseHeaders, [
-    drugRow('Paracetamol syrup','','120 mg/5 mL','10-15 mk/Dose','10 kg = 1 ช้อนชา', 10*w, 15*w, (10*w*5)/120, (15*w*5)/120, 'prn q 4-6 hr', 'MAX 90 mk/Day'),
+    drugRow('Paracetamol syrup','','120 mg/5 mL','10-15 mk/Dose','10 kg = 1 ช้อนชา', 10*w, 15*w, (10*w*5)/120, (15*w*5)/120, 'prn q 4-6 hr', 'MAX 75 mk/Day และ 4,000 mg/day'),
     drugRow('Paracetamol syrup','','250 mg/5 mL','','10 kg = ½ ช้อนชา', null, null, (10*w*5)/250, (15*w*5)/250, '', ''),
     drugRow('Paracetamol kit syr','','60 mg/0.6 mL','','1 kg = 0.1 mL', null, null, (10*w*0.6)/60, (15*w*0.6)/60, '', ''),
     drugRow('Paracetamol tab','','325 mg/tab','','30 kg = 1 tab', null, null, (10*w)/325, (15*w)/325, '', ''),
     drugRow('Paracetamol tab','','500 mg/tab','','25 kg = ½ tab', null, null, (10*w)/500, (15*w)/500, '', ''),
+    drugRow('Paracetamol suppo','','125 mg/supp','10-20 mk/Dose','rectal', 10*w, 20*w, (10*w)/125, (20*w)/125, 'q 4-6 hr', paraRectalNote),
+    drugRow('Paracetamol suppo','','250 mg/supp','','', null, null, (10*w)/250, (20*w)/250, '', ''),
     drugRow('Ibuprofen syrup','','100 mg/5 mL','5-10 mk/Dose',ibuFixedDose, 5*w, 10*w, (5*w*5)/100, (10*w*5)/100, 'prn q 6-8 hr', ibuRowNote, 400),
     drugRow('Ibuprofen tab','','200 mg/tab','','20 kg = ½-1 tab', null, null, (5*w)/200, (10*w)/200, '', ''),
     drugRow('Ibuprofen tab','','400 mg/tab','','40 kg = ½-1 tab', null, null, (5*w)/400, (10*w)/400, '', ''),
+    drugRow('Diclofenac tab','(Voltaren)','25 mg/tab','2-3 mk/Day','JIA แบ่ง 2-4 ครั้ง', (w*2)/3, (w*3)/3, ((w*2)/3)/25, ((w*3)/3)/25, 'q 6-12 hr', 'JIA: 2-3 mk/day แบ่งวันละ 2-4 ครั้ง (MAX 150 mg/day)<br>ไตบกพร่อง: eGFR 30-&lt;60 พิจารณาหยุดชั่วคราว | &lt;30 หลีกเลี่ยง', 150),
+    drugRow('Celecoxib cap','(Celebrex)','200 mg/cap',celeDose,'JIA ≥2 ปี', null, null, null, null, 'q 12 hr', 'JIA (≥2 ปี): 10-25 kg 50 mg bid | &gt;25 kg 100 mg bid<br>ตับบกพร่อง Child-Pugh B ลด 50%, C ไม่แนะนำ'),
   ]);
 
   // Antihistamine
   html += sectionHead('Antihistamine', 'ยาแก้แพ้ ลดอาการคัน');
+  // Cetirizine — QSNICH: ขนาดคงที่ตามช่วงอายุ (mg) ไม่ได้คิดตามน้ำหนัก
+  const cetAm = am || 0;
+  const cetDose = cetAm<6 ? 'ใช้ ≥6 เดือน' : cetAm<72 ? '2.5 mg' : '5-10 mg';
+  const cetApprox = cetAm<6 ? '' : cetAm<12 ? 'วันละ 1 ครั้ง' : cetAm<24 ? 'qd → bid ได้' : cetAm<72 ? 'qd → bid หรือ 5 mg qd' : 'วันละ 1 ครั้ง';
+  const cetMinMl = cetAm<6 ? null : cetAm<72 ? 2.5 : 5;      // syr 5 mg/5 mL → 1 mg = 1 mL
+  const cetMaxMl = cetAm<6 ? null : cetAm<12 ? 2.5 : cetAm<72 ? 5 : 10;
+  const cetIv = cetAm<6 ? '' : (cetAm<12 || cetAm>=72) ? 'q 24 hr' : 'q 12-24 hr';
+  const cetRowNote = 'ใช้ในอายุ ≥6 เดือน — 6-&lt;12 เดือน 2.5 mg qd | 12-23 เดือน 2.5 mg qd→bid | 2-5 ปี 2.5 mg qd→bid หรือ 5 mg qd (MAX 5 mg/day) | ≥6 ปี 5-10 mg qd<br>ไตบกพร่อง: GFR 10-29 ใช้ 50% | &lt;10 ไม่แนะนำ | HD/PD 50%';
   html += makeTable(doseHeaders, [
-    drugRow('Cetirizine syr','','5 mg/5 mL', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, ageYr<2?'q 24 hr':'q 12-24 hr', '6mo-2yr:2.5mg | 2-6yr:5mg | &gt;6yr:10mg'),
-    drugRow('Cetirizine tab','','10 mg/tab', ageYr<2?'2.5 mg':ageYr<6?'5 mg':'10 mg','', null, null, null, null, '', ''),
-    drugRow('CPM syrup','','2 mg/5 mL',ageYr<6?'1 mg':ageYr<12?'2 mg':'4 mg','', ageYr<6?1:ageYr<12?2:4, null, ageYr<6?(1*5/2):ageYr<12?(2*5/2):(4*5/2), null, 'q 4-6 hr', 'ห้ามใช้ &lt;2yr<br>2-&lt;6yr:1mg q4-6hr MAX6mg/d | 6-&lt;12yr:2mg MAX12mg/d | &gt;12yr:4mg MAX24mg/d'),
+    drugRow('Cetirizine syr','','5 mg/5 mL (60 mL)', cetDose, cetApprox, null, null, cetMinMl, cetMaxMl, cetIv, cetRowNote),
+    drugRow('Cetirizine tab','','10 mg/tab', '', '', null, null, cetMinMl===null?null:cetMinMl/10, cetMaxMl===null?null:cetMaxMl/10, '', ''),
+    drugRow('CPM syrup','','2 mg/5 mL',ageYr<6?'1 mg':ageYr<12?'2 mg':'4 mg','', ageYr<6?1:ageYr<12?2:4, null, ageYr<6?(1*5/2):ageYr<12?(2*5/2):(4*5/2), null, 'q 4-6 hr', 'QSNICH ระบุขนาดตั้งแต่ 2 ปีขึ้นไป<br>2-&lt;6yr:1mg q4-6hr MAX6mg/d | 6-&lt;12yr:2mg MAX12mg/d | &gt;12yr:4mg MAX24mg/d'),
     drugRow('CPM tablet','','4 mg/tab',ageYr<6?'¼ tab':ageYr<12?'½ tab':'1 tab','', ageYr<6?1:ageYr<12?2:4, null, ageYr<6?(1/4):ageYr<12?(2/4):(4/4), null, 'q 4-6 hr', ''),
     drugRow('CPM IV','','10 mg/mL',am<6?'0.25 mk':ageYr<6?'2.5 mg':ageYr<12?'5 mg':'10 mg','', am<6?(0.25*w):ageYr<6?2.5:ageYr<12?5:10, null, am<6?((0.25*w)/10):ageYr<6?(2.5/10):ageYr<12?(5/10):(10/10), null, 'qid (IM/IV)', '1-5mo:0.25mk MAX2.5mg | 6mo-5yr:2.5mg | 6-11yr:5mg | 12-17yr:10mg<br>Anaphylaxis/Allergy emergency'),
     drugRow('Hydroxyzine syr','','10 mg/5 mL','1-2 mk/Day','10 kg = ½-1 ช้อนชา', (1*w)/3, (2*w)/3, ((1*w)/3*5)/10, ((2*w)/3*5)/10, 'q 8 hr', ''),
@@ -2692,9 +3107,10 @@ function renderDose(w, am) {
     drugRow('Carbocysteine syr','','100 mg/5 mL',carboSyrDose,'', null, null, null, null, '', 'kids formula'),
     drugRow('Carbocysteine tab','(Flemex)','375 mg/tab',carboTabDose,'', null, null, null, null, carboSyrInt, '12-17yr:4-6 tab/d tid-qid'),
     drugRow('Carbocysteine lysine','(Fluifort)','90 mg/mL',carboLysDose,'', null, null, null, null, carboLysInt, '2-5yr:2.5mL bid | 5-12yr:5mL bid | &gt;12yr:20mL od'),
-    drugRow('Acetylcysteine','(Fluimucil)','Sachet 100mg','½-1 sac','', null, null, null, null, 'bid/tid/qid pc', 'Mucolytic:&lt;6yr 50-100mg tid-qid | &gt;6yr 200mg bid-tid<br>Neb:10-15% 1-10mL tid-qid<br>NAC IV:150mk/60min→50mk/4hr→100mk/16hr<br>NAC PO:140mk load→70mk q4hr x17doses'),
+    drugRow('Acetylcysteine','(Fluimucil)','Sachet 100mg','½-1 sac','', null, null, null, null, 'tid-qid pc', 'Mucolytic (QSNICH): 50-100 mg/dose วันละ 3-4 ครั้ง ทุกอายุ<br>Neb (10% solution): Infants 2-4 mL | Children-Adolescents 6-10 mL วันละ 3-4 ครั้ง (ทั่วไป 2-20 mL ทุก 2-6 ชม.) — พ่น bronchodilator ก่อน 10-15 นาที<br>Acetylcysteine IV (21 hr): 150 mk drip 60 นาที (MAX 15 g) → 50 mk ใน 4 ชม. (MAX 5 g) → 100 mk ใน 16 ชม. (MAX 10 g)<br>ℹ Acetylcysteine PO 140 mk load → 70 mk q4hr × 17 ครั้ง — ไม่มีใน QSNICH'),
     drugRow('Acetylcysteine','','Sachet 200mg','½-1 sac','', null, null, null, null, '', ''),
     drugRow('Acetylcysteine','','Tab 600mg','½-1 tab','', null, null, null, null, '', ''),
+    drugRow('Acetylcysteine inj','','300 mg/3 mL','150 mk LD','IV drip 60 นาที', w*150, w*150, (w*150)/100, (w*150)/100, 'single', nacInjNote, 15000),
   ]);
 
   // Antitussive
@@ -2717,7 +3133,7 @@ function renderDose(w, am) {
   html += sectionHead('Decongestant', 'ยาลดคัดจมูก');
   const oxyConc = ageYr<6?'0.025%':'0.05%';
   html += makeTable(doseHeaders, [
-    drugRow('Oxymetazoline','(Iliadin)','Drop 0.025%',ageYr<6?'0.025% sol':'','2-3 หยด แต่ละข้าง', null, null, null, null, 'bid', 'ห้ามใช้ &lt;2yr<br>ไม่ควรใช้ต่อเนื่อง &gt;3-5 วัน'),
+    drugRow('Oxymetazoline','(Iliadin)','Drop 0.025%',ageYr<6?'0.025% sol':'','2-3 หยด แต่ละข้าง', null, null, null, null, 'bid', 'QSNICH ระบุขนาดตั้งแต่ 2 ปีขึ้นไป<br>ไม่ควรใช้ต่อเนื่อง &gt;3-5 วัน'),
     drugRow('Oxymetazoline','','Spray 0.05%',ageYr>=6?'0.05% sol':'','2-3 หยด/puff แต่ละข้าง', null, null, null, null, 'bid', '&ge;6yr เท่านั้น'),
     drugRow('Pseudoephedrine','(Maxiphed, Nasolin)','30 mg/5 mL','1 mk/Dose','', w*1, null, (w*1*5)/30, null, 'q 8 hr', ''),
     drugRow('Pseudoephedrine','','60 mg/tab','','', null, null, (w*1)/60, null, '', ''),
@@ -2738,11 +3154,11 @@ function renderDose(w, am) {
   const salbSyrNote = '2-6yr:0.1-0.2mk tid MAX12mg/d<br>6-14yr:2mg tid-qid MAX24mg/d<br>Adolescent:2-4mg tid-qid MAX32mg/d';
   const salbTabDose = am<72?'':ageYr<14?'2 mg':'2-4 mg';
   html += makeTable(doseHeaders, [
-    drugRow('Montelukast','(Singulair, Montek)','Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg',montelDose,'รับประทานตอนเย็น', null, null, null, null, 'q 24 hr', '6mo-&lt;6yr:4mg | 6-&lt;15yr:5mg | &ge;15yr:10mg<br>Allergic rhinitis / Asthma maint / Acute exacerbation(adjunct)<br>Urticaria(NSAID-induced):&ge;15yr 10mg'),
+    drugRow('Montelukast','(Singulair, Montek)','Granule 4mg<br>Chewable 4-5mg<br>Tab 10mg',montelDose,'รับประทานตอนเย็น', null, null, null, null, 'q 24 hr', montelNote),
     drugRow('Salbutamol syr','(Ventolin)','2 mg/5 mL',salbSyrDose,'', salbSyrMin, salbSyrMax, salbSyrMinMl, salbSyrMaxMl, salbSyrInterval, salbSyrNote),
     drugRow('Salbutamol tab','','2 mg/tab',salbTabDose,'', null, null, null, null, salbSyrInterval, ''),
-    drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.15 mk/Dose','min 2.5mg', w*0.15, null, (w*0.15)/5, null, 'neb q 20 min<br>x 2-3 then q1-4hr', 'MAX 10mg/dose<br>Continuous:0.3-0.5mk/hr<br>MDI:&lt;5yr 2-6puff | &gt;6yr 4-10puff<br>Exercise px:&lt;5yr 1-2puff | &gt;5yr 2puff ก่อนออกกำลัง 5-20นาที<br>Hyperkalemia:NB 0.4mg+NSS2mL neb q2hr<br>WB:0.3-0.5mk rapid neb or continuous<br>Fixed(&ge;5yr):&lt;25kg 2.5mg | &ge;25kg 5mg neb 10min ซ้ำใน2hr'),
-    drugRow('Salbutamol NEB','','Nebule 2.5mg/2.5mL',nebDose,'ผสม NSS up to 4 mL', null, null, null, null, '', '&lt;20kg:½neb | &gt;20kg:1neb'),
+    drugRow('Salbutamol NEB','(Ventolin)','Solution 5 mg/mL','0.15 mk/Dose','min 2.5mg', w*0.15, null, (w*0.15)/5, null, 'neb q 20 min<br>x 2-3 then q1-4hr', 'MAX 10mg/dose<br>Continuous:0.3-0.5mk/hr<br>MDI:&lt;5yr 2-6puff | &gt;6yr 4-10puff<br>Neonates: 1.25-2.5 mg q8hr | MDI ผ่าน ventilator 1-2 puff q6hr<br>Adolescents: 2.5-5 mg q20min ×3 แล้ว 2.5-10 mg q1-4hr | Continuous 10-15 mg/hr<br>Exercise px:&lt;5yr 1-2puff | &gt;5yr 2puff ก่อนออกกำลัง 5-20นาที<br>Hyperkalemia:NB 0.4mg+NSS2mL neb q2hr<br>WB:0.3-0.5mk rapid neb or continuous<br>Fixed(&ge;5yr):&lt;25kg 2.5mg | &ge;25kg 5mg neb 10min ซ้ำใน2hr'),
+    drugRow('Salbutamol NEB','','Nebule 2.5mg/2.5mL',nebDose,'ผสม NSS up to 4 mL', null, null, null, null, '', 'ℹ ข้อมูลเดิมในแอป (ไม่มีใน QSNICH): &lt;20kg ½ neb | &gt;20kg 1 neb — QSNICH ระบุ Min 2.5 mg/dose'),
     drugRow('Ipratropium+Fenoterol','(Berodual)','500 mcg/neb (4mL)',ipratDose,'', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
     drugRow('Ipratropium+Albuterol','(Combivent)','500 mcg/2.5mL/vial',ipratDose,'ผสม NSS up to 4 mL', null, null, null, null, 'q 6-8 hr', 'S/E: dried secretion, antiCholinergic'),
     drugRow('Budesonide','(Pulmicort)','1 mg/2mL/respule','see note','', null, null, null, null, '', 'Attack:0.5-1mg q20min x3<br>Maint:0.5mg bid (MAX 2mg/d)<br>Croup:2mg single'),
@@ -2791,8 +3207,8 @@ function renderDose(w, am) {
   html += sectionHead('Antacid', 'ยาลดกรด');
   let antacidRows = `<table style="table-layout:fixed">${doseColgroup}${makeManualTableHead()}<tbody>`;
   [
-    drugRow('Omeprazole IV','','40 mg/amp','0.5-2 mk/Day','1 mk/Dose IV OD', w*1, null, null, null, '', ''),
-    drugRow('Omeprazole tab','','20 mg/tab','0.5-2 mk/Day','PO q12-24hr', w*0.5, w*2, (w*0.5)/20, (w*2)/20, 'q 12-24 hr', ''),
+    drugRow('Omeprazole IV','','40 mg/vial','0.5-2 mk/Day','1 mk/Dose IV OD', w*1, null, null, null, '', ''),
+    drugRow('Omeprazole cap','','20 mg/cap','0.5-2 mk/Day','PO q12-24hr', w*0.5, w*2, (w*0.5)/20, (w*2)/20, 'q 12-24 hr', ''),
     drugRow('Ranitidine IV','','50 mg/amp','2-4 mk/Day','1 mk/Dose IV/PO q12hr', w*1, w*2, null, null, 'q 12 hr', 'MAX 50 mg/dose'),
     drugRow('Ranitidine tab','','150 mg/tab','PO q12hr, IV q8hr','', w*1, w*2, (w*1)/150, (w*2)/150, 'q 12 hr', 'MAX 300 mg/day'),
     drugRow('Famotidine tab','','20 mg/tab','0.5 mk/Dose','PO q12-24hr', w*0.5, null, (w*0.5)/20, null, 'q 12-24 hr', ''),
@@ -2823,8 +3239,11 @@ function renderDose(w, am) {
   laxRows += makeRowHtml(drugRow('Lactulose','(Hepalac, Duphalac)','syr 10 g/15 mL (66.7%)','1-2 g/kg/Day<br>(1.5-3 mL/kg/Day)','', null, null, w*1.5, w*3, 'q 12-24 hr', lactuRowNote));
   laxRows += makeRowHtml(drugRow('Lactulose','','20 g/30 mL (ขวด 100 mL)','','ความเข้มข้นเท่ากัน (66.7%)', null, null, w*1.5, w*3, '', ''));
   laxRows += makeRowHtml(drugRow('Lactulose','','20 g/30 mL (ขวด 30 mL)','','ความเข้มข้นเท่ากัน (66.7%)', null, null, w*1.5, w*3, '', ''));
-  const momDose = ageYr<2?`0.5mL/kg (${r(w*0.5)}mL)`:ageYr<6?'5-15 mL':ageYr<12?'15-30 mL':'30-60 mL';
-  laxRows += makeRowHtml(drugRow('Milk of Magnesia','','','0.5-1 mL/kg/dose',momDose, null, null, null, null, 'q 24 hr / hs or bid', '&lt;2yr:0.5mL/kg | 2-5yr:5-15mL | 6-11yr:15-30mL | &gt;12yr:30-60mL'));
+  const momDose = ageYr<2?`${r(w*1)}-${r(w*3)} mL/day`:ageYr<6?'5-15 mL/day':ageYr<12?'15-30 mL/day':'15-60 mL/day';
+  const momRowNote = 'ตามน้ำหนัก: 80-240 mg/kg/day (1-3 mL/kg/day) แบ่งวันละ 1-2 ครั้ง — MAX 60 mL/day<br>ตามอายุ: 2-&lt;6 ปี 5-15 mL/day | 6-&lt;12 ปี 15-30 mL/day | ≥12 ปี 15-60 mL/day<br>⚠️ ระวังในไตบกพร่อง — CrCl &lt;25 ควรตรวจระดับ Mg';
+  const lopDose = ageYr<2?'ใช้ ≥2 ปี':ageYr<6?'เริ่ม 1 mg แล้ว 1 mg':ageYr<12?'เริ่ม 2 mg แล้ว 1 mg':'เริ่ม 4 mg แล้ว 2 mg';
+  laxRows += makeRowHtml(drugRow('Milk of Magnesia','','400 mg/5 mL (60, 240 mL)','1-3 mL/kg/Day',momDose, null, null, w*1, w*3, 'q 12-24 hr', momRowNote));
+  laxRows += makeRowHtml(drugRow('Loperamide tab','(Sbob, Mantil)','2 mg/tab',lopDose,'ทุกครั้งที่ถ่ายเหลว', null, null, null, null, 'prn', 'Acute diarrhea: 2-5 ปี (13-&lt;21 kg) เริ่ม 1 mg แล้ว 1 mg/dose (MAX 3 mg/d) | 6-8 ปี (21-&lt;27 kg) เริ่ม 2 mg แล้ว 1 mg (MAX 4 mg/d) | 9-11 ปี (27.1-43 kg) เริ่ม 2 mg แล้ว 1 mg (MAX 6 mg/d) | &gt;12 ปี เริ่ม 4 mg แล้ว 2 mg (MAX 8 mg/d)<br>Chronic: 0.08-0.24 mk/day แบ่ง 2-3 ครั้ง (MAX 2 mg/dose)'));
   laxRows += '</tbody></table>';
   html += laxRows;
 
@@ -2833,6 +3252,8 @@ function renderDose(w, am) {
   const dexaNote = 'Croup:0.6mk single MAX16mg<br>Asthma:Oral 0.15-0.6mk qd x1-2d | IV/IM 0.6mk single<br>Airway edema:NB 0.25-0.5mk q8hr | Child 0.5mk q6hr x6<br>Anaphylaxis:0.6mk MAX16mg<br>Anti-inflam:0.02-0.3mk/d q6-12hr<br>Meningitis(HiB):0.15mk q6hr x4d<br>Cerebral edema:เริ่ม1-2mk→1-2mk/d q4-6hr MAX16mg<br>COVID-19:0.15mk qd x10d MAX6mg<br>BPD DART:0.075→0.05→0.025→0.01mk q12hr<br>Physiologic:0.03-0.15mk/d q6-12hr';
   html += makeTable(doseHeaders, [
     drugRow('Hydrocortisone','(Solu-Cortef)','100 mg/vial','1-5 mk/Dose','', w*1, w*5, null, null, 'q 6-8 hr', 'Anaphylaxis:4-8mk/dose q6hr MAX100mg | Adult200mg q6hr<br>Adrenal crisis:เริ่ม2-3mk MAX100mg→1-5mk q6hr<br>Adrenal maint:8-10mg/m²/d oral ÷3<br>Anti-inflam:Oral2.5-10mk/d | IV1-5mk/d<br>CAH:NB10-15 | Child8-15 mg/m²/d ÷3 MAX20<br>Hypoglycemia:NB 5mk/d q8-12hr หรือ1-2mk/dose q6hr<br>Asthma:5mk/dose q6hr x3-5d MAX250mg | Adult200mg<br>Septic Shock:NB3mk/d | Child2mk single | Adult50mg q6hr<br>Physiologic:NB7-9 | Child8-12 mg/m²/d<br>Stress:Mild20-50 | Major100 mg/m²/d<br>CLD:NB 0.5mk q12hr x12d→0.25mk x3d<br>Thyroid storm:Adult 300mg→100mg q8hr'),
+    drugRow('Methylprednisolone','(Solumedrol)','40 mg/vial','1-2 mk/Dose','Anaphylaxis/Asthma', w*1, w*2, null, null, 'q 6 hr', 'Acute asthma: 1 mk/dose q6hr นาน 3-5 วัน (MAX 60 mg/dose)<br>Status asthmaticus: เริ่ม 2 mk ต่อด้วย 0.5-1 mk q6hr<br>Anaphylaxis: 1-2 mk/dose q6hr (MAX 50 mg/dose)<br>Pulse therapy: 15-30 mk/dose วันละครั้ง นาน 3 วัน (MAX 1 g/dose)', 60),
+    drugRow('Methylprednisolone','(M-prednisolone)','500 mg/vial','','', null, null, null, null, '', ''),
     drugRow('Dexamethasone','(Dexa)','4 mg/mL (inj)','0.15-0.6 mk/Dose','', w*0.15, w*0.6, null, null, 'varies', dexaNote),
     drugRow('Dexamethasone','','0.5 mg/tab','','', null, null, (w*0.15)/0.5, (w*0.6)/0.5, '', ''),
     drugRow('Prednisolone','','5 mg/tab','1-2 mk/Day','mg/kg/day', w*1, w*2, (w*1)/5, (w*2)/5, 'qd-qid', 'Asthma exacerbation:2mk/d qd x3-5d<br>MAX &lt;2yr 20mg/d | 2-5yr 30mg/d | &gt;5yr 40mg/d<br>Asthma maint:&lt;12yr 0.25-2mk/d qd AM/qod MAX60mg/d<br>Anaphylaxis:1-2mk/d ÷2-3 MAX40mg/d<br>Anti-inflam:0.1-2mk/d ÷1-4<br>Kawasaki:2mk/d ÷q8hr MAX60mg/d จนCRPปกติ taper 2-3wk<br>Nephrotic:2mk/d or 60mg/m²/d qd MAX60mg/d x4-6wk<br>then 1.5mk/dose or 40mg/m²/dose qod MAX40mg/dose taper'),
@@ -2873,7 +3294,7 @@ function renderDose(w, am) {
   const fentaRowNote = 'Acute pain (opioid-naive): NB &amp; Infants 1-2 mcg/kg/dose q2-4hr (infant อาจถึง 4) | Children &lt;2 ปี 1-2 mcg/kg ซ้ำ q30-60 นาที | &lt;50 kg 0.5-1 mcg/kg q1-2hr | ≥50 kg 25-50 mcg q1-2hr<br>ET intubation: NB 1-4 | Infants &amp; Children 1-5 mcg/kg/dose slow IV<br>Continuous: bolus 1-2 mcg/kg → drip 1 mcg/kg/hr (ปรับ 1-5)<br>⚠️ Opioid — กดการหายใจ สำรอง Naloxone';
 
   html += makeTable(doseHeaders, [
-    drugRow('Chloral hydrate','','250 mg/5 mL','25-75 mk/Dose','1 mL/kg ก่อนหัตถการ', w*25, w*75, (w*25*5)/250, (w*75*5)/250, '', 'MAX 0.5-2 gm/dose'),
+    drugRow('Chloral hydrate','','250 mg/5 mL','25-75 mk/Dose','1 mL/kg ก่อนหัตถการ', w*25, w*75, (w*25*5)/250, (w*75*5)/250, '', 'Sedation/anxiety MAX 500 mg/dose | หัตถการ: total MAX 1 g (infants) / 2 g (children)'),
     drugRow('Chloral hydrate','','500 mg/5 mL','','ใช้ขนาด 250 mg/5 mL', null, null, null, null, '', ''),
     drugRow('Midazolam IV','','5 mg/mL','0.05-0.1 mg/kg','repeat 0.05 q2min', w*0.05, w*0.1, null, null, 'IV', ''),
     drugRow('Midazolam IM','','5 mg/mL','0.1 mg/kg','', w*0.1, null, null, null, 'IM', ''),
@@ -2891,28 +3312,29 @@ function renderDose(w, am) {
 }
 
 function renderATB(w, am) {
+  resetQsnichTags();
   const ageYr = (am || 0) / 12;
   let html = '';
 
   // Penicillins
   html += sectionHead('Penicillins', 'Penicillins');
   html += makeTable(doseHeaders, [
-    drugRow('Penicillin G','(PGS)','1,5 mU/vial','100-250k u/kg/d','q6hr', (w*0.1)/4, (w*0.25)/4, null, null, 'q 6 hr (mU)', 'NB Bacteremia:25-50k u/kg/dose<br>NB Meningitis:75-100k u/kg/dose<br>NB interval BW&lt;2kg:0-28d q12hr 29-44d q8hr<br>NB interval BW≥2kg:0-7d q12hr 8-44d q8hr<br>GBS Meningitis:250-450k u/kg/d q8hr(NB) q4-6hr(Infant)<br>Mild-mod:100-150k/d | Severe:200-400k u/kg/d<br>Pneumonia:200-250k u/kg/d q4-6hr<br>MAX 24MU/day<br>Renal:CrCl&gt;50 ปกติ | 10-50 q8-12hr | &lt;10 full dose q12hr'),
-    drugRow('Penicillin G','','','250-450k u/kg/d','q4hr Meningitis', (w*0.25)/6, (w*0.45)/6, null, null, 'q 4 hr (mU)', 'Meningitis:250-450k u/kg/d q4-6hr'),
+    drugRow('Penicillin G','(PGS)','1,5 mU/vial','100-150k u/kg/d','Mild-moderate', (w*0.1)/4, (w*0.15)/4, null, null, 'q 6 hr (mU)', penGNote),
+    drugRow('Penicillin G','','','200-300k u/kg/d','Severe / CNS', (w*0.2)/6, (w*0.3)/6, null, null, 'q 4 hr (mU)', 'Severe: 200,000-300,000 u/kg/day แบ่งทุก 4-6 ชม. (MAX 24 MU/day)'),
     drugRow('Penicillin V syr','','125 mg/5 mL','25-75 mk/Day','', (w*25)/3, (w*75)/3, ((w*25)/3*5)/125, ((w*75)/3*5)/125, 'q 8 hr', 'MAX 2 gm/day'),
     drugRow('Penicillin V tab','','250 mg/tab','','', (w*25)/3, (w*75)/3, ((w*25)/3)/250, ((w*75)/3)/250, 'q 8 hr', ''),
     drugRow('Benzathine Pen G','','1.2 MU/vial','50k u/kg IM','IM only',w*50000,null,null,null,'single dose','NB Congenital Syphilis:50k u/kg IM x1<br>RF 2nd prevention:&le;27kg 600k u q3-4wk | &gt;27kg 1.2MU q3-4wk<br>Syphilis:50k u/kg/dose IM weekly x3wk MAX2.4MU/dose<br>GAS pharyngitis(Adult):1.2MU IM x1'),
-    drugRow('Cloxacillin IV','','0.5,1 gm/amp','50-100 mk/Day','', (w*50)/4, (w*100)/4, null, null, 'q 6 hr', 'MAX 4 gm/day'),
+    drugRow('Cloxacillin IV','','1 gm/vial','100-200 mk/Day','', (w*100)/4, (w*200)/4, null, null, 'q 6 hr', cloxIvNote, 2000),
     drugRow('Cloxacillin syr','','125 mg/5 mL','','', (w*50)/4, (w*100)/4, ((w*50)/4*5)/125, ((w*100)/4*5)/125, 'q 6 hr', ''),
     drugRow('Cloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*50)/4, (w*100)/4, ((w*50)/4)/250, ((w*100)/4)/250, 'q 6 hr', ''),
     drugRow('Cloxacillin cap','','500 mg/cap','','', null, null, ((w*50)/4)/500, ((w*100)/4)/500, '', ''),
-    drugRow('Dicloxacillin syr','','62.5 mg/5 mL','12.5-50 mk/Day','', (w*12.5)/4, (w*50)/4, ((w*12.5)/4*5)/62.5, ((w*50)/4*5)/62.5, 'q 6 hr', 'MAX 2 gm/day'),
+    drugRow('Dicloxacillin syr','','62.5 mg/5 mL (60 mL)','12.5-50 mk/Day','', (w*12.5)/4, (w*50)/4, ((w*12.5)/4*5)/62.5, ((w*50)/4*5)/62.5, 'q 6 hr', 'MAX 2 gm/day'),
     drugRow('Dicloxacillin cap','','250 mg/cap','','ใช้ 250mg/cap', (w*12.5)/4, (w*50)/4, ((w*12.5)/4)/250, ((w*50)/4)/250, 'q 6 hr', ''),
     drugRow('Dicloxacillin cap','','500 mg/cap','','', null, null, ((w*12.5)/4)/500, ((w*50)/4)/500, '', ''),
-    drugRow('Amoxicillin syr','','125 mg/5 mL','25-100 mk/Day','', (w*25)/3, (w*100)/3, ((w*25)/3*5)/125, ((w*100)/3*5)/125, 'q 8-12 hr', 'Mild(&gt;3mo):25-50mk q8hr MAX500mg/dose<br>Severe:80-100mk q8hr<br>AOM:80-90mk q12hr<br>Pneumonia:90-100mk q8-12hr MAX4g/d<br>GAS:50mk qd or 25mk bid x10d MAX1g/d<br>Tonsillopharyngitis:3mo-3yr 30mk/d q8hr or 40mk/d q12hr | >3yr 50mk/d x10d<br>Rhinosinusitis:30-40mk q8hr<br>Endo px:50mk x1 MAX2g<br>UTI px:10-15mk qd'),
+    drugRow('Amoxicillin syr','','125 mg/5 mL','25-100 mk/Day','', (w*25)/3, (w*100)/3, ((w*25)/3*5)/125, ((w*100)/3*5)/125, 'q 8-12 hr', amoxNote),
     drugRow('Amoxicillin syr','','250 mg/5 mL','','10 kg = 1 ช้อนชา', null, null, ((w*25)/3*5)/250, ((w*100)/3*5)/250, '', ''),
     drugRow('Amoxicillin cap','','500 mg/cap','','', (w*25)/3, (w*100)/3, ((w*25)/3)/500, ((w*100)/3)/500, 'q 8-12 hr', ''),
-    drugRow('Amox/Clav IV','(Cavumox)','0.6, 1.2 gm/vial','30 mk/dose (total)','q 6-8 hr', w*30, w*30, null, null, 'q 6-8 hr', 'คำนวณ total Amox+Clav<br>&lt;3mo(&lt;4kg):30mk q12hr | &gt;4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg&amp;Adult:1.2g q8hr<br>Severe:q4-6hr<br>Renal Oral:CrCl&lt;30 ห้าม875mg | 10-30 250-500mg q12hr | &lt;10 q24hr<br>Renal IV:CrCl10-30 30mk bid | &lt;10 30mk q24hr'),
+    drugRow('Amox/Clav IV','(Cavumox)','0.6, 1.2 gm/vial','30 mk/dose (total)','q 6-8 hr', w*30, w*30, null, null, 'q 6-8 hr', 'คำนวณ total Amox+Clav<br>&lt;3mo(&lt;4kg):30mk q12hr | &gt;4kg:30mk q8hr<br>3mo-12yr:30mk q6-8hr<br>≥40kg&amp;Adult:1.2g q8hr<br>Severe:q4-6hr<br>Oral &gt;40 kg: Aspirate pneumonia 875 mg q12hr<br>Renal Oral:CrCl&lt;30 ห้าม875mg | 10-30 250-500mg q12hr | &lt;10 q24hr<br>Renal IV:CrCl10-30 30mk bid | &lt;10 30mk q24hr'),
     drugRow('Amox/Clav syr','(Ranclav 7:1)','400/57 mg/5 mL','25-45 mk/Day of Amox','', (w*25)/2, (w*45)/2, ((w*25)/2*5)/400, ((w*45)/2*5)/400, 'q 12 hr', '7:1 General:25-45mk/d q12hr<br>or 20-40mk/d q8hr<br>MAX 4gm Amox/day'),
     drugRow('Amox/Clav ES syr','(Cavumox ES 14:1)','600/42.9 mg/5 mL','80-100 mk/Day of Amox','', (w*80)/2, (w*100)/2, ((w*80)/2*5)/600, ((w*100)/2*5)/600, 'q 12 hr', 'AOM/Sinusitis:90mk/d q12hr<br>CAP:80-100mk/d q12hr<br>MAX 4gm Amox/day'),
     drugRow('Amox/Clav tab','(Cavumox 7:1)','875/125 mg/tab','','', (w*25)/2, (w*45)/2, ((w*25)/2)/875, ((w*45)/2)/875, 'q 12 hr', '≥40kg:250-500mg q8hr<br>Sinusitis:2g q12hr x10d<br>Bite/Abscess:875mg q12hr<br>CAP:2g q12hr(extended)'),
@@ -2929,16 +3351,16 @@ function renderATB(w, am) {
     drugRow('Cefaclor syr (2nd)','','125 mg/5 mL','20-40 mk/Day','', (w*20)/2, (w*40)/2, ((w*20)/2*5)/125, ((w*40)/2*5)/125, 'q 12 hr', 'MAX 2 gm/day'),
     drugRow('Cefaclor syr (2nd)','','250 mg/5 mL','','ใช้ 250 mg/5 mL', null, null, ((w*20)/2*5)/250, ((w*40)/2*5)/250, '', ''),
     drugRow('Cefaclor tab','','375 mg/tab','','', (w*20)/2, (w*40)/2, ((w*20)/2)/375, ((w*40)/2)/375, 'q 8-12 hr', ''),
-    drugRow('Ceftriaxone (3rd)','','500 mg/vial','50-75 mk/Day','q 12-24 hr', w*50, w*75, null, null, 'q 24 hr', 'MAX 4 gm/day<br>CNS: 100 mk/Day'),
-    drugRow('Ceftriaxone (3rd)','','1000 mg/vial','','', null, null, null, null, '', ''),
+    drugRow('Ceftriaxone (3rd)','','500 mg/vial (IM)','50-75 mk/Day','q 12-24 hr', w*50, w*75, null, null, 'q 24 hr', 'MAX 4 gm/day<br>CNS: 100 mk/Day'),
+    drugRow('Ceftriaxone (3rd)','','1000 mg/vial (IV)','','', null, null, null, null, '', ''),
     drugRow('Cefotaxime (3rd)','','500 mg/vial','100-200 mk/Day','q 6-8 hr', (w*100)/3, (w*200)/3, null, null, 'q 8 hr', 'MAX 12 gm/day'),
     drugRow('Cefotaxime (3rd)','','1000 mg/vial','','', null, null, null, null, '', ''),
     drugRow('Ceftazidime (3rd)','','500 mg/vial','100-150 mk/Day','q 8 hr', (w*100)/3, (w*150)/3, null, null, 'q 8 hr', 'MAX 6 gm/day'),
     drugRow('Ceftazidime (3rd)','','1000 mg/vial','','', null, null, null, null, '', ''),
     drugRow('Ceftazidime (3rd)','','2000 mg/vial','','', null, null, null, null, '', ''),
-    drugRow('Cefdinir syr (3rd)','(Omnicef)','125 mg/5 mL','14 mk/Day','', (w*14)/2, null, ((w*14)/2*5)/125, null, 'q 12 hr', 'MAX 600 mg/day'),
+    drugRow('Cefdinir syr (3rd)','(Omnicef)','125 mg/5 mL (30 mL)','14 mk/Day','', (w*14)/2, null, ((w*14)/2*5)/125, null, 'q 12 hr', 'MAX 600 mg/day'),
     drugRow('Cefdinir cap','','300 mg/cap','','', (w*14)/2, null, ((w*14)/2)/300, null, 'q 12-24 hr', ''),
-    drugRow('Cefixime syr (3rd)','(Cefspan)','100 mg/5 mL','8 mk/Day','', (w*8)/2, null, ((w*8)/2*5)/100, null, 'q 12 hr', 'MAX 400 mg/day'),
+    drugRow('Cefixime syr (3rd)','(Cefspan)','100 mg/5 mL (30 mL)','8 mk/Day','', (w*8)/2, null, ((w*8)/2*5)/100, null, 'q 12 hr', 'MAX 400 mg/day'),
     drugRow('Cefixime cap','','100 mg/cap','','', (w*8)/2, null, ((w*8)/2)/100, null, 'q 12 hr', ''),
   ]);
 
@@ -2957,7 +3379,7 @@ function renderATB(w, am) {
   // Lincosamides
   html += sectionHead('Lincosamides', 'Lincosamides');
   html += makeTable(doseHeaders, [
-    drugRow('Clindamycin IV','','600 mg/vial','20-40 mk/Day','q 6-8 hr', (w*20)/3, (w*40)/3, null, null, 'q 8 hr', 'MAX 2.7gm IV/day'),
+    drugRow('Clindamycin IV','','600 mg/vial (150 mg/mL)','20-40 mk/Day','q 6-8 hr', (w*20)/3, (w*40)/3, null, null, 'q 8 hr', 'MAX 2.7gm IV/day'),
     drugRow('Clindamycin cap','','150 mg/cap','','', (w*20)/3, (w*40)/3, ((w*20)/3)/150, ((w*40)/3)/150, 'q 6-8 hr', 'MAX 1.8gm PO/day'),
     drugRow('Clindamycin cap','','300 mg/cap','','', null, null, ((w*20)/3)/300, ((w*40)/3)/300, '', ''),
   ]);
@@ -2972,8 +3394,8 @@ function renderATB(w, am) {
   // Quinolones
   html += sectionHead('Quinolones', 'Quinolones');
   html += makeTable(doseHeaders, [
-    drugRow('Ciprofloxacin','','250 mg/tab','20-40 mk/Day','ใช้ 250mg/tab', (w*20)/2, (w*40)/2, ((w*20)/2)/250, ((w*40)/2)/250, 'q 12 hr', 'MAX 1.5 gm/day'),
-    drugRow('Ciprofloxacin','','500 mg/tab','','', null, null, ((w*20)/2)/500, ((w*40)/2)/500, '', ''),
+    drugRow('Ciprofloxacin','','250 mg/tab','20-30 mk/Day','ใช้ 250mg/tab', (w*20)/2, (w*30)/2, ((w*20)/2)/250, ((w*30)/2)/250, 'q 12 hr', 'MAX oral 1.5 g/day (IV 800 mg/day)'),
+    drugRow('Ciprofloxacin','','500 mg/tab','','', null, null, ((w*20)/2)/500, ((w*30)/2)/500, '', ''),
     drugRow('Norfloxacin','','100 mg/tab','15-20 mk/Day','', (w*15)/2, (w*20)/2, ((w*15)/2)/100, ((w*20)/2)/100, 'q 12 hr', 'MAX 400 mg/day'),
     drugRow('Norfloxacin','','200 mg/tab','','ใช้ 200mg/tab', null, null, ((w*15)/2)/200, ((w*20)/2)/200, '', ''),
     drugRow('Norfloxacin','','400 mg/tab','','', null, null, ((w*15)/2)/400, ((w*20)/2)/400, '', ''),
@@ -2982,11 +3404,11 @@ function renderATB(w, am) {
   // Others
   html += sectionHead('Others', 'Others');
   html += makeTable(doseHeaders, [
-    drugRow('Metronidazole IV','','500 mg/100mL','22.5-40 mk/Day','q 8 hr', (w*22.5)/3, (w*40)/3, null, null, 'q 8 hr', 'MAX 1.5gm IV/day'),
-    drugRow('Metronidazole syr','','200 mg/5 mL','30-50 mk/Day','10 kg = ½ ช้อนชา', (w*30)/3, (w*50)/3, ((w*30)/3*5)/200, ((w*50)/3*5)/200, 'q 8 hr', 'MAX 2.25gm PO/day'),
-    drugRow('Metronidazole tab','','200 mg/tab','','ใช้ 200mg/tab', (w*30)/3, (w*50)/3, ((w*30)/3)/200, ((w*50)/3)/200, 'q 8 hr', ''),
-    drugRow('Metronidazole tab','','400 mg/tab','','', null, null, ((w*30)/3)/400, ((w*50)/3)/400, '', ''),
-    drugRow('Metronidazole tab','','500 mg/tab','','', null, null, ((w*30)/3)/500, ((w*50)/3)/500, '', ''),
+    drugRow('Metronidazole IV','','500 mg/100 mL (5 mg/mL)','22.5-40 mk/Day','แบ่ง 3-4 ครั้ง', (w*22.5)/3, (w*40)/3, null, null, 'q 6-8 hr', metroNote),
+    drugRow('Metronidazole syr','','200 mg/5 mL (60 mL)','15-50 mk/Day','10 kg = ½ ช้อนชา', (w*15)/3, (w*50)/3, ((w*15)/3*5)/200, ((w*50)/3*5)/200, 'q 8 hr', 'Oral: MAX 2,250 mg/day'),
+    drugRow('Metronidazole tab','','200 mg/tab','','ใช้ 200mg/tab', (w*15)/3, (w*50)/3, ((w*15)/3)/200, ((w*50)/3)/200, 'q 8 hr', ''),
+    drugRow('Metronidazole tab','','400 mg/tab','','', null, null, ((w*15)/3)/400, ((w*50)/3)/400, '', ''),
+    drugRow('Metronidazole tab','','500 mg/tab','','', null, null, ((w*15)/3)/500, ((w*50)/3)/500, '', ''),
     drugRow('Doxycycline','','100 mg/cap','2-5 mk/Day','q 12-24 hr', (w*2)/2, (w*5)/2, ((w*2)/2)/100, ((w*5)/2)/100, 'q 12 hr', 'MAX 200 mg/day'),
   ]);
 
@@ -3037,13 +3459,13 @@ function renderATB(w, am) {
     drugRow('Oseltamivir','','45 mg/tab','', oselApprox(45), null, null, null, null, '', ''),
     drugRow('Oseltamivir','','75 mg/tab','', oselApprox(75), null, null, null, null, '', ''),
     // Acyclovir IV
-    drugRow('Acyclovir IV','','250 mg/vial','5-20 mk/Dose','', w*5, w*20, null, null, 'q 8-12 hr', 'NB HSV:20mk BW&lt;1kg:q12hr all PNA<br>BW1-2kg:PNA&le;14d q12hr,15-28d q8hr<br>BW&gt;2kg:PNA&le;7d q12hr,8-28d q8hr<br>(CNS 21d skin 14d)<br>HSV encepha:10-15mk q8hr x21d<br>HSV severe:5-10mk q8hr 5-7d<br>VZV:10-15mk q8hr 5-10d<br>VZV immunocomp:10-15mk q8hr 7-14d<br>Zoster:10mk q8hr 7-10d<br>Zoster immunocomp:10mk q8hr 7-10d<br>Renal:CrCl25-50 q12hr | 10-25 q24hr | &lt;10 50%dose q24hr'),
+    drugRow('Acyclovir IV','','250 mg/vial','5-20 mk/Dose','', w*5, w*20, null, null, 'q 8-12 hr', 'Neonatal HSV 20 mk | HSV encephalitis 10-15 mk q8hr x21d | Mucocutaneous/orolabial 5-10 mk q8hr | Disseminated/retinal necrosis 10-15 mk q8hr | VZV/Zoster 10 mk หรือ 500 mg/m² q8hr — เลือก indication ในแท็บ Reverse<br>' + acyNote),
     // Acyclovir Oral
-    drugRow('Acyclovir','','200 mg/tab','10-20 mk/Dose','MAX 800mg', w*10, w*20, (w*10)/200, (w*20)/200, 'tid-5x/d', 'Genital HSV mild:40-80mk/d÷3-4 x7-10d MAX1200mg/d<br>Genital severe:IV 5-10mk q8hr<br>Orolabial:20mk qid MAX800 หรือ &le;6yr 15mk 5x/d MAX200 x5-7d<br>Recurrent &lt;12yr:20mk tid x5d MAX400<br>VZV(&gt;2yr):20mk qid x5d MAX3200mg/d<br>VZV immunocomp:500mg/m2 q8hr or IV<br>Zoster:20mk qid x5d &ge;12yr 800mg 5x/d<br>Suppression:400mg bid or 200mg tid-5x/d'),
-    drugRow('Acyclovir','','400 mg/tab','','', null, null, (w*10)/400, (w*20)/400, '', ''),
-    drugRow('Acyclovir','','800 mg/tab','','', null, null, (w*10)/800, (w*20)/800, '', ''),
+    drugRow('Acyclovir','','200 mg/tab','15-20 mk/Dose','MAX 800mg', w*15, w*20, (w*15)/200, (w*20)/200, 'qid-5x/d', 'Orolabial: 20 mk qid (MAX 800 mg) | ≤6 ปี 15 mk 5x/d (MAX 200 mg) x5-7d<br>Genital first: 40-80 mk/day ÷3-4 x7-10d (MAX 1,200 mg/day)<br>Genital recurrent: &lt;12 ปี 20 mk tid x5d (MAX 400 mg) | ≥12 ปี 800 mg bid x5d<br>Mucocutaneous: 20 mk qid (MAX 800 mg) x5-7d<br>Suppression: 20 mk bid-tid (MAX 400 mg)<br>VZV (≥2 ปี): 20 mk qid x5d (MAX 3,200 mg/day)<br>Zoster: &lt;12 ปี 20 mk qid x5d | ≥12 ปี 800 mg 5x/d x5-7d'),
+    drugRow('Acyclovir','','400 mg/tab','','', null, null, (w*15)/400, (w*20)/400, '', ''),
+    drugRow('Acyclovir','','800 mg/tab','','', null, null, (w*15)/800, (w*20)/800, '', ''),
     // Acyclovir susp
-    drugRow('Acyclovir susp','','200 mg/5 mL (susp)','10-20 mk/Dose','ยาเตรียมเฉพาะราย', w*10, w*20, (w*10*5)/200, (w*20*5)/200, 'tid-5x/d', ''),
+    drugRow('Acyclovir susp','','20 mg/mL (20 mL)','15-20 mk/Dose','ยาเตรียมเฉพาะราย', w*15, w*20, (w*15)/20, (w*20)/20, 'qid-5x/d', ''),
     // Acyclovir cream
     drugRow('Acyclovir cream','','5% cream 10g','','ทาบาง ๆ q4hr 5x/d x5-10d', null, null, null, null, '5x/d', 'HSV skin/cold sore'),
   ]);
@@ -3461,10 +3883,14 @@ function updateRevBadge() {
 // เกณฑ์เป็น OR ตาม QSNICH (เช่น Domperidone N/V: อายุ 12-17 ปี *หรือ* น้ำหนัก >=35 kg) จึงต้องเรียงแถบที่คุมเข้มกว่าไว้ก่อน
 // ใช้ ?? ไม่ใช่ || เพราะ maxMo:0 (ช่วง neonate) เป็น falsy - ถ้าใช้ || จะกลายเป็น 9999 และ match ทุกอายุ
 function bandMatches(a, am, w) {
-  const ageOk = am >= (a.minMo ?? 0) && am <= (a.maxMo ?? 9999);
+  const hasAge = a.minMo !== undefined || a.maxMo !== undefined;
   const hasKg = a.minKg !== undefined || a.maxKg !== undefined;
+  const ageOk = hasAge && am >= (a.minMo ?? 0) && am <= (a.maxMo ?? 9999);
   const kgOk = hasKg && w > 0 && w >= (a.minKg ?? 0) && w <= (a.maxKg ?? 9999);
-  return ageOk || kgOk;
+  if (hasAge && hasKg) return ageOk || kgOk;  // QSNICH เขียนแบบ "อายุ X หรือ น้ำหนัก Y"
+  if (hasKg) return kgOk;                     // แถบที่แบ่งตามน้ำหนักล้วน เช่น Omeprazole
+  if (hasAge) return ageOk;
+  return true;
 }
 
 // Resolve byAge within an indication: returns the matched sub-entry (by age or weight) or the indication itself
@@ -3482,7 +3908,7 @@ function resolveByAge(ind, am, w) {
 function inputUnitOptions(drug) {
   const du = drug.doseUnit || 'mg';
   if (!drug.concMg) return [drug.unit];
-  if (drug.unit === 'mL' || drug.unit === 'tab' || drug.unit === 'cap') return [drug.unit, du];
+  if (drug.unit === 'mL' || drug.unit === 'tab' || drug.unit === 'cap' || drug.unit === 'sac' || drug.unit === 'supp') return [drug.unit, du];
   return [drug.unit];
 }
 // หน่วยตั้งต้น: ยาฉีดสั่งกันเป็น mg/mcg ส่วนยาน้ำกิน/พ่น/หยอด สั่งเป็น mL และยาเม็ดเป็น tab/cap
@@ -3503,15 +3929,19 @@ function getInputUnit(drugId, drug) {
   return (sel && opts.includes(sel.value)) ? sel.value : defaultInputUnit(drug);
 }
 // แปลงจำนวนที่กรอก (ตามหน่วยที่เลือก) → mg/mcg ตาม doseUnit ของยา
+// indication ที่ระบุ daily เอง (true/false) มีผลเหนือ daily ของตัวยา — ยาที่เป็น mg/kg/day อาจมี indication ที่เป็นต่อ dose
+function isDailyCtx(ind, drug) {
+  return (ind && ind.daily !== undefined) ? !!ind.daily : !!drug.daily;
+}
 function amountToDose(drug, amount, unit) {
   if (unit === 'mL') return (amount * drug.concMg) / drug.concVol;
-  if (unit === 'tab' || unit === 'cap') return amount * drug.concMg;
+  if (unit === 'tab' || unit === 'cap' || unit === 'sac' || unit === 'supp') return amount * drug.concMg;
   return amount; // กรอกเป็น mg/mcg อยู่แล้ว
 }
 // แปลงกลับจาก mg/mcg → หน่วยที่ต้องการ
 function doseToAmount(drug, dose, unit) {
   if (unit === 'mL') return (dose * drug.concVol) / drug.concMg;
-  if (unit === 'tab' || unit === 'cap') return dose / drug.concMg;
+  if (unit === 'tab' || unit === 'cap' || unit === 'sac' || unit === 'supp') return dose / drug.concMg;
   return dose;
 }
 function fmtAmount(v) {
@@ -3573,7 +4003,7 @@ function reverseCalc(drugId, amount, weight) {
         // ขนาดรวมไม่อิงน้ำหนัก (mg รวม/วัน ถ้า daily) — เทียบกับ minTotal/maxTotal ตรง ๆ
         const freqSel = document.getElementById('disp-freq-' + drugId);
         const freq = freqSel ? (parseInt(freqSel.value) || 1) : 1;
-        const checkTotalMg = (ind.daily || drug.daily) ? totalMg * freq : totalMg;
+        const checkTotalMg = isDailyCtx(ind, drug) ? totalMg * freq : totalMg;
         const eps = 0.001;
         if (checkTotalMg < ind.minTotal - eps) status = 'low';
         else if (checkTotalMg > ind.maxTotal * 1.5 + eps) status = 'danger';
@@ -3581,7 +4011,7 @@ function reverseCalc(drugId, amount, weight) {
       } else if (ind && ind.minD > 0) {
         const freqSel = document.getElementById('disp-freq-' + drugId);
         const freq = freqSel ? (parseInt(freqSel.value) || 1) : 1;
-        const perDay = ind.daily || drug.daily;
+        const perDay = isDailyCtx(ind, drug);
         const checkMk = perDay ? mgPerKg * freq : mgPerKg;
         const checkTotalMg = perDay ? totalMg * freq : totalMg;
         if (checkMk < ind.minD) status = 'low';
@@ -3669,7 +4099,7 @@ function renderSafeRangeHTML(drug, d, w, freq) {
     const fmg = d.fixedMg;
     let fShow, u = iu;
     if (u === 'mL') fShow = ((fmg * drug.concVol) / drug.concMg).toFixed(2);
-    else if (u === 'tab' || u === 'cap') fShow = (fmg / drug.concMg).toFixed(2);
+    else if (u === 'tab' || u === 'cap' || u === 'sac' || u === 'supp') fShow = (fmg / drug.concMg).toFixed(2);
     else { fShow = fmg; u = du; }
     return `<div class="rev-range">ครั้งละ: <strong>${fShow}</strong> ${u} (${fmg} ${du}/dose)${d.maxDay ? '<br>MAX ' + d.maxDay + ' ' + du + '/day' : ''}${d.note ? '<br><span style="font-size:0.68rem;color:var(--text-muted)">'+d.note+'</span>' : ''}</div>`;
   }
@@ -3677,16 +4107,16 @@ function renderSafeRangeHTML(drug, d, w, freq) {
   // minTotal/maxTotal = ขนาดรวมเป็น mg ที่ไม่อิงน้ำหนัก (เช่น Lactulose ใน PSE สั่งเป็น mL/day ตามช่วงอายุ)
   const isTotal = d.minTotal > 0;
   if (!isTotal && mn <= 0) return d.note ? `<div class="rev-range"><span style="font-size:0.72rem">${d.note}</span></div>` : '';
-  const perDay = d.daily || drug.daily;
+  const perDay = isDailyCtx(d, drug);
   let minMg = isTotal ? d.minTotal : mn * w, maxMg = isTotal ? d.maxTotal : mx * w; // total per day if perDay, else per dose
   if (d.maxDose && !perDay) { minMg = Math.min(minMg, d.maxDose); maxMg = Math.min(maxMg, d.maxDose); }
   const conv = (mg) => {
     if (iu === 'mL') return ((mg * drug.concVol) / drug.concMg).toFixed(1);
-    if (iu === 'tab' || iu === 'cap') return (mg / drug.concMg).toFixed(1);
+    if (iu === 'tab' || iu === 'cap' || iu === 'sac' || iu === 'supp') return (mg / drug.concMg).toFixed(1);
     return mg.toFixed(1);
   };
   let u = iu;
-  if (u !== 'mL' && u !== 'tab' && u !== 'cap') u = du;
+  if (u !== 'mL' && u !== 'tab' && u !== 'cap' && u !== 'sac' && u !== 'supp') u = du;
   const rangeLabel = perDay ? du + '/kg/day' : du + '/kg/dose';
   // safeRangeText: override สำหรับยาที่สั่งเป็นปริมาตร/หน่วยอื่น (เช่น Lactulose ที่จริงคือ g/kg/day)
   const safeTxt = d.safeRangeText || drug.safeRangeText ||
@@ -3909,7 +4339,7 @@ function renderReverseDose() {
       html += `<div class="rev-card" style="border-left:4px solid ${catColor};">
         <div class="rev-card-header">
           <div>
-            <div class="rev-card-name">${drug.name} <span style="font-size:0.6rem;font-weight:400;color:${catColor};opacity:0.8;">${drug.cat}</span>${!isInHospital(id) ? ' <span class="rev-not-in-hospital">ไม่มีใน รพ.</span>' : ''}</div>
+            <div class="rev-card-name">${drug.name} <span style="font-size:0.6rem;font-weight:400;color:${catColor};opacity:0.8;">${drug.cat}</span>${hasQsnichRef(drug) ? '<span class="rev-ref-qsnich">Ref QSNICH</span>' : ''}${!isInHospital(id) ? ' <span class="rev-not-in-hospital">ไม่มีใน รพ.</span>' : ''}</div>
             <div class="rev-card-prep">${drug.prep}</div>
           </div>
           <button class="rev-card-remove" onclick="removeDrugFromReverse('${id}')" title="ลบ">✕</button>
@@ -3958,7 +4388,7 @@ function renderReverseDose() {
               if (ind.fixedMg) {
                 doseText = ind.fixedMg + 'mg/dose' + (ind.maxDay ? ' MAX' + ind.maxDay + 'mg/d' : '');
               } else if (ind.minD > 0 || ind.maxD > 0) {
-                const rl = (ind.daily||drug.daily) ? 'mk/d' : 'mk/dose';
+                const rl = isDailyCtx(ind, drug) ? 'mk/d' : 'mk/dose';
                 doseText = ind.minD + '–' + ind.maxD + ' ' + rl;
               } else {
                 doseText = 'ดู note';
@@ -4062,7 +4492,7 @@ function updateRevResult(drugId, val, weight) {
       const idx = sel ? (parseInt(sel.value) || 0) : 0;
       activeInd = resolveByAge(drug.indications[idx], am, weight);
     }
-    isDaily = (activeInd?.daily) || activeInd?.maxDayMk || isDaily;
+    if (activeInd) isDaily = isDailyCtx(activeInd, drug) || activeInd.maxDayMk || drug.maxDayMk;
   }
   // ขนาดที่ไม่อิงน้ำหนัก (minTotal) → mg/kg ไม่มีความหมาย แสดงเป็นปริมาณรวม/วันแทน
   const isTotalInd = !!(activeInd && activeInd.minTotal > 0);
@@ -4114,7 +4544,7 @@ const drugIntervals = {
   'cefotax-500':'q 8 hr','cefotax-1000':'q 8 hr',
   'ceftaz-500':'q 8 hr','ceftaz-1000':'q 8 hr','ceftaz-2000':'q 8 hr',
   // Antipyretic — prn
-  'para-syr-120':'q 4-6 hr','para-syr-250':'q 4-6 hr','para-kit':'q 4-6 hr','para-tab-325':'q 4-6 hr','para-tab-500':'q 4-6 hr',
+  'para-syr-120':'q 4-6 hr','para-syr-250':'q 4-6 hr','para-kit':'q 4-6 hr','para-tab-325':'q 4-6 hr','para-tab-500':'q 4-6 hr','para-supp-125':'q 4-6 hr','para-supp-250':'q 4-6 hr',
   'ibu-syr':'q 6-8 hr','ibu-tab-200':'q 6-8 hr','ibu-tab-400':'q 6-8 hr',
   // Antihistamine
   'cet-syr':'q 12-24 hr','cet-tab':'q 12-24 hr',
@@ -4123,7 +4553,7 @@ const drugIntervals = {
   // Mucolytic
   'brom-syr':'bid-tid','brom-tab':'bid-tid',
   'carbo-syr-250':'bid-tid','carbo-syr-100':'bid-tid','carbo-tab':'bid-tid','carbo-lys':'bid',
-  'acetyl-100':'bid-qid','acetyl-200':'bid-qid','acetyl-600':'bid-qid',
+  'acetyl-100':'tid-qid','acetyl-200':'tid-qid','acetyl-600':'tid-qid','acetyl-inj':'single',
   // Antitussive
   'gg-syr':'q 4 hr','gg-syr-100':'q 4 hr','gg-tab-100':'q 4 hr','levo-syr':'q 6-8 hr',
   // Decongestant
@@ -4137,6 +4567,7 @@ const drugIntervals = {
   // Antacid
   'omep-iv':'q 24 hr','omep-tab':'q 24 hr','rani-iv':'q 12 hr','rani-tab':'q 12 hr','famo-tab':'q 12-24 hr',
   'lactu-syr':'q 12-24 hr','lactu-syr-100':'q 12-24 hr','lactu-syr-30':'q 12-24 hr',
+  'mom-susp':'q 12-24 hr','loperamide-tab':'prn','diclofenac-tab':'q 6-12 hr','celecoxib-cap':'q 12 hr','methylpred-40':'q 6 hr','methylpred-500':'q 6 hr',
   'buscopan-syr':'tid','buscopan-tab':'tid','buscopan-inj':'tid-qid',
   // Steroid
   'hydro-iv':'q 6-8 hr','dexa-iv':'single','dexa-tab':'qd','pred-tab':'qd-qid','pred-susp':'qd-qid',
@@ -4174,7 +4605,7 @@ const drugIntervals = {
   'doxy-cap':'q 12-24 hr',
   // Antivirals
   'osel-30':'q 12-24 hr','osel-45':'q 12-24 hr','osel-75':'q 12-24 hr',
-  'acy-iv':'q 8 hr','acy-tab-200':'bid-5x','acy-tab-400':'bid-5x','acy-tab-800':'bid-5x','acy-susp':'bid-5x',
+  'acy-iv':'q 8 hr','acy-tab-200':'qid','acy-tab-400':'qid','acy-tab-800':'qid','acy-susp':'qid',
   // Sedation / Analgesia
   'chloral-250':'q 6-8 hr','chloral-500':'q 6-8 hr',
   'midaz-iv':'q 2-4 hr','midaz-im':'single',
@@ -4287,7 +4718,7 @@ function spinInput(inputId, delta, drugId, w) {
   let step = 0.5;
   if (drug) {
     const iu = getInputUnit(drugId, drug);
-    if (iu !== 'mL' && iu !== 'tab' && iu !== 'cap') step = (drug.doseUnit === 'mcg') ? 5 : 10;
+    if (iu !== 'mL' && iu !== 'tab' && iu !== 'cap' && iu !== 'sac' && iu !== 'supp') step = (drug.doseUnit === 'mcg') ? 5 : 10;
   }
   let val = parseFloat(el.value) || 0;
   val = Math.max(0, val + Math.sign(delta) * step);
@@ -4545,7 +4976,7 @@ const allDrugs = [
   // Antispasmodic
   'Hyoscine butylbromide','Hyoscine','Buscopan','Scopolamine butylbromide',
   // Laxatives
-  'Lactulose','Hepalac','Duphalac','Milk of Magnesia',
+  'Lactulose','Hepalac','Duphalac','Milk of Magnesia','MOM','Loperamide','Sbob','Mantil','Diclofenac','Voltaren','Celecoxib','Celebrex','Methylprednisolone','Solumedrol',
   // Steroid
   'Hydrocortisone','Solu-Cortef','Dexamethasone','Dexa','Prednisolone',
   // Anti-epileptic
