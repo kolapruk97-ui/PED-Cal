@@ -219,8 +219,13 @@ body {
 .hosp-subtab.active { border-color: var(--primary); color: var(--primary); background: rgba(0,191,165,0.1); }
 .hosp-subtab .hosp-badge { font-size: 0.62rem; opacity: 0.85; margin-left: 4px; font-weight: 400; }
 .hosp-subtab.active .hosp-badge::after { content: ' ●'; color: var(--success); }
+.hosp-sticky {
+  position: sticky; top: -20px; z-index: 5; background: var(--card);
+  margin: 0 -20px; padding: 8px 20px 2px; border-bottom: 1px solid var(--border);
+}
+.hosp-search { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
 .hospital-toolbar {
-  display: flex; gap: 8px; margin-bottom: 10px; align-items: center;
+  display: flex; gap: 8px; margin-bottom: 8px; align-items: center;
 }
 .hospital-toolbar button {
   font-size: 0.65rem; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);
@@ -239,6 +244,8 @@ body {
 .hospital-item:hover { background: var(--section-bg); }
 .hospital-item input[type=checkbox] { accent-color: var(--success); width: 14px; height: 14px; flex-shrink: 0; }
 .hospital-item .hosp-prep { color: var(--text-muted); font-size: 0.6rem; margin-left: 4px; }
+#hospitalDrugList { min-height: 50vh; } /* กัน modal หดจนบังรายการแนะนำเมื่อผลค้นหาเหลือน้อย */
+.hosp-empty { padding: 16px 8px; text-align: center; font-size: 0.8rem; color: var(--text-muted); }
 .rev-not-in-hospital {
   font-size: 0.55rem; color: var(--danger); background: rgba(239,83,80,0.15);
   padding: 1px 5px; border-radius: 4px; margin-left: 4px; white-space: nowrap;
@@ -1190,7 +1197,9 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
 
   <h3>V.6</h3>
   <div class="cl-new"><strong style="font-size:0.7rem;color:var(--success);">NEW</strong>
-  <ul><li><span style="color:#ffa726;">[2026/10/30]</span> <strong>Acyclovir susp แก้ความแรงเป็น 20 mg/mL (20 mL)</strong> ตามรูป QSNICH (ยาเตรียมเฉพาะราย) — เดิม 200 mg/5 mL (= 40 mg/mL) ทำให้ปริมาตร mL ที่คำนวณได้เหลือครึ่งเดียวของที่ควรให้ · ผู้ใช้ยืนยันว่า รพ. ใช้ 20 mg/mL</li>
+  <ul><li><span style="color:#ffa726;">[2026/10/31]</span> รายการยา รพ. — <strong>แสดงรายการแนะนำชื่อยาขณะพิมพ์</strong> เหมือนช่องค้นหาหลัก (สูงสุด 8 รายการ ไฮไลต์ส่วนที่ตรง ชื่อขึ้นต้นตรงมาก่อน) ดึงจากชื่อยาและชื่อการค้าในรายการยา คลิกหรือใช้ลูกศร + Enter เพื่อเลือก, Esc เพื่อปิด</li>
+    <li><span style="color:#ffa726;">[2026/10/31]</span> รายการยา รพ. — <strong>เพิ่มช่องค้นหา</strong> พร้อมปุ่ม CLEAR กรองรายการทันทีที่พิมพ์ ค้นจากชื่อยา รูปแบบยา หมวด และชื่อการค้า · ช่องค้นหาและปุ่มเลือกอยู่กับที่เมื่อเลื่อนรายการ · ระหว่างค้นหา ปุ่มเปลี่ยนเป็น "เลือกที่พบ (N)" / "ยกเลิกที่พบ (N)" และมีผลเฉพาะยาที่แสดงอยู่</li>
+    <li><span style="color:#ffa726;">[2026/10/30]</span> <strong>Acyclovir susp แก้ความแรงเป็น 20 mg/mL (20 mL)</strong> ตามรูป QSNICH (ยาเตรียมเฉพาะราย) — เดิม 200 mg/5 mL (= 40 mg/mL) ทำให้ปริมาตร mL ที่คำนวณได้เหลือครึ่งเดียวของที่ควรให้ · ผู้ใช้ยืนยันว่า รพ. ใช้ 20 mg/mL</li>
     <li><span style="color:#ffa726;">[2026/10/30]</span> <strong>แก้บั๊ก daily vs ต่อ dose ใน Reverse</strong> — ยาที่ตัวยาเป็น mg/kg/<strong>day</strong> (Cipro, Metronidazole, Clindamycin, Cloxacillin, Cefazolin, Ceftriaxone, Amoxicillin, Phenobarbital maint, Phenytoin maint, Omeprazole) เดิมบังคับให้ <em>ทุก</em> indication เป็นต่อวัน ทำให้ indication ที่ QSNICH ให้เป็น <strong>ต่อ dose</strong> (เช่น Cipro UTI 10-20 mk/dose, Metronidazole C. diff / H. pylori, Neonate, Endocarditis/Surgical px, Phenobarbital sedative) คำนวณช่วงปลอดภัยต่ำไป 2-4 เท่า → เพิ่ม <code>isDailyCtx()</code> ให้ <code>daily</code> ของ indication มีผลเหนือตัวยา และระบุ <code>daily:false</code> ใน indication ต่อ dose ทั้งหมด</li>
     <li><span style="color:#ffa726;">[2026/10/30]</span> <strong>เติม indication ที่ขาดตามรูป QSNICH 13 ตัว</strong>: <strong>Acyclovir</strong> (IV 9 / oral 8 indication: HSV orolabial, genital first/recurrent, mucocutaneous, suppression, encephalitis, retinal necrosis, disseminated, VZV, zoster + ขนาดยาไต oral/IV/IHD/PD/CRRT) · <strong>PGS</strong> (คำนวณใน Reverse ได้แล้ว หน่วย units: mild-mod, pneumonia, severe/CNS, neonate bacteremia/meningitis, GBS meningitis, congenital syphilis; renal เปลี่ยนเป็นตาม QSNICH) · <strong>Amoxicillin</strong> (8 indication; แก้ Rhinosinusitis เป็น 45 / 80-90 mk/day q12hr MAX 2 g/dose และ Tonsillopharyngitis เป็น 3-18 ปี 50 mk/day — ค่าเดิมไม่ตรงรูป) · <strong>Amox/Clav</strong> (indication syr/ES/tab/IV + aspirate pneumonia + renal) · <strong>Metronidazole</strong> (+Tetanus, Trichomoniasis, Bacterial vaginosis, PD exit-site / peritonitis, STD px, C. diff severe IV, colorectal px; เปลี่ยนชื่อ "Amoebic/IBD" → UC/pouchitis + Crohn; ตาราง ATB: oral 15-50 mk/day, IV MAX 4 g/day แทน 1.5 g) · <strong>Salbutamol</strong> (neb: neonate/children/adolescent, continuous, hyperkalemia; oral ตามอายุ; MDI ใน note) · <strong>Midazolam</strong> (+oral ก่อนหัตถการ, sedation ขณะใช้เครื่องช่วยหายใจ, neonatal anticonvulsant) · <strong>Methylprednisolone</strong> (+Pneumocystis pneumonia) · <strong>Ceftriaxone</strong> (+S. pneumoniae invasive CNS / non-CNS) · <strong>Montelukast</strong> (indication แยก allergic rhinitis / asthma maint / exacerbation 2-5 ปี / urticaria) · <strong>Paracetamol</strong> (+suppo 125, 250 mg พร้อมขนาด rectal และ peri-op; แก้ note ตาราง MAX 90 → 75 mk/day) · <strong>Ciprofloxacin</strong> (+Neonate / severe 10-60 mk/day; ตาราง 20-40 → 20-30 mk/day) · <strong>Cloxacillin</strong> (+ตาราง neonate age-directed; ตาราง ATB IV 50-100 → 100-200 mk/day MAX 2 g/dose) · หน่วย <code>supp</code> แปลงตามความแรงเหมือน tab · <em>ยังไม่แก้</em>: ความแรง Acyclovir susp (แอป 200 mg/5 mL vs QSNICH 20 mg/mL) รอยืนยัน</li>
     <li><span style="color:#ffa726;">[2026/10/30]</span> Acetylcysteine — เลิกใช้ชื่อย่อ <strong>NAC</strong> ใช้ชื่อ Acetylcysteine อย่างเดียว: ลบ NAC ออกจาก alias, คำค้น, ชื่อการค้าในแถว inj และหมายเหตุ ("NAC IV/PO" → "Acetylcysteine IV/PO")</li>
@@ -1358,10 +1367,19 @@ tr.drug-highlight-last td { border-bottom: 3px solid #00bfa5 !important; }
     <button class="hosp-subtab" id="hospTab-thungsong" onclick="switchHospTab('thungsong')">รพ.ทุ่งสง<span class="hosp-badge" id="hospBadge-thungsong"></span></button>
     <button class="hosp-subtab" id="hospTab-khanom" onclick="switchHospTab('khanom')">รพ.ขนอม<span class="hosp-badge" id="hospBadge-khanom"></span></button>
   </div>
-  <div class="hospital-toolbar">
-    <button onclick="toggleAllHospital(true)">เลือกทั้งหมด</button>
-    <button onclick="toggleAllHospital(false)">ยกเลิกทั้งหมด</button>
-    <span class="hosp-count" id="hospCount"></span>
+  <div class="hosp-sticky">
+    <div class="hosp-search">
+      <div class="search-wrap">
+        <input type="text" id="hospSearchInput" placeholder="Search drug name..." autocomplete="off" oninput="onHospSearchInput()" onkeydown="onHospSearchKey(event)" onblur="hideHospAC()">
+        <div class="autocomplete-list" id="hospAcList"></div>
+      </div>
+      <button class="search-clear-btn" onclick="clearHospSearch()">CLEAR</button>
+    </div>
+    <div class="hospital-toolbar">
+      <button id="hospSelectAll" onclick="toggleAllHospital(true)">เลือกทั้งหมด</button>
+      <button id="hospClearAll" onclick="toggleAllHospital(false)">ยกเลิกทั้งหมด</button>
+      <span class="hosp-count" id="hospCount"></span>
+    </div>
   </div>
   <div id="hospitalDrugList"></div>
 </div>
@@ -5639,13 +5657,87 @@ function switchHospTab(hosp) {
   refreshReverseIfActive();
 }
 
+// ยาที่ตรงกับคำค้นในหน้ารายการยา รพ. — ค้นจาก name + prep + cat + alias เหมือนแท็บ Reverse
+function hospFilteredDrugs() {
+  const q = (document.getElementById('hospSearchInput')?.value || '').trim().toLowerCase();
+  if (!q) return drugRegistry;
+  return drugRegistry.filter(d => `${d.name} ${d.prep} ${d.cat} ${d.alias || ''}`.toLowerCase().includes(q));
+}
+
+function clearHospSearch() {
+  document.getElementById('hospSearchInput').value = '';
+  hideHospAC();
+  renderHospitalDrugList();
+}
+
+// รายการแนะนำขณะพิมพ์ — เหมือนช่องค้นหาหลัก แต่ดึงจาก drugRegistry (ชื่อยา + alias) เพื่อให้เลือกแล้วเจอยาในรายการเสมอ
+let hospAcIdx = -1;
+
+function hideHospAC() {
+  document.getElementById('hospAcList').classList.remove('show');
+}
+
+function hospSuggestions(val) {
+  const terms = new Map();
+  drugRegistry.forEach(d => [d.name, ...(d.alias ? d.alias.split(',') : [])].forEach(t => {
+    const term = t.trim();
+    if (term && term.toLowerCase().includes(val)) terms.set(term.toLowerCase(), term);
+  }));
+  const starts = t => t.toLowerCase().startsWith(val) ? 0 : 1; // ขึ้นต้นตรงกับที่พิมพ์มาก่อน
+  return [...terms.values()].sort((a, b) => starts(a) - starts(b)).slice(0, 8);
+}
+
+function onHospSearchInput() {
+  renderHospitalDrugList();
+  const val = document.getElementById('hospSearchInput').value.trim().toLowerCase();
+  const list = document.getElementById('hospAcList');
+  const matches = val ? hospSuggestions(val) : [];
+  if (matches.length === 0) { hideHospAC(); return; }
+  hospAcIdx = -1;
+  list.innerHTML = matches.map(m => {
+    const idx = m.toLowerCase().indexOf(val);
+    const hl = m.substring(0, idx) + '<span class="match">' + m.substring(idx, idx + val.length) + '</span>' + m.substring(idx + val.length);
+    return `<div class="autocomplete-item" onmousedown="selectHospAC(this.textContent)">${hl}</div>`;
+  }).join('');
+  list.classList.add('show');
+}
+
+function onHospSearchKey(e) {
+  const list = document.getElementById('hospAcList');
+  const items = list.querySelectorAll('.autocomplete-item');
+  if (!list.classList.contains('show') || items.length === 0) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    hospAcIdx = e.key === 'ArrowDown' ? Math.min(hospAcIdx + 1, items.length - 1) : Math.max(hospAcIdx - 1, 0);
+    items.forEach((it, i) => it.classList.toggle('active', i === hospAcIdx));
+    items[hospAcIdx].scrollIntoView({block:'nearest'});
+  } else if (e.key === 'Enter') {
+    e.preventDefault();
+    if (hospAcIdx >= 0) selectHospAC(items[hospAcIdx].textContent);
+    else hideHospAC();
+  } else if (e.key === 'Escape') {
+    hideHospAC();
+  }
+}
+
+function selectHospAC(name) {
+  document.getElementById('hospSearchInput').value = name;
+  hideHospAC();
+  renderHospitalDrugList();
+}
+
 function renderHospitalDrugList() {
   const container = document.getElementById('hospitalDrugList');
   if (!container) return;
-  const cats = [...new Set(drugRegistry.map(d => d.cat))];
+  const filtered = hospFilteredDrugs();
+  const isFiltered = filtered !== drugRegistry;
+  // ปุ่มเลือก/ยกเลิกมีผลเฉพาะยาที่แสดงอยู่ — ขณะค้นหาต้องบอกให้ชัด กันการล้างทั้งรายการโดยไม่ตั้งใจ
+  document.getElementById('hospSelectAll').textContent = isFiltered ? `เลือกที่พบ (${filtered.length})` : 'เลือกทั้งหมด';
+  document.getElementById('hospClearAll').textContent = isFiltered ? `ยกเลิกที่พบ (${filtered.length})` : 'ยกเลิกทั้งหมด';
+  const cats = [...new Set(filtered.map(d => d.cat))];
   let html = '';
   cats.forEach(cat => {
-    const drugs = drugRegistry.filter(d => d.cat === cat);
+    const drugs = filtered.filter(d => d.cat === cat);
     const cc = HOSP_CAT_COLORS[cat] || '#607d8b';
     html += `<div class="hospital-cat" style="border-left:3px solid ${cc};color:${cc};">${cat} (${drugs.length})</div>`;
     drugs.forEach(d => {
@@ -5653,13 +5745,15 @@ function renderHospitalDrugList() {
       html += `<label class="hospital-item"><input type="checkbox" value="${d.id}"${checked} onchange="toggleHospitalDrug('${d.id}',this.checked)"><span>${d.name}</span><span class="hosp-prep">${d.prep}</span></label>`;
     });
   });
-  container.innerHTML = html;
+  container.innerHTML = html || '<div class="hosp-empty">ไม่พบยาที่ค้นหา</div>';
   updateHospCount();
 }
 
 function openHospitalList() {
   // Open with the current active hospital selected
   hospEditing = hospActive;
+  document.getElementById('hospSearchInput').value = '';
+  hideHospAC();
   document.querySelectorAll('.hosp-subtab').forEach(t => t.classList.toggle('active', t.id === 'hospTab-' + hospEditing));
   renderHospitalDrugList();
   document.getElementById('hospitalOverlay').classList.add('open');
@@ -5678,8 +5772,10 @@ function toggleHospitalDrug(id, checked) {
 }
 
 function toggleAllHospital(checked) {
-  if (checked) hospLists[hospEditing].clear();
-  else drugRegistry.forEach(d => hospLists[hospEditing].add(d.id));
+  hospFilteredDrugs().forEach(d => {
+    if (checked) hospLists[hospEditing].delete(d.id);
+    else hospLists[hospEditing].add(d.id);
+  });
   saveHospitalList();
   document.querySelectorAll('#hospitalDrugList input[type=checkbox]').forEach(cb => cb.checked = checked);
   updateHospCount();
